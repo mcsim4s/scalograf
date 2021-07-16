@@ -1,3 +1,5 @@
 .idea
 target
 .bsp
+
+application.local.conf
