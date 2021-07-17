@@ -5,6 +5,12 @@ ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix := Some("scalograf")
 
 val sttpVersion = "3.3.11"
+val circeVersion = "0.14.1"
+
+val model = (project in file("model"))
+  .settings(
+    name := "model"
+  )
 
 val client = (project in file("client"))
   .settings(
@@ -12,20 +18,20 @@ val client = (project in file("client"))
     libraryDependencies ++= Seq(
       "com.softwaremill.sttp.client3" %% "core" % sttpVersion,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion,
-      "com.softwaremill.sttp.client3" %% "circe" % sttpVersion
+      "com.softwaremill.sttp.client3" %% "circe" % sttpVersion,
+      "io.circe" %% "circe-core" % circeVersion,
+      "io.circe" %% "circe-generic" % circeVersion,
+      "io.circe" %% "circe-parser" % circeVersion
     )
   )
-
-val model = (project in file("model"))
-  .settings(
-    name := "model"
-  )
+  .dependsOn(model)
 
 val tools = (project in file("tools"))
   .settings(
     name := "model",
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.1"
+      "com.typesafe" % "config" % "1.4.1",
+      "ch.qos.logback" % "logback-classic" % "1.2.3"
     )
   )
-  .dependsOn(client)
+  .dependsOn(client, model)
