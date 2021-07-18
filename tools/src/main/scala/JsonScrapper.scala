@@ -1,8 +1,11 @@
 package scalograf
 
 import client.GrafanaClient
+import model.Dashboard
 
 import com.typesafe.config.ConfigFactory
+import io.circe.generic.auto._
+import io.circe.syntax._
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits._
@@ -22,9 +25,17 @@ object JsonScrapper extends App {
     _ = log.info(s"Dashboards")
     _ = dashboards.foreach(d => log.info(s"$d"))
     snippets <- Future.traverse(dashboards) { snippet =>
-      client.dashboardRaw(snippet.uid).map(_.body).orDie
+      client
+        .dashboardRaw(snippet.uid)
+        .map(_.body)
+        .orDie
+        .map(_.asObject.get("dashboard").get)
     }
-  } yield snippets.foreach(s => log.info(s"$s"))
+    _ = snippets.foreach(s => log.info(s"$s"))
+    diff <- Future.traverse(snippets) { json =>
+      Future(json.as[Dashboard].map(parsed => JsonAnalyzer.diff(json, parsed.asJson))).orDie
+    }
+  } yield log.info(diff.toString())
 
   program
     .andThen {

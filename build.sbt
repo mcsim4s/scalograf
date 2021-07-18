@@ -7,6 +7,8 @@ ThisBuild / idePackagePrefix := Some("scalograf")
 val sttpVersion = "3.3.11"
 val circeVersion = "0.14.1"
 
+val scalatestVersion = "3.2.9"
+
 val model = (project in file("model"))
   .settings(
     name := "model"
@@ -31,7 +33,8 @@ val tools = (project in file("tools"))
     name := "model",
     libraryDependencies ++= Seq(
       "com.typesafe" % "config" % "1.4.1",
-      "ch.qos.logback" % "logback-classic" % "1.2.3"
+      "ch.qos.logback" % "logback-classic" % "1.2.3",
+      "org.scalatest" %% "scalatest" % scalatestVersion % "test"
     )
   )
   .dependsOn(client, model)
