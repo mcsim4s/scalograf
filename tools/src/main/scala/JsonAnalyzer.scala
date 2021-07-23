@@ -1,6 +1,6 @@
 package scalograf
 
-import io.circe.Json
+import io.circe.{Json, JsonObject}
 import io.circe.Json._
 
 object JsonAnalyzer {
@@ -9,20 +9,41 @@ object JsonAnalyzer {
 
   private def diff(leftJson: Json, rightJson: Json, path: String): Seq[JsonDiff] = {
     (leftJson, rightJson) match {
-      case (left, right) if left.isObject && right.isObject => Seq.empty
-      case (left, right) if left.isArray && right.isArray   => Seq.empty
+      case (left, right) if left.isObject && right.isObject =>
+        objectDiff(path, left.asObject.get, right.asObject.get)
+      case (left, right) if left.isArray && right.isArray =>
+        arrayDiff(path, left.asArray.get, right.asArray.get)
       case (left, right) if left.isString && right.isString =>
         valueDiff(path, left.asString.get, right.asString.get)
       case (left, right) if left.isNumber && right.isNumber =>
         valueDiff(path, left.asNumber.get, right.asNumber.get)
       case (left, right) if left.isBoolean && right.isBoolean =>
         valueDiff(path, left.asBoolean.get, right.asBoolean.get)
-      case (left, right) if left.isNull && right.isNull => Seq.empty
-      case (left, right)                                => Seq(TypeDiff(path, left.name, right.name))
+      case (left, right) if left.isNull && right.isNull =>
+        Seq.empty
+      case (left, right) =>
+        Seq(TypeDiff(path, left.name, right.name))
     }
   }
 
-  private def valueDiff[T](path: String, left: T, right: T): scala.Seq[JsonDiff] = {
+  def objectDiff(path: String, left: JsonObject, right: JsonObject): Seq[JsonDiff] = {
+    left.toMap.flatMap {
+      case (key, l) =>
+        right(key) match {
+          case Some(r) => diff(l, r, s"$path.$key")
+          case None    => Seq(FieldMissing(path, key, l))
+        }
+    }.toSeq
+  }
+
+  private def arrayDiff(path: String, left: Vector[Json], right: Vector[Json]): Seq[JsonDiff] = {
+    val sizeDiff = if (left.size != right.size) {
+      Seq(ValueDiff(s"$path.size", left.size, right.size))
+    } else Seq.empty
+    sizeDiff ++ (left zip right).zipWithIndex.flatMap { case ((l, r), index) => diff(l, r, s"$path[$index]") }
+  }
+
+  private def valueDiff[T](path: String, left: T, right: T): Seq[JsonDiff] = {
     if (left != right) Seq(ValueDiff(path, left, right)) else Seq.empty
   }
 
@@ -32,4 +53,7 @@ object JsonAnalyzer {
 
   case class TypeDiff(path: String, leftType: String, rightType: String) extends JsonDiff
   case class ValueDiff[T](path: String, leftValue: T, rightValue: T) extends JsonDiff
+  case class FieldMissing[T](path: String, fieldName: String, value: Json) extends JsonDiff {
+    override def toString: String = s"Field Missing: \"$path.$fieldName\": ${value.name} : ${value.noSpaces}"
+  }
 }

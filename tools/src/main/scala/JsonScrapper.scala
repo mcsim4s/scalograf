@@ -22,8 +22,6 @@ object JsonScrapper extends App {
 
   val program = for {
     dashboards <- client.search().map(_.body).orDie
-    _ = log.info(s"Dashboards")
-    _ = dashboards.foreach(d => log.info(s"$d"))
     snippets <- Future.traverse(dashboards) { snippet =>
       client
         .dashboardRaw(snippet.uid)
@@ -31,17 +29,16 @@ object JsonScrapper extends App {
         .orDie
         .map(_.asObject.get("dashboard").get)
     }
-    _ = snippets.foreach(s => log.info(s"$s"))
     diff <- Future.traverse(snippets) { json =>
       Future(json.as[Dashboard].map(parsed => JsonAnalyzer.diff(json, parsed.asJson))).orDie
     }
-  } yield log.info(diff.toString())
+  } yield diff.flatMap(_.map(_.toString())).foreach(log.info)
 
   program
     .andThen {
       case Failure(exception) => log.error("Fatal", exception)
     }
-    .flatMap(_ => client.close())
+    .andThen(_ => client.close())
 
   implicit class RichFutureEither[E <: Throwable, T](val f: Future[Either[E, T]]) {
     def orDie: Future[T] = f.map(_.toTry).flatMap(Future.fromTry)

@@ -9,14 +9,9 @@ val circeVersion = "0.14.1"
 
 val scalatestVersion = "3.2.9"
 
-val model = (project in file("model"))
+val core = (project in file("core"))
   .settings(
-    name := "model"
-  )
-
-val client = (project in file("client"))
-  .settings(
-    name := "client",
+    name := "core",
     libraryDependencies ++= Seq(
       "com.softwaremill.sttp.client3" %% "core" % sttpVersion,
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion,
@@ -26,15 +21,14 @@ val client = (project in file("client"))
       "io.circe" %% "circe-parser" % circeVersion
     )
   )
-  .dependsOn(model)
 
 val tools = (project in file("tools"))
   .settings(
-    name := "model",
+    name := "tools",
     libraryDependencies ++= Seq(
       "com.typesafe" % "config" % "1.4.1",
       "ch.qos.logback" % "logback-classic" % "1.2.3",
       "org.scalatest" %% "scalatest" % scalatestVersion % "test"
     )
   )
-  .dependsOn(client, model)
+  .dependsOn(core)

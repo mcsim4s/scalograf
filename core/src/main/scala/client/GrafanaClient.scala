@@ -4,7 +4,7 @@ package client
 import model._
 
 import io.circe.Json
-import io.circe.generic.auto._
+import marshallers.CirceMarshaller._
 import sttp.client3._
 import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
 import sttp.client3.circe._
@@ -34,8 +34,7 @@ case class GrafanaClient(url: String, authToken: String) {
     dashboardInner(asJsonAlways[Json])(uid)
   }
 
-  private def dashboardInner[T](responseAs: ResponseAs[T, Any])
-                               (uid: String) = {
+  private def dashboardInner[T](responseAs: ResponseAs[T, Any])(uid: String) = {
     grafanaRequest
       .get(uri"$url/api/dashboards/uid/$uid")
       .response(responseAs)
