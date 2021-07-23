@@ -1,44 +1,41 @@
 package scalograf
 
-import client.GrafanaClient
-import model.Dashboard
+import JsonAnalyzer.JsonDiff
+import client._
+import model._
 
-import com.typesafe.config.ConfigFactory
 import io.circe.generic.auto._
 import io.circe.syntax._
-import org.slf4j.LoggerFactory
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
-import scala.util.Failure
 
-object JsonScrapper extends App {
-  val log = LoggerFactory.getLogger(this.getClass)
-  val conf = ConfigFactory.parseResources("application.local.conf")
-  val grafana = conf.getConfig("grafana")
+class JsonScrapper(config: GrafanaConfig, limit: Int = 100) {
+  val client = GrafanaClient(config)
 
-  val client =
-    GrafanaClient(grafana.getString("url"), grafana.getString("token"))
+  def scrape: Future[Seq[JsonDiff]] = {
+    val result = for {
+      dashboards <- client.search().map(_.body).orDie
+      diff <- fillDiff(dashboards)
+    } yield diff
+    result.andThen(_ => client.close())
+  }
 
-  val program = for {
-    dashboards <- client.search().map(_.body).orDie
-    snippets <- Future.traverse(dashboards) { snippet =>
-      client
-        .dashboardRaw(snippet.uid)
-        .map(_.body)
-        .orDie
-        .map(_.asObject.get("dashboard").get)
+  private def fillDiff(dashboards: Seq[DashboardSnippet]): Future[Seq[JsonDiff]] = {
+    def inner(acc: Seq[JsonDiff], left: Seq[DashboardSnippet]): Future[Seq[JsonDiff]] = {
+      if (acc.length >= limit || left.isEmpty) Future.successful(acc)
+      else {
+        client
+          .dashboardRaw(left.head.uid)
+          .map(_.body)
+          .orDie
+          .map(_.asObject.get("dashboard").get)
+          .flatMap(json => Future(json.as[Dashboard].map(parsed => JsonAnalyzer.diff(json, parsed.asJson))).orDie)
+          .flatMap(chunk => inner(acc ++ chunk, left.drop(1)))
+      }
     }
-    diff <- Future.traverse(snippets) { json =>
-      Future(json.as[Dashboard].map(parsed => JsonAnalyzer.diff(json, parsed.asJson))).orDie
-    }
-  } yield diff.flatMap(_.map(_.toString())).foreach(log.info)
-
-  program
-    .andThen {
-      case Failure(exception) => log.error("Fatal", exception)
-    }
-    .andThen(_ => client.close())
+    inner(Seq.empty, dashboards)
+  }
 
   implicit class RichFutureEither[E <: Throwable, T](val f: Future[Either[E, T]]) {
     def orDie: Future[T] = f.map(_.toTry).flatMap(Future.fromTry)

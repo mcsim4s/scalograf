@@ -28,7 +28,8 @@ val tools = (project in file("tools"))
     libraryDependencies ++= Seq(
       "com.typesafe" % "config" % "1.4.1",
       "ch.qos.logback" % "logback-classic" % "1.2.3",
-      "org.scalatest" %% "scalatest" % scalatestVersion % "test"
+      "org.scalatest" %% "scalatest" % scalatestVersion % "test",
+      "org.testcontainers" %% "testcontainers" % "1.15.3" % "test"
     )
   )
   .dependsOn(core)

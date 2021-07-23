@@ -11,7 +11,9 @@ import sttp.client3.circe._
 
 import scala.concurrent.Future
 
-case class GrafanaClient(url: String, authToken: String) {
+case class GrafanaClient(config: GrafanaConfig) {
+  import config._
+
   private val backend: SttpBackend[Future, Any] = AsyncHttpClientFutureBackend()
   private val grafanaRequest = basicRequest
     .header("Authorization", s"Bearer $authToken")
