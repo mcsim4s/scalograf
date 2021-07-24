@@ -3,6 +3,7 @@ name := "scalograf"
 ThisBuild / version := "0.1"
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix := Some("scalograf")
+ThisBuild / Test / fork := true
 
 val sttpVersion = "3.3.11"
 val circeVersion = "0.14.1"
@@ -26,10 +27,11 @@ val tools = (project in file("tools"))
   .settings(
     name := "tools",
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.1",
       "ch.qos.logback" % "logback-classic" % "1.2.3",
-      "org.scalatest" %% "scalatest" % scalatestVersion % "test",
-      "org.testcontainers" %% "testcontainers" % "1.15.3" % "test"
+      "com.github.pureconfig" %% "pureconfig" % "0.16.0",
+      "org.testcontainers" % "testcontainers" % "1.15.3" % "test",
+      "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.39.5",
+      "org.scalatest" %% "scalatest" % scalatestVersion % "test"
     )
   )
   .dependsOn(core)

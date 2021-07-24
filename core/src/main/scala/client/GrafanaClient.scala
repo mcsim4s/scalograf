@@ -12,11 +12,14 @@ import sttp.client3.circe._
 import scala.concurrent.Future
 
 case class GrafanaClient(config: GrafanaConfig) {
-  import config._
+
+  private val url = {
+    import config.endpoint._
+    s"$scheme://$host:$port"
+  }
 
   private val backend: SttpBackend[Future, Any] = AsyncHttpClientFutureBackend()
-  private val grafanaRequest = basicRequest
-    .header("Authorization", s"Bearer $authToken")
+  private val grafanaRequest = basicRequest.auth.basic(config.auth.login, config.auth.password)
 
   def search() = {
     grafanaRequest
@@ -34,6 +37,13 @@ case class GrafanaClient(config: GrafanaConfig) {
 
   private[scalograf] def dashboardRaw(uid: String) = {
     dashboardInner(asJsonAlways[Json])(uid)
+  }
+
+  private[scalograf] def importJson(id: CommunityDashboardId) = {
+    grafanaRequest
+      .get(uri"$url/api/gnet/dashboards/${id.id}")
+      .response(asJsonAlways[Json])
+      .send(backend)
   }
 
   private def dashboardInner[T](responseAs: ResponseAs[T, Any])(uid: String) = {
