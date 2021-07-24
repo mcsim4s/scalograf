@@ -1,36 +1,33 @@
 package scalograf
 
-import client._
+import model.Dashboard
 
-import org.scalatest.BeforeAndAfterAll
+import io.circe.parser._
+import io.circe.syntax._
+import org.scalatest.OptionValues
 import org.scalatest.matchers.should
-import org.scalatest.wordspec.AsyncWordSpec
-import org.testcontainers.containers.GenericContainer
-import org.testcontainers.utility.DockerImageName
+import org.scalatest.wordspec.AnyWordSpec
 
-class EmptyDiffSpec extends AsyncWordSpec with should.Matchers with BeforeAndAfterAll {
-  val grafana = new GenericContainer(DockerImageName.parse("grafana/grafana"))
-  grafana.withExposedPorts(3000)
+import java.io.File
+import scala.io.Source
 
-  override protected def beforeAll(): Unit = {
-    grafana.start()
-  }
-
-  override protected def afterAll(): Unit = {
-    grafana.stop()
-  }
+class EmptyDiffSpec extends AnyWordSpec with should.Matchers with OptionValues {
+  val testDataDir = new File(getClass.getResource("/testDashboards").getPath)
 
   "Model diff analyzer" should {
-    "build empty diff" in {
-      val scrapper = new JsonScrapper(
-        GrafanaConfig(
-          Endpoint("http", grafana.getHost, grafana.getMappedPort(3000).toLong),
-          Auth("admin", "admin")
-        )
-      )
-      for {
-        diff <- scrapper.scrape
-      } yield {
+    s"should get empty diff for community dashboards" in {
+      testDataDir.listFiles().foreach { dashboardFile =>
+        val json = parse(Source.fromFile(dashboardFile).getLines().mkString) match {
+          case Left(value)  => throw value
+          case Right(value) => value
+        }
+        val dashboardJson = json.asObject.get("json").get
+        val dashboard = dashboardJson.as[Dashboard] match {
+          case Left(value)  => throw value
+          case Right(value) => value
+        }
+        val diff = JsonAnalyzer.diff(dashboardJson, dashboard.asJson)
+        diff.foreach(println)
         diff should be(empty)
       }
     }

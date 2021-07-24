@@ -13,6 +13,5 @@ object CirceMarshaller {
   implicit val timePickerCodec = deriveCodec[TimePicker]
   implicit val timeCodec = deriveCodec[Time]
 
-  implicit val dashboardCodec = deriveCodec[Dashboard]
   implicit val dashboardSnippetCodec = deriveCodec[DashboardSnippet]
 }

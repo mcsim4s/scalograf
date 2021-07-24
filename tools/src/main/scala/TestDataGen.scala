@@ -46,7 +46,7 @@ object TestDataGen extends App {
       Files.write(
         Paths.get(s"tools/src/test/resources/testDashboards/$id"),
         testData.noSpaces.getBytes(StandardCharsets.UTF_8),
-        StandardOpenOption.CREATE_NEW
+        StandardOpenOption.CREATE
       )
       log.info(s"Written $id with name '$name'")
     }

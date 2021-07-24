@@ -1,13 +1,16 @@
 package scalograf
 package model
 
+import marshallers.CirceMarshaller._
+import io.circe.generic.semiauto.deriveCodec
+
 case class Dashboard(
-    id: Long,
+    id: Option[Long],
     uid: String,
     style: String,
     tags: List[String],
     timezone: String,
-    templating: Templating,
+//    templating: Templating,
     title: String,
     schemaVersion: Long,
     editable: Boolean,
@@ -18,3 +21,7 @@ case class Dashboard(
 //    timePicker: TimePicker,
     time: Time
 )
+
+object Dashboard {
+  implicit val dashboardCodec = deriveCodec[Dashboard]
+}
