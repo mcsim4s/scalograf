@@ -2,7 +2,7 @@ package scalograf
 package model
 
 import marshallers.CirceMarshaller._
-import io.circe.generic.semiauto.deriveCodec
+import io.circe.generic.extras.semiauto._
 
 case class Dashboard(
     id: Option[Long],
@@ -23,5 +23,5 @@ case class Dashboard(
 )
 
 object Dashboard {
-  implicit val dashboardCodec = deriveCodec[Dashboard]
+  implicit val dashboardCodec = deriveConfiguredCodec[Dashboard]
 }

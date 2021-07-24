@@ -18,8 +18,8 @@ val core = (project in file("core"))
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion,
       "com.softwaremill.sttp.client3" %% "circe" % sttpVersion,
       "io.circe" %% "circe-core" % circeVersion,
-      "io.circe" %% "circe-generic" % circeVersion,
-      "io.circe" %% "circe-parser" % circeVersion
+      "io.circe" %% "circe-parser" % circeVersion,
+      "io.circe" %% "circe-generic-extras" % circeVersion
     )
   )
 
