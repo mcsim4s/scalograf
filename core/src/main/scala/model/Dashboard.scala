@@ -3,7 +3,6 @@ package model
 
 import io.circe.Decoder.Result
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
-import io.circe.syntax._
 import io.circe.{Codec, HCursor, Json}
 
 case class Dashboard(
@@ -28,26 +27,12 @@ object Dashboard {
   implicit val dashboardCodec = new Codec[Dashboard] {
     override def apply(d: Dashboard): Json =
       deriveConfiguredEncoder[Dashboard]
-        .mapJsonObject { obj =>
-          obj("annotations") match {
-            case Some(value) => obj.add("annotations", Json.obj("list" -> value))
-            case None        => obj
-          }
-        }
+        .mapJsonObject(encodeAsListObject("annotations"))
         .apply(d)
 
     override def apply(c: HCursor): Result[Dashboard] =
       deriveConfiguredDecoder[Dashboard]
-        .prepare(_.withFocus(_.mapObject(obj => {
-          obj("annotations") match {
-            case Some(value) =>
-              value.asObject.flatMap(_("list")) match {
-                case Some(list) => obj.add("annotations", list)
-                case None       => obj
-              }
-            case None => obj
-          }
-        })))
+        .prepare(decodeAsListObject("annotations"))
         .apply(c)
   }
 }
