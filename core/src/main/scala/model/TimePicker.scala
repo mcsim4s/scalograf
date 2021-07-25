@@ -10,5 +10,5 @@ object TimePicker {
   val empty: TimePicker = TimePicker(List.empty)
 
   implicit val conf = Configuration.default.withSnakeCaseMemberNames
-  implicit val timePickerCodec = deriveConfiguredCodec[TimePicker]
+  implicit val codec = deriveConfiguredCodec[TimePicker]
 }

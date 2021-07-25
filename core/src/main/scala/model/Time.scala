@@ -10,5 +10,5 @@ object Time {
   val default = Time()
 
   implicit val codecConfig = Configuration.default
-  implicit val timeCodec = deriveConfiguredCodec[Time]
+  implicit val codec = deriveConfiguredCodec[Time]
 }

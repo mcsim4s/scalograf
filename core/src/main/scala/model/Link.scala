@@ -9,5 +9,5 @@ case class Link()
 object Link {
 
   implicit val codecConfig = Configuration.default
-  implicit val linkCodec = deriveConfiguredCodec[Link]
+  implicit val codec = deriveConfiguredCodec[Link]
 }

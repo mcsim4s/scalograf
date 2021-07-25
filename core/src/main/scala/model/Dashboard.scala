@@ -7,26 +7,28 @@ import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfigur
 import io.circe.{Codec, HCursor, Json}
 
 case class Dashboard(
-    id: Option[Long] = None,
-    uid: Option[String] = None,
-    style: String = "default",
-    tags: List[String] = List.empty,
-    timezone: String = "browser",
-    templating: List[Template] = List.empty,
-    title: String = "",
-    schemaVersion: Long = 0,
-    editable: Boolean = true,
     annotations: List[Annotation] = List.empty,
-    version: Long = 0,
+    description: Option[String] = None,
+    editable: Boolean = true,
+    id: Option[Long] = None,
     links: List[Link] = List.empty,
     panels: List[Panel] = List.empty,
+    refresh: Boolean = true,
+    schemaVersion: Long = 0,
+    style: String = "default",
+    tags: List[String] = List.empty,
+    templating: List[Template] = List.empty,
+    time: Time = Time.default,
     timepicker: TimePicker = TimePicker.empty,
-    time: Time = Time.default
+    timezone: String = "browser",
+    title: String = "",
+    uid: Option[String] = None,
+    version: Long = 0
 )
 
 object Dashboard {
   implicit val codecConfig = Configuration.default
-  implicit val dashboardCodec = new Codec[Dashboard] {
+  implicit val codec = new Codec[Dashboard] {
     override def apply(d: Dashboard): Json =
       deriveConfiguredEncoder[Dashboard]
         .mapJsonObject(encodeAsListObject("annotations"))

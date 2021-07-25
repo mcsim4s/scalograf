@@ -4,9 +4,9 @@ package model
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 
-case class DashboardSnippet(id: Long, uid: String, uri: String)
+case class GridPosition(h: Int, w: Int, x: Int, y: Int)
 
-object DashboardSnippet {
+object GridPosition {
   implicit val codecConfig = Configuration.default
-  implicit val codec = deriveConfiguredCodec[DashboardSnippet]
+  implicit val codec = deriveConfiguredCodec[GridPosition]
 }
