@@ -4,7 +4,6 @@ package client
 import model._
 
 import io.circe.Json
-import marshallers.CirceMarshaller._
 import sttp.client3._
 import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
 import sttp.client3.circe._
