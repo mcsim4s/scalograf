@@ -1,11 +1,8 @@
 package scalograf
 
 import io.circe.{ACursor, Json, JsonObject}
-import io.circe.generic.extras.Configuration
 
 package object model {
-  implicit val codecConfig = Configuration.default
-
   private[scalograf] def encodeAsListObject(field: String)(obj: JsonObject) = {
     obj(field) match {
       case Some(value) => obj.add(field, Json.obj("list" -> value))

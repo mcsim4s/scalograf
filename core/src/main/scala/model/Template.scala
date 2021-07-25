@@ -4,10 +4,9 @@ package model
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 
-case class Panel()
+case class Template()
 
-object Panel {
-
+object Template {
   implicit val codecConfig = Configuration.default
-  implicit val panelCodec = deriveConfiguredCodec[Panel]
+  implicit val templateCodec = deriveConfiguredCodec[Template]
 }
