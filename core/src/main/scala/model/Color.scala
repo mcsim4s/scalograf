@@ -11,9 +11,11 @@ sealed trait Color
 
 object Color {
   case class RGBa(red: Short, green: Short, blue: Short, alpha: Short = 255) extends Color
+  case class Named(name: String) extends Color //ToDo full enum???
 
   implicit val colorEncoder = Encoder.instance[Color] {
     case RGBa(red, green, blue, alpha) => s"rgba($red, $green, $blue, $alpha)".asJson
+    case Named(name)                   => name.asJson
   }
 
   private implicit val rgbaDecoder = Decoder.instance[RGBa] { cursor =>
@@ -28,6 +30,7 @@ object Color {
 
   implicit val colorDecoder =
     List[Decoder[Color]](
-      rgbaDecoder.widen
+      rgbaDecoder.widen,
+      implicitly[Decoder[String]].map(Named.apply)
     ).reduce(_ or _)
 }

@@ -8,22 +8,22 @@ import io.circe.{Codec, HCursor, Json}
 
 case class Dashboard(
     annotations: List[Annotation] = List.empty,
-    description: Option[String] = None,
+    description: Option[String] = None, //ToDo option or empty default?
     editable: Boolean = true,
-    id: Option[Long] = None,
+    id: Option[Long] = None, //ToDo Option or adt?
     links: List[Link] = List.empty,
     panels: List[Panel] = List.empty,
     refresh: Boolean = true,
-    schemaVersion: Long = 0,
-    style: String = "default",
+    schemaVersion: Long = 0, //ToDo what is this?
+    style: String = "default", //ToDo enum
     tags: List[String] = List.empty,
     templating: List[Template] = List.empty,
-    time: Time = Time.default,
-    timepicker: TimePicker = TimePicker.empty,
-    timezone: String = "browser",
+    time: Time = Time.default, //ToDo time/duration model
+    timepicker: TimePicker = TimePicker.empty, //ToDo default
+    timezone: String = "browser", //ToDo enum
     title: String = "",
-    uid: Option[String] = None,
-    version: Long = 0
+    uid: Option[String] = None, //ToDo option or adt?
+    version: Long = 0 //ToDo ???
 )
 
 object Dashboard {
