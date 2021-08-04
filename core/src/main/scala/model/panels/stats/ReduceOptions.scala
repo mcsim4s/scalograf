@@ -1,5 +1,5 @@
 package scalograf
-package model
+package model.panels.stats
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec

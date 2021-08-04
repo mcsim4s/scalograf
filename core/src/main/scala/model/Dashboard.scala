@@ -5,6 +5,7 @@ import io.circe.Decoder.Result
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
 import io.circe.{Codec, HCursor, Json}
+import scalograf.model.panels.Panel
 
 case class Dashboard(
     annotations: List[Annotation] = List.empty,

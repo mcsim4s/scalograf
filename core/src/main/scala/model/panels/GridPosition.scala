@@ -1,5 +1,5 @@
 package scalograf
-package model
+package model.panels
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._

@@ -10,11 +10,13 @@ import cats.syntax.functor._
 sealed trait Color
 
 object Color {
+  case class RGB(red: Short, green: Short, blue: Short) extends Color
   case class RGBa(red: Short, green: Short, blue: Short, alpha: Short = 255) extends Color
   case class Named(name: String) extends Color //ToDo full enum???
 
   implicit val colorEncoder = Encoder.instance[Color] {
     case RGBa(red, green, blue, alpha) => s"rgba($red, $green, $blue, $alpha)".asJson
+    case RGB(red, green, blue)         => s"#${red.toHexString}${green.toHexString}${blue.toHexString}".toUpperCase.asJson
     case Named(name)                   => name.asJson
   }
 
@@ -28,9 +30,27 @@ object Color {
     }
   }
 
+  private implicit val hexDecoder = Decoder.instance[RGB] { cursor =>
+    val regex = "^#(\\w{2})(\\w{2})(\\w{2})$".r
+    cursor.value.asString match {
+      case Some(regex(red, green, blue)) =>
+        Right(
+          RGB(
+            Integer.parseInt(red, 16).toShort,
+            Integer.parseInt(green, 16).toShort,
+            Integer.parseInt(blue, 16).toShort
+          )
+        )
+      case Some(_) => Left(DecodingFailure("rgba color string have wrong format", cursor.history))
+      case _       => Left(DecodingFailure("rgba color must be a string", cursor.history))
+
+    }
+  }
+
   implicit val colorDecoder =
     List[Decoder[Color]](
       rgbaDecoder.widen,
-      implicitly[Decoder[String]].map(Named.apply)
+      hexDecoder.widen,
+      implicitly[Decoder[String]].map(Named.apply).widen
     ).reduce(_ or _)
 }

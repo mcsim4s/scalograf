@@ -1,13 +1,15 @@
 package scalograf
-package model
+package model.panels
+
+import FieldConfig._
+import model.{Color, Mappings, Override}
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
-import FieldConfig._
 
 case class FieldConfig(
-    defaults: Defaults
-//                        overrides: List[String] // ToDo
+    defaults: Defaults,
+    overrides: List[Override] = List.empty
 )
 
 object FieldConfig {
@@ -28,10 +30,12 @@ object FieldConfig {
 
   case class Defaults(
       color: DefaultsColor = DefaultsColor(),
-//      mappings: List[String] = List.empty,
+      mappings: List[Mappings] = List.empty,
       decimals: Option[Int] = None,
-      thresholds: Thresholds = Thresholds()
-//      unit: String //ToDo enum
+      thresholds: Thresholds = Thresholds(),
+      unit: Option[String] = None,
+      min: Option[Double] = None,
+      max: Option[Double] = None
   )
 
   implicit val codecConfig = Configuration.default.withDefaults
