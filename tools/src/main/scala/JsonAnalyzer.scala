@@ -27,20 +27,32 @@ object JsonAnalyzer {
   }
 
   def objectDiff(path: String, left: JsonObject, right: JsonObject): Seq[JsonDiff] = {
-    left.toMap.flatMap {
+    val missing = left.toMap.flatMap {
       case (key, l) =>
         right(key) match {
           case Some(r) => diff(l, r, s"$path.$key")
           case None    => Seq(FieldMissing(path, key, l))
         }
     }.toSeq
+
+//    val extra = right.toMap.filter(p => !left.contains(p._1)).map { case (k, v) =>
+//      ExtraField(path, k, v)
+//    }
+
+    missing
   }
 
   private def arrayDiff(path: String, left: Vector[Json], right: Vector[Json]): Seq[JsonDiff] = {
     val sizeDiff = if (left.size != right.size) {
       Seq(ValueDiff(s"$path.size", left.size, right.size))
     } else Seq.empty
-    sizeDiff ++ (left zip right).zipWithIndex.flatMap { case ((l, r), index) => diff(l, r, s"$path[$index]") }
+    sizeDiff ++ (left zip right).zipWithIndex.flatMap { case ((l, r), index) =>
+      val idxString = l.asObject.flatMap(_ ("type")).flatMap(_.asString) match {
+        case Some(value) => value
+        case None => index.toString
+      }
+      diff(l, r, s"$path[$idxString]")
+    }
   }
 
   private def valueDiff[T](path: String, left: T, right: T): Seq[JsonDiff] = {
@@ -53,7 +65,10 @@ object JsonAnalyzer {
 
   case class TypeDiff(path: String, leftType: String, rightType: String) extends JsonDiff
   case class ValueDiff[T](path: String, leftValue: T, rightValue: T) extends JsonDiff
-  case class FieldMissing[T](path: String, fieldName: String, value: Json) extends JsonDiff {
+  case class FieldMissing(path: String, fieldName: String, value: Json) extends JsonDiff {
     override def toString: String = s"Field Missing: \"$path.$fieldName\": ${value.name} : ${value.noSpaces}"
+  }
+  case class ExtraField[T](path: String, fieldName: String, value: Json) extends JsonDiff {
+    override def toString: String = s"Extra field: \"$path.$fieldName\": ${value.name} : ${value.noSpaces}"
   }
 }

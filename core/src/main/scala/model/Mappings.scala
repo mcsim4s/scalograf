@@ -5,7 +5,7 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 import Mappings._
 
-case class Mappings(options: Map[String, Mapping])
+case class Mappings(options: Map[String, Mapping], `type`: Option[String] = None)
 
 object Mappings {
   case class Mapping(color: Option[Color] = None, index: Int, text: String)

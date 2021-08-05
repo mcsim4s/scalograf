@@ -22,7 +22,8 @@ case class Table(
     timeFrom: Option[String] = None, //ToDo time model
     timeShift: Option[Time] = None,
     title: Option[String] = None,
-    transformations: List[Transformation] = List.empty
+    transformations: List[Transformation] = List.empty,
+    pluginVersion: Option[String] = None
 ) extends Panel {
   override def `type`: String = "table"
 

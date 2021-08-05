@@ -8,7 +8,7 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Options(
     showHeader: Boolean = true,
-    sortBy: Option[SortBy] = None
+    sortBy: List[SortBy] = List.empty
 )
 
 object Options {
