@@ -1,5 +1,7 @@
 package scalograf
-package model.panels
+package model.panels.row
+
+import model.panels.{GridPosition, Panel}
 
 import io.circe._
 import io.circe.generic.extras.Configuration

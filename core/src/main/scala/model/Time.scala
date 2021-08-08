@@ -7,7 +7,6 @@ import io.circe.generic.extras.semiauto._
 case class Time()
 
 object Time {
-  val default = Time()
 
   implicit val codecConfig = Configuration.default
   implicit val codec = deriveConfiguredCodec[Time]

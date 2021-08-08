@@ -2,8 +2,9 @@ package scalograf
 package model.panels
 
 import FieldConfig._
-import model.{Color, Mappings, Override}
+import model.{Color, Mappings}
 
+import io.circe.JsonObject
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 
@@ -35,7 +36,8 @@ object FieldConfig {
       thresholds: Thresholds = Thresholds(),
       unit: Option[String] = None,
       min: Option[Double] = None,
-      max: Option[Double] = None
+      max: Option[Double] = None,
+      custom: JsonObject = JsonObject()
   )
 
   implicit val codecConfig = Configuration.default.withDefaults

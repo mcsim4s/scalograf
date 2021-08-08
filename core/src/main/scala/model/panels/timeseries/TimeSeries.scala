@@ -1,16 +1,28 @@
 package scalograf
-package model.panels
+package model.panels.timeseries
+
+import model.panels.{FieldConfig, GridPosition, Panel, Transformation}
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+import scalograf.model.{Target, Time}
 
 case class TimeSeries(
-    id: Int,
+    datasource: Option[String] = None,
     description: Option[String] = None,
+    fieldConfig: Option[FieldConfig] = None,
     gridPos: GridPosition,
+    id: Int,
+    interval: Option[String] = None,
+    maxDataPoints: Int = 300,
+    options: Options = Options(),
+    pluginVersion: Option[String] = None,
+    targets: List[Target] = List.empty,
+    timeFrom: Option[String] = None, //ToDo time model
+    timeShift: Option[Time] = None,
     title: Option[String] = None,
-    datasource: Option[String] = None
+    transformations: List[Transformation] = List.empty
 ) extends Panel {
   override def `type`: String = "timeseries"
 

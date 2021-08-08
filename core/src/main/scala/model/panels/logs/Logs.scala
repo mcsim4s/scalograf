@@ -1,16 +1,23 @@
 package scalograf
-package model.panels
+package model.panels.logs
+
+import model.{Target, Time}
+import model.panels.{GridPosition, Panel}
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Logs(
-    id: Int,
-    gridPos: GridPosition,
+    datasource: Option[String] = None,
     description: Option[String] = None,
-    title: Option[String] = None,
-    datasource: Option[String] = None
+    gridPos: GridPosition,
+    id: Int,
+    options: Options = Options(),
+    targets: List[Target] = List.empty,
+    timeFrom: Option[Time] = None,
+    timeShift: Option[Time] = None,
+    title: Option[String] = None
 ) extends Panel {
   override def `type`: String = "logs"
 

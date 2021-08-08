@@ -9,7 +9,8 @@ case class Target(
     refId: String,
     legendFormat: String = "",
     range: Boolean = false,
-    instant: Boolean = false
+    instant: Boolean = false,
+    maxLines: Option[Int] = None
 )
 
 object Target {
