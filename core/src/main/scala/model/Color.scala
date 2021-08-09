@@ -1,11 +1,9 @@
 package scalograf
 package model
 
-import io.circe.CursorOp.DownField
-import io.circe.Decoder.Result
-import io.circe.{Codec, Decoder, DecodingFailure, Encoder, HCursor, Json}
-import io.circe.syntax._
 import cats.syntax.functor._
+import io.circe.syntax._
+import io.circe.{Decoder, DecodingFailure, Encoder}
 
 sealed trait Color
 
@@ -16,7 +14,7 @@ object Color {
 
   implicit val colorEncoder = Encoder.instance[Color] {
     case RGBa(red, green, blue, alpha) => s"rgba($red, $green, $blue, $alpha)".asJson
-    case RGB(red, green, blue)         => s"#${red.toHexString}${green.toHexString}${blue.toHexString}".toUpperCase.asJson
+    case RGB(red, green, blue)         => f"#$red%02X$green%02X$blue%02X".toUpperCase.asJson
     case Named(name)                   => name.asJson
   }
 

@@ -14,7 +14,9 @@ object JsonAnalyzer {
       case (left, right) if left.isArray && right.isArray =>
         arrayDiff(path, left.asArray.get, right.asArray.get)
       case (left, right) if left.isString && right.isString =>
-        valueDiff(path, left.asString.get, right.asString.get)
+        val leftVal = left.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
+        val rigthVal = right.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
+        valueDiff(path, leftVal, rigthVal)
       case (left, right) if left.isNumber && right.isNumber =>
         valueDiff(path, left.asNumber.get, right.asNumber.get)
       case (left, right) if left.isBoolean && right.isBoolean =>

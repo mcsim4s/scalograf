@@ -1,18 +1,18 @@
 package scalograf
 package model.panels
 
+import model.panels.graph.Graph
+import model.panels.logs.Logs
 import model.panels.map.WorldMapPanel
+import model.panels.row.Row
+import model.panels.singlestat.SingleStat
 import model.panels.stats.Stat
+import model.panels.table.Table
+import model.panels.timeseries.TimeSeries
 
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.generic.extras.Configuration
-import scalograf.model.panels.graph.Graph
-import scalograf.model.panels.logs.Logs
-import scalograf.model.panels.row.Row
-import scalograf.model.panels.singlestat.SingleStat
-import scalograf.model.panels.table.Table
-import scalograf.model.panels.timeseries.TimeSeries
 
 trait Panel {
   def `type`: String

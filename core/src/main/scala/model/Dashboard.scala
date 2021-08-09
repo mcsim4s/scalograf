@@ -1,12 +1,14 @@
 package scalograf
 package model
 
+import model.Refresh.Never
 import model.panels.Panel
 
 import io.circe.Decoder.Result
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
 import io.circe.{Codec, HCursor, Json}
+import scalograf.model.annotations.Annotation
 
 case class Dashboard(
     __inputs: List[Input] = List.empty,
@@ -20,7 +22,7 @@ case class Dashboard(
     iteration: Option[Long] = None,
     links: List[Link] = List.empty,
     panels: List[Panel] = List.empty,
-//    refresh: Boolean = true,
+    refresh: Refresh = Never,
     schemaVersion: Long = 0, //ToDo what is this?
     style: String = "default", //ToDo enum
     tags: List[String] = List.empty,
