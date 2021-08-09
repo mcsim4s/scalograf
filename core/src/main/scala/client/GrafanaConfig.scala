@@ -1,8 +1,15 @@
 package scalograf
 package client
 
+import GrafanaConfig._
+
 case class GrafanaConfig(endpoint: Endpoint, auth: Auth)
 
-case class Endpoint(scheme: String, host: String, port: Long)
+object GrafanaConfig {
+  case class Endpoint(scheme: String, host: String, port: Long)
 
-case class Auth(login: String, password: String)
+  sealed trait Auth
+
+  case class LoginPassword(login: String, password: String) extends Auth
+  case class Token(token: String) extends Auth
+}

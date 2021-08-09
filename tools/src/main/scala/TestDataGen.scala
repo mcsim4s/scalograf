@@ -1,7 +1,8 @@
 package scalograf
 
 import BetterFuture._
-import client.{Auth, Endpoint, GrafanaClient, GrafanaConfig}
+import client.GrafanaConfig._
+import client._
 import model.CommunityDashboardId
 
 import io.circe.JsonObject
@@ -9,6 +10,7 @@ import io.circe.syntax._
 import org.slf4j.LoggerFactory
 import pureconfig.generic.auto._
 import pureconfig.{ConfigCursor, ConfigReader, ConfigSource}
+import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Paths, StandardOpenOption}
@@ -27,8 +29,9 @@ object TestDataGen extends App {
   val client = GrafanaClient(
     GrafanaConfig(
       Endpoint("http", container.host, container.port),
-      Auth("admin", "admin")
-    )
+      LoginPassword("admin", "admin")
+    ),
+    AsyncHttpClientFutureBackend()
   )
 
   val program = Future.traverse(conf.communityDashboardIds) { id =>
