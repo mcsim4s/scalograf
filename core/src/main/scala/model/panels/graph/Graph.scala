@@ -1,5 +1,5 @@
 package scalograf
-package model.panels.graphs
+package model.panels.graph
 
 import model.panels.{GridPosition, Panel}
 

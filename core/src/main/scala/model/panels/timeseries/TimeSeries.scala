@@ -2,11 +2,11 @@ package scalograf
 package model.panels.timeseries
 
 import model.panels.{FieldConfig, GridPosition, Panel, Transformation}
+import model.{Target, Time}
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
-import scalograf.model.{Target, Time}
 
 case class TimeSeries(
     datasource: Option[String] = None,

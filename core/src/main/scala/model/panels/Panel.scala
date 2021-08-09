@@ -7,7 +7,7 @@ import model.panels.stats.Stat
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.generic.extras.Configuration
-import scalograf.model.panels.graphs.Graph
+import scalograf.model.panels.graph.Graph
 import scalograf.model.panels.logs.Logs
 import scalograf.model.panels.row.Row
 import scalograf.model.panels.singlestat.SingleStat
