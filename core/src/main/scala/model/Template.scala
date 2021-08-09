@@ -27,6 +27,7 @@ case class Template(
     sort: Int = 0, //ToDo enum
     tagValuesQuery: String = "",
     tagsQuery: String = "",
+    tags: List[String] = List.empty,
     useTags: Boolean = false
 )
 
@@ -36,6 +37,6 @@ object Template {
   implicit val currentCodec = deriveConfiguredCodec[Current]
   implicit val codec = deriveConfiguredCodec[Template]
 
-  case class Current(selected: Boolean = false, text: String = "", value: String = "")
+  case class Current(selected: Boolean = false, text: String = "", value: String = "", tags: List[String] = List.empty)
   case class Error()
 }

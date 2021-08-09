@@ -6,7 +6,7 @@ import io.circe.generic.extras.semiauto._
 
 case class Annotation(
     `type`: String, // ToDo enum
-    builtIn: Int = 0, // ToDo what is it ???
+//    builtIn: Int = 0, // ToDo what is it ???
     datasource: String,
     enable: Boolean = true,
     hide: Boolean = false,

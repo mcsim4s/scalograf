@@ -7,8 +7,10 @@ import model.panels.stats.Stat
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.generic.extras.Configuration
+import scalograf.model.panels.graphs.Graph
 import scalograf.model.panels.logs.Logs
 import scalograf.model.panels.row.Row
+import scalograf.model.panels.singlestat.SingleStat
 import scalograf.model.panels.table.Table
 import scalograf.model.panels.timeseries.TimeSeries
 
@@ -39,6 +41,8 @@ object Panel {
           case Right("table")                  => c.as[Table]
           case Right("logs")                   => c.as[Logs]
           case Right("timeseries")             => c.as[TimeSeries]
+          case Right("singlestat")             => c.as[SingleStat]
+          case Right("graph")                  => c.as[Graph]
           case Right(other)                    => Left(DecodingFailure(s"Unknown panel type '$other'", c.history))
           case Left(_)                         => Left(DecodingFailure("Panel object doesn't contain 'type' field", c.history))
         }

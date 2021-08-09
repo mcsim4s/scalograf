@@ -6,11 +6,14 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Target(
     expr: String,
-    refId: String,
-    legendFormat: String = "",
-    range: Boolean = false,
+    format: Option[String] = None,
     instant: Boolean = false,
-    maxLines: Option[Int] = None
+    intervalFactor: Option[Double] = None,
+    legendFormat: String = "",
+    maxLines: Option[Int] = None,
+    range: Boolean = false,
+    refId: String,
+    step: Option[Double] = None
 )
 
 object Target {

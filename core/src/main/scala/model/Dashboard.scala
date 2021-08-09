@@ -20,7 +20,7 @@ case class Dashboard(
     iteration: Option[Long] = None,
     links: List[Link] = List.empty,
     panels: List[Panel] = List.empty,
-    refresh: Boolean = true,
+//    refresh: Boolean = true,
     schemaVersion: Long = 0, //ToDo what is this?
     style: String = "default", //ToDo enum
     tags: List[String] = List.empty,
