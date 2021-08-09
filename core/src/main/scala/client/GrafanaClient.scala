@@ -6,12 +6,9 @@ import model._
 import io.circe
 import io.circe.Json
 import sttp.client3._
-import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
 import sttp.client3.circe._
 
-import scala.concurrent.Future
-
-case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, Any]) {
+case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpBackend[F, Any]) {
 
   private val url = {
     import config.endpoint._
@@ -37,6 +34,13 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
 
   def dashboard(uid: String): F[Response[Either[DeserializationException[circe.Error], Dashboard]]] = {
     dashboardInner(asJsonAlways[Dashboard])(uid)
+  }
+
+  def upload(request: DashboardUploadRequest) = {
+    grafanaRequest
+      .post(uri"$url/api/dashboards/db")
+      .body(request)
+      .send(backend)
   }
 
   private[scalograf] def dashboardRaw(uid: String): F[Response[Either[DeserializationException[circe.Error], Json]]] = {

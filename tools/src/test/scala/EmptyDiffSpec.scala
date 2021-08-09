@@ -15,7 +15,7 @@ class EmptyDiffSpec extends AnyWordSpec with should.Matchers with OptionValues {
   val testDataDir = new File(getClass.getResource("/testDashboards").getPath)
 
   "Model diff analyzer" should {
-    s"should get empty diff for community dashboards" in {
+    s"get empty diff for community dashboards" in {
       testDataDir.listFiles().foreach { dashboardFile =>
         val json = parse(Source.fromFile(dashboardFile).getLines().mkString) match {
           case Left(value)  => throw value
