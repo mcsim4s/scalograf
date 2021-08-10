@@ -1,0 +1,18 @@
+version: "2.1"
+services:
+  prometheus:
+    build: prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana
+
+  fake-prometheus-data:
+    image: grafana/fake-data-gen
+    environment:
+      FD_DATASOURCE: prom
+
+  prometheus-random-data:
+    build: prometheus_random_data
+
