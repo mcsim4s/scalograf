@@ -6,7 +6,8 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class SortBy(
     desc: Boolean = false,
-    displayName: Option[String] = None
+    displayName: Option[String] = None,
+    col: Option[Int] = None
 )
 
 object SortBy {

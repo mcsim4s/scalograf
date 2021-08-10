@@ -1,6 +1,8 @@
 package scalograf
 package model.panels.graph
 
+import model._
+
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
 
@@ -14,22 +16,9 @@ case class Tooltip(
 object Tooltip {
 
   implicit val config = Configuration.default.withDefaults
-  implicit val encoder = deriveConfiguredEncoder[Tooltip].mapJson(
-    _.mapObject(obj =>
-      obj("valueType") match {
-        case Some(value) => obj.add("value_type", value)
-        case None        => obj
-      }
-    )
-  )
-  implicit val decoder = deriveConfiguredDecoder[Tooltip].prepare(
-    _.withFocus(
-      _.mapObject(obj =>
-        obj("value_type") match {
-          case Some(value) => obj.add("valueType", value)
-          case None        => obj
-        }
-      )
-    )
-  )
+  implicit val encoder = deriveConfiguredEncoder[Tooltip]
+    .mapJson(changeEncodeName("valueType", "value_type"))
+
+  implicit val decoder = deriveConfiguredDecoder[Tooltip]
+    .prepare(changeDecodeName("value_type", "valueType"))
 }

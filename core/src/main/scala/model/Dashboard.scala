@@ -2,13 +2,11 @@ package scalograf
 package model
 
 import model.Refresh.Never
+import model.annotations.Annotation
 import model.panels.Panel
 
-import io.circe.Decoder.Result
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
-import io.circe.{Codec, HCursor, Json}
-import scalograf.model.annotations.Annotation
 
 case class Dashboard(
     __inputs: List[Input] = List.empty,
@@ -28,7 +26,7 @@ case class Dashboard(
     tags: List[String] = List.empty,
     templating: List[Template] = List.empty,
     time: TimeRange = TimeRange("now - 1h", "now - 1m"), //ToDo time/duration model
-    timepicker: TimePicker = TimePicker.empty, //ToDo default
+    timepicker: TimePicker = TimePicker(),
     timezone: String = "browser", //ToDo enum
     title: String = "",
     uid: Option[String] = None, //ToDo option or adt?
@@ -37,17 +35,12 @@ case class Dashboard(
 
 object Dashboard {
   implicit val codecConfig = Configuration.default
-  implicit val codec = new Codec[Dashboard] {
-    override def apply(d: Dashboard): Json =
-      deriveConfiguredEncoder[Dashboard]
-        .mapJsonObject(encodeAsListObject("annotations"))
-        .mapJsonObject(encodeAsListObject("templating"))
-        .apply(d)
 
-    override def apply(c: HCursor): Result[Dashboard] =
-      deriveConfiguredDecoder[Dashboard]
-        .prepare(decodeAsListObject("annotations"))
-        .prepare(decodeAsListObject("templating"))
-        .apply(c)
-  }
+  implicit val encoder = deriveConfiguredEncoder[Dashboard]
+    .mapJsonObject(encodeAsListObject("annotations"))
+    .mapJsonObject(encodeAsListObject("templating"))
+
+  implicit val decoder = deriveConfiguredDecoder[Dashboard]
+    .prepare(decodeAsListObject("annotations"))
+    .prepare(decodeAsListObject("templating"))
 }
