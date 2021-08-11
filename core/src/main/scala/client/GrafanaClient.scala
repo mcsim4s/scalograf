@@ -10,11 +10,7 @@ import sttp.client3._
 import sttp.client3.circe._
 
 case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpBackend[F, Any]) {
-
-  private val url = {
-    import config.endpoint._
-    s"$scheme://$host:$port"
-  }
+  val url = config.endpoint.url
 
   private val grafanaRequest = {
     config.auth match {

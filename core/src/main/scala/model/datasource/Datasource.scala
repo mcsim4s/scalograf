@@ -18,7 +18,7 @@ case class Datasource(
     readOnly: Boolean = false,
     //ToDp Datasource model
     `type`: String,
-    jsonData: JsonObject
+    jsonData: JsonObject = JsonObject()
 //    secureJsonData: JsonObject //ToDo what is that???
 )
 

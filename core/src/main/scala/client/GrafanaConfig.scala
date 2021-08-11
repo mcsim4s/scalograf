@@ -3,10 +3,22 @@ package client
 
 import GrafanaConfig._
 
+import scala.language.implicitConversions
+
 case class GrafanaConfig(endpoint: Endpoint, auth: Auth)
 
 object GrafanaConfig {
-  case class Endpoint(scheme: String, host: String, port: Long)
+  sealed trait Endpoint {
+    def url: String
+  }
+
+  case class Url(url: String) extends Endpoint
+
+  case class Scheme(scheme: String, host: String, port: Long) extends Endpoint {
+    def url: String = s"$scheme://$host:$port"
+  }
+
+  implicit def string2url(url: String): Url = Url(url)
 
   sealed trait Auth
 

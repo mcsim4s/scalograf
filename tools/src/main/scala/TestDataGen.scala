@@ -28,7 +28,7 @@ object TestDataGen extends App {
 
   val client = GrafanaClient(
     GrafanaConfig(
-      Endpoint("http", container.host, container.port),
+      Scheme("http", container.host, container.port),
       LoginPassword("admin", "admin")
     ),
     AsyncHttpClientFutureBackend()
