@@ -6,6 +6,7 @@ import model.styles.Style
 import model.{Link, SortBy, Target, Time}
 
 import io.circe._
+import io.circe.generic.extras.auto._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
@@ -13,12 +14,12 @@ case class Table(
     columns: List[Column] = List.empty,
     datasource: Option[String] = None,
     description: Option[String] = None,
-    fieldConfig: Option[FieldConfig] = None,
+    fieldConfig: FieldConfig[TableConfig] = FieldConfig[TableConfig](),
     fontSize: Option[String], //ToDo units
     gridPos: GridPosition,
     height: Option[String] = None, //ToDo unit
     hideTimeOverride: Boolean = false,
-    id: Int,
+    id: Option[Int] = None,
     interval: Option[String] = None,
     links: List[Link] = List.empty,
     maxDataPoints: Int = 300,

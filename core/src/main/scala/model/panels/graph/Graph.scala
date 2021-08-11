@@ -22,7 +22,7 @@ case class Graph(
     grid: Grid = Grid(),
     gridPos: GridPosition,
     height: Option[String] = None, //ToDo units
-    id: Int,
+    id: Option[Int] = None,
     isNew: Boolean = false, //ToDo ???
     legend: Legend = Legend(),
     lines: Boolean = false,

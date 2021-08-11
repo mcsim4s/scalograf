@@ -4,7 +4,7 @@ package client
 import model.Dashboard
 
 import io.circe.generic.extras.Configuration
-import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
 
 case class DashboardUploadRequest(
     dashboard: Dashboard,
@@ -16,5 +16,6 @@ case class DashboardUploadRequest(
 
 object DashboardUploadRequest {
   implicit val config = Configuration.default.withDefaults
-  implicit val codec = deriveConfiguredCodec[DashboardUploadRequest]
+  implicit val encoder = deriveConfiguredEncoder[DashboardUploadRequest].mapJson(_.deepDropNullValues)
+  implicit val decoder = deriveConfiguredDecoder[DashboardUploadRequest]
 }

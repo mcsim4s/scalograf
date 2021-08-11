@@ -1,7 +1,7 @@
 package scalograf
 package model.panels.timeseries
 
-import model.panels.{FieldConfig, GridPosition, Panel, Transformation}
+import model.panels._
 import model.{Target, Time}
 
 import io.circe._
@@ -11,11 +11,11 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 case class TimeSeries(
     datasource: Option[String] = None,
     description: Option[String] = None,
-    fieldConfig: Option[FieldConfig] = None,
+    fieldConfig: FieldConfig[TimeSeriesConfig] = FieldConfig[TimeSeriesConfig](),
     gridPos: GridPosition,
-    id: Int,
+    id: Option[Int] = None,
     interval: Option[String] = None,
-    maxDataPoints: Int = 300,
+    maxDataPoints: Option[Int] = None,
     options: Options = Options(),
     pluginVersion: Option[String] = None,
     targets: List[Target] = List.empty,

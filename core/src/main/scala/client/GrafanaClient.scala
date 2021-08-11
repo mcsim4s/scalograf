@@ -2,10 +2,10 @@ package scalograf
 package client
 
 import model._
+import model.datasource.Datasource
 
 import io.circe
 import io.circe.Json
-import scalograf.model.datasource.Datasource
 import sttp.client3._
 import sttp.client3.circe._
 
@@ -33,14 +33,21 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
     dashboardInner(asJsonAlways[Dashboard])(uid)
   }
 
-  def upload(request: DashboardUploadRequest) = {
+  def uploadDashboard(request: DashboardUploadRequest) = {
     grafanaRequest
       .post(uri"$url/api/dashboards/db")
       .body(request)
       .send(backend)
   }
 
-  def create(datasource: Datasource): F[Response[Either[String, String]]] = {
+  def listDataSources() = {
+    grafanaRequest
+      .get(uri"$url/api/datasources")
+      .response(asJsonAlways[Json])
+      .send(backend)
+  }
+
+  def createDatasource(datasource: Datasource): F[Response[Either[String, String]]] = {
     grafanaRequest
       .post(uri"$url/api/datasources")
       .body(datasource)

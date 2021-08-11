@@ -11,6 +11,7 @@ case class Datasource(
     uid: Option[String] = None,
     access: String, //ToDo enum
     url: String,
+    name: String,
     password: Option[String] = None,
     user: Option[String] = None,
     basicAuth: Boolean = false,

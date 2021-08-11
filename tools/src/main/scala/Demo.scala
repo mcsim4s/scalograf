@@ -1,10 +1,13 @@
 package scalograf
 
 import client.GrafanaConfig._
-import client.{GrafanaClient, GrafanaConfig}
+import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
+import model.Refresh.Every
 import model.datasource.Datasource
-
-import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
+import model.panels.FieldConfig.Defaults
+import model.panels.timeseries.{TimeSeries, TimeSeriesConfig}
+import model.panels.{FieldConfig, GridPosition}
+import model.{Dashboard, Target}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -13,22 +16,65 @@ object Demo extends App {
   val env = if (args.isEmpty) Embedded else Standalone(args)
 
   env.start()
+  println(s"Gafana: ${env.grafanaUrl}")
 
   val client = GrafanaClient(
     GrafanaConfig(env.grafanaUrl, LoginPassword("admin", "admin")),
-    AsyncHttpClientFutureBackend()
+    OpsBackend()
   )
   val prometheusDatasource = Datasource(
     uid = Some("prometheus"),
     `type` = "prometheus",
     isDefault = true,
     url = "http://prometheus:9090",
-    access = "server"
+    access = "proxy",
+    name = "Random Prometheus"
   )
 
-  client
-    .create(prometheusDatasource)
-    .andThen(_ => env.stop())
+  val timeSeries = TimeSeries(
+    gridPos = GridPosition(12, 10, 0, 0),
+    title = Some("Rps by service"),
+    datasource = Some(prometheusDatasource.name),
+    targets = List(
+      Target(
+        expr = "sum(irate(rpc_durations_seconds_count[1m])) by (service)",
+        refId = "A",
+        legendFormat = "{{service}}"
+      )
+    ),
+    fieldConfig = FieldConfig[TimeSeriesConfig](
+      defaults = Defaults[TimeSeriesConfig](
+        custom = Some(
+          TimeSeriesConfig(
+            lineWidth = 2,
+            showPoints = "never"
+          )
+        )
+      )
+    )
+  )
+
+  val dashboard = Dashboard(
+    title = "Demo Dashboard",
+    description = Some("Test dashboard for library abilities demonstration"),
+    uid = Some("demo"),
+    refresh = Every("5s"),
+    panels = List(timeSeries)
+  )
+  val uploadReq = DashboardUploadRequest(
+    dashboard = dashboard,
+    overwrite = true
+  )
+
+  val program = for {
+    _ <- client.createDatasource(prometheusDatasource)
+    _ <- client.uploadDashboard(uploadReq)
+  } yield ()
+
+  program.andThen { _ =>
+    client.close()
+    env.stop()
+  }
 
   trait Env {
     def start(): Unit
@@ -45,7 +91,6 @@ object Demo extends App {
         env.stop()
       }
 
-      println(s"Gafana: ${env.grafanaUrl}")
       println(s"Prometheus: ${env.prometheusUrl}")
     }
 

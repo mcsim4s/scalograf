@@ -19,7 +19,7 @@ case class WorldMapPanel(
     gridPos: GridPosition,
     hideEmpty: Boolean = false,
     hideZero: Boolean = false,
-    id: Int,
+    id: Option[Int] = None,
     initialZoom: String = "2",
     interval: Option[Time] = None,
     locationData: String = "countries", //ToDo enum

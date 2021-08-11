@@ -11,7 +11,7 @@ case class Text(
     datasource: Option[String] = None,
     description: Option[String] = None,
     gridPos: GridPosition,
-    id: Int,
+    id: Option[Int] = None,
     options: Options = Options(),
     pluginVersion: Option[String] = None,
     title: Option[String] = None,

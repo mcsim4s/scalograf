@@ -19,7 +19,7 @@ case class SingleStat(
     format: String,
     gauge: Gauge,
     gridPos: GridPosition,
-    id: Int,
+    id: Option[Int] = None,
     interval: Option[String] = None,
     links: List[Link] = List.empty,
     mappingType: Int, //ToDo what's that?

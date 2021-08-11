@@ -12,7 +12,7 @@ case class Dashboard(
     __inputs: List[Input] = List.empty,
     __requires: List[Requirement] = List.empty,
     annotations: List[Annotation] = List.empty,
-    description: Option[String] = None, //ToDo option or empty default?
+    description: Option[String] = None,
     editable: Boolean = true,
     gnetId: Option[Long] = None,
     graphTooltip: Option[Long] = None,
@@ -21,16 +21,16 @@ case class Dashboard(
     links: List[Link] = List.empty,
     panels: List[Panel] = List.empty,
     refresh: Refresh = Never,
-    schemaVersion: Long = 0, //ToDo what is this?
+    schemaVersion: Option[Long] = None,
     style: String = "default", //ToDo enum
     tags: List[String] = List.empty,
     templating: List[Template] = List.empty,
     time: TimeRange = TimeRange("now - 1h", "now - 1m"), //ToDo time/duration model
     timepicker: TimePicker = TimePicker(),
     timezone: String = "browser", //ToDo enum
-    title: String = "",
+    title: String,
     uid: Option[String] = None, //ToDo option or adt?
-    version: Long = 0 //ToDo ???
+    version: Option[Long] = None
 )
 
 object Dashboard {

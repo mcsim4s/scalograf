@@ -44,7 +44,7 @@ class DashboardsUploadSpec extends AsyncWordSpec with should.Matchers with Optio
             }
 
             client
-              .upload(DashboardUploadRequest(dashboard))
+              .uploadDashboard(DashboardUploadRequest(dashboard))
               .map(_.body)
               .map(println)
           }

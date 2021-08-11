@@ -6,7 +6,7 @@ import model.panels.logs.Logs
 import model.panels.map.WorldMapPanel
 import model.panels.row.Row
 import model.panels.singlestat.SingleStat
-import model.panels.stats.Stat
+import model.panels.stat.Stat
 import model.panels.table.Table
 import model.panels.timeseries.TimeSeries
 
@@ -19,7 +19,7 @@ trait Panel {
   def datasource: Option[String]
   def description: Option[String]
   def gridPos: GridPosition
-  def id: Int
+  def id: Option[Int]
   def title: Option[String]
 
   def asJson: JsonObject

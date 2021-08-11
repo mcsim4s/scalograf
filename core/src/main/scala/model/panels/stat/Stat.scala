@@ -1,7 +1,7 @@
 package scalograf
-package model.panels.stats
+package model.panels.stat
 
-import model.panels.{FieldConfig, GridPosition, Panel, Transformation}
+import model.panels._
 import model._
 
 import io.circe._
@@ -12,10 +12,10 @@ case class Stat(
     cacheTimeout: Option[Time] = None,
     datasource: Option[String] = None,
     description: Option[String] = None,
-    fieldConfig: Option[FieldConfig] = None,
+    fieldConfig: FieldConfig[StatConfig] = FieldConfig(),
     gridPos: GridPosition,
     hideTimeOverride: Boolean = false,
-    id: Int,
+    id: Option[Int] = None,
     interval: Option[String] = None,
     links: List[Link] = List.empty,
     maxDataPoints: Int = 300,
