@@ -1,7 +1,6 @@
 package scalograf
 
 import io.circe.{Json, JsonObject}
-import io.circe.Json._
 
 object JsonAnalyzer {
 
@@ -15,8 +14,8 @@ object JsonAnalyzer {
         arrayDiff(path, left.asArray.get, right.asArray.get)
       case (left, right) if left.isString && right.isString =>
         val leftVal = left.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
-        val rigthVal = right.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
-        valueDiff(path, leftVal, rigthVal)
+        val rightVal = right.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
+        valueDiff(path, leftVal, rightVal)
       case (left, right) if left.isNumber && right.isNumber =>
         valueDiff(path, left.asNumber.get, right.asNumber.get)
       case (left, right) if left.isBoolean && right.isBoolean =>
@@ -37,9 +36,9 @@ object JsonAnalyzer {
         }
     }.toSeq
 
-//    val extra = right.toMap.filter(p => !left.contains(p._1)).map { case (k, v) =>
-//      ExtraField(path, k, v)
-//    }
+    //    val extra = right.toMap.filter(p => !left.contains(p._1)).map { case (k, v) =>
+    //      ExtraField(path, k, v)
+    //    }
 
     missing
   }

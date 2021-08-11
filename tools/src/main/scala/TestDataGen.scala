@@ -47,7 +47,7 @@ object TestDataGen extends App {
         "json" -> json
       ).asJson
       Files.write(
-        Paths.get(s"tools/src/test/resources/testDashboards/$id"),
+        Paths.get(s"core/src/test/resources/testDashboards/$id"),
         testData.noSpaces.getBytes(StandardCharsets.UTF_8),
         StandardOpenOption.CREATE
       )

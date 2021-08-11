@@ -1,7 +1,7 @@
 package scalograf
 
 object Demo extends App {
-  val env = DataSourcesEnv("tools/src/main/resources/datasources/docker-compose.yaml")
+  val env = DataSourcesEnv("testkit/src/main/resources/datasources/docker-compose.yaml")
 
   env.start()
 
