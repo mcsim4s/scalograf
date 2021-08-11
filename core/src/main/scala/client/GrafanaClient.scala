@@ -5,6 +5,7 @@ import model._
 
 import io.circe
 import io.circe.Json
+import scalograf.model.datasource.Datasource
 import sttp.client3._
 import sttp.client3.circe._
 
@@ -40,6 +41,13 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
     grafanaRequest
       .post(uri"$url/api/dashboards/db")
       .body(request)
+      .send(backend)
+  }
+
+  def create(datasource: Datasource): F[Response[Either[String, String]]] = {
+    grafanaRequest
+      .post(uri"$url/api/datasources")
+      .body(datasource)
       .send(backend)
   }
 
