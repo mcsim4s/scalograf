@@ -11,6 +11,7 @@ case class Datasource(
     uid: Option[String] = None,
     access: String, //ToDo enum
     url: String,
+    name: String,
     password: Option[String] = None,
     user: Option[String] = None,
     basicAuth: Boolean = false,
@@ -18,7 +19,7 @@ case class Datasource(
     readOnly: Boolean = false,
     //ToDp Datasource model
     `type`: String,
-    jsonData: JsonObject
+    jsonData: JsonObject = JsonObject()
 //    secureJsonData: JsonObject //ToDo what is that???
 )
 

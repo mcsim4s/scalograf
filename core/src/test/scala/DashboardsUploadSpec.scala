@@ -1,6 +1,6 @@
 package scalograf
 
-import client.GrafanaConfig.{Endpoint, LoginPassword}
+import client.GrafanaConfig.{LoginPassword, Scheme}
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
 import model.Dashboard
 
@@ -25,7 +25,7 @@ class DashboardsUploadSpec extends AsyncWordSpec with should.Matchers with Optio
       case container: GrafanaContainer =>
         val client = GrafanaClient(
           GrafanaConfig(
-            Endpoint("http", container.host, container.port),
+            Scheme("http", container.host, container.port),
             LoginPassword("admin", "admin")
           ),
           AsyncHttpClientFutureBackend()
@@ -44,7 +44,7 @@ class DashboardsUploadSpec extends AsyncWordSpec with should.Matchers with Optio
             }
 
             client
-              .upload(DashboardUploadRequest(dashboard))
+              .uploadDashboard(DashboardUploadRequest(dashboard))
               .map(_.body)
               .map(println)
           }

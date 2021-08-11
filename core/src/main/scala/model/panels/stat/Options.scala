@@ -1,5 +1,5 @@
 package scalograf
-package model.panels.stats
+package model.panels.stat
 
 import model.Text
 

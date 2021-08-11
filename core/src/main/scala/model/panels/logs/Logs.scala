@@ -12,7 +12,7 @@ case class Logs(
     datasource: Option[String] = None,
     description: Option[String] = None,
     gridPos: GridPosition,
-    id: Int,
+    id: Option[Int] = None,
     options: Options = Options(),
     targets: List[Target] = List.empty,
     timeFrom: Option[Time] = None,

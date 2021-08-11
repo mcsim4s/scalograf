@@ -9,7 +9,7 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Row(
     collapsed: Boolean = false,
-    id: Int,
+    id: Option[Int] = None,
     gridPos: GridPosition,
     panels: List[Panel] = List.empty,
     description: Option[String] = None,
