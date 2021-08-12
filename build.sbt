@@ -7,8 +7,8 @@ ThisBuild / Test / fork := true
 
 val sttpVersion = "3.3.11"
 val circeVersion = "0.14.1"
-
 val scalatestVersion = "3.2.9"
+val enumeratumVersion = "1.7.0"
 
 val testkit = (project in file("testkit"))
   .settings(
@@ -26,6 +26,8 @@ val core = (project in file("core"))
   .settings(
     name := "core",
     libraryDependencies ++= Seq(
+      "com.beachape" %% "enumeratum" % enumeratumVersion,
+      "com.beachape" %% "enumeratum-circe" % enumeratumVersion,
       "com.softwaremill.sttp.client3" %% "circe" % sttpVersion,
       "com.softwaremill.sttp.client3" %% "core" % sttpVersion,
       "io.circe" %% "circe-core" % circeVersion,
@@ -36,7 +38,7 @@ val core = (project in file("core"))
       "ch.qos.logback" % "logback-classic" % "1.2.3" % "test"
     )
   )
-  .dependsOn(testkit % "compile->compile;test->test")
+  .dependsOn(testkit % "compile->test;test->test")
 
 val tools = (project in file("tools"))
   .settings(

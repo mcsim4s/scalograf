@@ -5,7 +5,7 @@ import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
 import model.Refresh.Every
 import model.datasource.Datasource
 import model.panels.FieldConfig.Defaults
-import model.panels.timeseries.{TimeSeries, TimeSeriesConfig}
+import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
 import model.panels.{FieldConfig, GridPosition}
 import model.{Dashboard, Target}
 
@@ -47,7 +47,7 @@ object Demo extends App {
         custom = Some(
           TimeSeriesConfig(
             lineWidth = 2,
-            showPoints = "never"
+            showPoints = ShowPoints.Never
           )
         )
       )

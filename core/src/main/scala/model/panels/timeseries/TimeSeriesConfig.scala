@@ -12,30 +12,30 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class TimeSeriesConfig(
     axisLabel: String = "",
-    axisPlacement: String = "auto", //ToDo enum
+    axisPlacement: AxisPlacement = AxisPlacement.Auto,
     barAlignment: Int = 0,
-    drawStyle: String = "line", //ToDo enum
+    drawStyle: DrawStyle = DrawStyle.Line,
     fillOpacity: Int = 0,
-    gradientMode: String = "none", //ToDo enum
+    gradientMode: GradientMode = GradientMode.None,
     hideFrom: HideFrom = HideFrom(),
-    lineInterpolation: String = "smooth", //ToDo enum
+    lineInterpolation: LineInterpolation = LineInterpolation.Smooth,
     lineWidth: Int = 1,
     pointSize: Int = 3,
     scaleDistribution: ScaleDistribution = Linear,
-    showPoints: String = "auto", //ToDo enum
+    showPoints: ShowPoints = ShowPoints.Auto,
     spanNulls: Boolean = false,
     stacking: Option[Stacking] = None,
     thresholdsStyle: ThresholdStyle = ThresholdStyle()
 ) extends CustomFieldConfig
 
 object TimeSeriesConfig {
-  case class ThresholdStyle(mode: String = "off") //ToDo enum
+  case class ThresholdStyle(mode: ThresholdStyleMode = ThresholdStyleMode.Off)
   case class HideFrom(
       legend: Boolean = false,
       tooltip: Boolean = false,
       viz: Boolean = false
   )
-  case class Stacking(group: String, mode: String = "none") //ToDo enum
+  case class Stacking(group: String, mode: StackingMode = StackingMode.None)
 
   sealed trait ScaleDistribution {
     def `type`: String
