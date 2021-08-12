@@ -7,7 +7,9 @@ import model.datasource.Datasource
 import model.panels.FieldConfig.Defaults
 import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
 import model.panels.{FieldConfig, GridPosition}
-import model.{Dashboard, Target}
+import model.{Dashboard, Target, TimePicker}
+
+import scalograf.model.enums.DashboardStyle
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -59,7 +61,9 @@ object Demo extends App {
     description = Some("Test dashboard for library abilities demonstration"),
     uid = Some("demo"),
     refresh = Every("5s"),
-    panels = List(timeSeries)
+    panels = List(timeSeries),
+    style = DashboardStyle.Dark,
+    timepicker = TimePicker(nowDelay = Some("1m"))
   )
   val uploadReq = DashboardUploadRequest(
     dashboard = dashboard,

@@ -10,7 +10,7 @@ sealed trait Color
 object Color {
   case class RGB(red: Short, green: Short, blue: Short) extends Color
   case class RGBa(red: Short, green: Short, blue: Short, alpha: Short = 255) extends Color
-  case class Named(name: String) extends Color //ToDo full enum???
+  case class Named(name: String) extends Color
 
   implicit val colorEncoder = Encoder.instance[Color] {
     case RGBa(red, green, blue, alpha) => s"rgba($red, $green, $blue, $alpha)".asJson

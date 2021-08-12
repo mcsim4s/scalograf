@@ -5,7 +5,7 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Threshold(
-    colorMode: String, //ToDo enum
+    colorMode: ThresholdColorMode = ThresholdColorMode.Critical,
     fill: Boolean = false,
     line: Boolean = false,
     op: String // ToDo operation model

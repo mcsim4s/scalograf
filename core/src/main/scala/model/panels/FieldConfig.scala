@@ -9,6 +9,7 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 import io.circe.syntax._
 import io.circe.{Codec, HCursor, JsonObject}
+import scalograf.model.enums.{ColorMode, ThresholdMode}
 
 case class FieldConfig[T <: CustomFieldConfig](
     defaults: Defaults[T] = Defaults[T](),
@@ -20,7 +21,7 @@ object FieldConfig {
   trait CustomFieldConfig
 
   case class DefaultsColor(
-      mode: String = "palette-classic" //ToDo enum
+      mode: ColorMode = ColorMode.PaletteClassic
   )
 
   case class ThresholdStep(
@@ -29,7 +30,7 @@ object FieldConfig {
   )
 
   case class Thresholds(
-      mode: String = "absolute", //ToDo enum
+      mode: ThresholdMode = ThresholdMode.Absolute,
       steps: List[ThresholdStep] = List.empty
   )
 

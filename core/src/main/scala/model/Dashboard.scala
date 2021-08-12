@@ -7,6 +7,7 @@ import model.panels.Panel
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
+import scalograf.model.enums.DashboardStyle
 
 case class Dashboard(
     __inputs: List[Input] = List.empty,
@@ -22,12 +23,12 @@ case class Dashboard(
     panels: List[Panel] = List.empty,
     refresh: Refresh = Never,
     schemaVersion: Option[Long] = None,
-    style: String = "default", //ToDo enum
+    style: DashboardStyle = DashboardStyle.Default,
     tags: List[String] = List.empty,
     templating: List[Template] = List.empty,
-    time: TimeRange = TimeRange("now - 1h", "now - 1m"), //ToDo time/duration model
+    time: TimeRange = TimeRange("now - 1h", "now"), //ToDo time/duration model
     timepicker: TimePicker = TimePicker(),
-    timezone: String = "browser", //ToDo enum
+    timezone: String = "browser", //ToDo timezone model
     title: String,
     uid: Option[String] = None, //ToDo option or adt?
     version: Option[Long] = None
