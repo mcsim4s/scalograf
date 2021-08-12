@@ -1,7 +1,7 @@
 package scalograf
 
-import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 import com.dimafeng.testcontainers.DockerComposeContainer._
+import com.dimafeng.testcontainers.{DockerComposeContainer, ExposedService}
 
 import java.io.File
 

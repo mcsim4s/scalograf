@@ -1,8 +1,9 @@
 package scalograf
 package model.panels.map
 
+import model.panels.{GridPosition, Panel}
+import model.transformations.Transformation
 import model.{Color, Target, Time}
-import model.panels.{GridPosition, Panel, Transformation}
 
 import io.circe._
 import io.circe.generic.extras.Configuration

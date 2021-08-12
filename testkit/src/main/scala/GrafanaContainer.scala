@@ -4,6 +4,7 @@ import com.dimafeng.testcontainers.GenericContainer
 
 case class GrafanaContainer(delegate: GenericContainer) extends GenericContainer(delegate) {
   def port: Long = this.mappedPort(3000).toLong
+  def url: String = s"http://localhost:$port"
 }
 
 object GrafanaContainer {

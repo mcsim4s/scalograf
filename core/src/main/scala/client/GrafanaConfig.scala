@@ -1,7 +1,7 @@
 package scalograf
 package client
 
-import GrafanaConfig._
+import client.GrafanaConfig._
 
 import scala.language.implicitConversions
 

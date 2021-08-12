@@ -4,12 +4,13 @@ import client.GrafanaConfig._
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
 import model.Refresh.Every
 import model.datasource.Datasource
+import model.enums.{DashboardStyle, TargetFormat}
 import model.panels.FieldConfig.Defaults
+import model.panels.table.Table
 import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
 import model.panels.{FieldConfig, GridPosition}
+import model.transformations.{Organize, Sort}
 import model.{Dashboard, Target, TimePicker}
-
-import scalograf.model.enums.DashboardStyle
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -34,7 +35,7 @@ object Demo extends App {
   )
 
   val timeSeries = TimeSeries(
-    gridPos = GridPosition(12, 10, 0, 0),
+    gridPos = GridPosition(12, 12, 0, 0),
     title = Some("Rps by service"),
     datasource = Some(prometheusDatasource.name),
     targets = List(
@@ -55,13 +56,34 @@ object Demo extends App {
       )
     )
   )
+  val table = Table(
+    gridPos = GridPosition(12, 12, 12, 0),
+    title = Some("Quantiles"),
+    datasource = Some(prometheusDatasource.name),
+    targets = List(
+      Target(
+        expr = "rpc_durations_seconds",
+        refId = "A",
+        instant = true,
+        legendFormat = "{{service}}",
+        format = TargetFormat.Table
+      )
+    ),
+    transformations = List(
+      Organize(
+        excludeByName = List("Time", "__name__", "instance", "job").map(_ -> true).toMap,
+        indexByName = List("service", "quantile", "Value").zipWithIndex.toMap
+      ),
+      Sort(sort = List(Sort.By("service")))
+    )
+  )
 
   val dashboard = Dashboard(
     title = "Demo Dashboard",
     description = Some("Test dashboard for library abilities demonstration"),
     uid = Some("demo"),
     refresh = Every("5s"),
-    panels = List(timeSeries),
+    panels = List(timeSeries, table),
     style = DashboardStyle.Dark,
     timepicker = TimePicker(nowDelay = Some("1m"))
   )

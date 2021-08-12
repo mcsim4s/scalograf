@@ -1,11 +1,9 @@
 package scalograf
 package model.annotations
 
-import model.Color
-
 import io.circe.Decoder.Result
-import io.circe.generic.extras.Configuration
 import io.circe._
+import io.circe.generic.extras.Configuration
 
 trait Annotation {
   def `type`: String

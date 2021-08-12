@@ -1,8 +1,9 @@
 package scalograf
 package model.panels.stat
 
-import model.panels._
 import model._
+import model.panels._
+import model.transformations.Transformation
 
 import io.circe._
 import io.circe.generic.extras.Configuration

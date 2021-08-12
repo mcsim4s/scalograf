@@ -2,7 +2,7 @@ package scalograf
 package model.styles
 
 import io.circe.Decoder.Result
-import io.circe.{Codec, DecodingFailure, HCursor, Json, JsonObject}
+import io.circe._
 
 trait Style {
   def `type`: String

@@ -1,8 +1,6 @@
 package scalograf
 package model.panels.table
 
-import model.SortBy
-
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 

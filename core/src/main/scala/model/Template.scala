@@ -1,9 +1,10 @@
 package scalograf
 package model
 
+import model.Template.Current
+
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
-import model.Template.Current
 
 case class Template(
     `type`: String, //ToDo enum

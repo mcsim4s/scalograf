@@ -2,13 +2,13 @@ package scalograf
 package model.panels.timeseries
 
 import model.panels.FieldConfig.CustomFieldConfig
+import model.panels.timeseries.TimeSeriesConfig._
 
-import TimeSeriesConfig._
 import io.circe.Decoder.Result
-import io.circe.{Codec, DecodingFailure, HCursor, JsonObject}
-import io.circe.syntax._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+import io.circe.syntax._
+import io.circe.{Codec, DecodingFailure, HCursor, JsonObject}
 
 case class TimeSeriesConfig(
     axisLabel: String = "",

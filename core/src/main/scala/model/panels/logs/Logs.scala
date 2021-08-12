@@ -1,8 +1,8 @@
 package scalograf
 package model.panels.logs
 
-import model.{Target, Time}
 import model.panels.{GridPosition, Panel}
+import model.{Target, Time}
 
 import io.circe._
 import io.circe.generic.extras.Configuration

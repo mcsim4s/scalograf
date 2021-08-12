@@ -2,27 +2,25 @@ package scalograf
 package model.panels.table
 
 import model.panels._
-import model.styles.Style
-import model.{Link, SortBy, Target, Time}
+import model.transformations.Transformation
+import model.{Link, Target, Time}
 
 import io.circe._
-import io.circe.generic.extras.auto._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Table(
-    columns: List[Column] = List.empty,
     datasource: Option[String] = None,
     description: Option[String] = None,
     fieldConfig: FieldConfig[TableConfig] = FieldConfig[TableConfig](),
-    fontSize: Option[String], //ToDo units
+    fontSize: Option[String] = None, //ToDo units
     gridPos: GridPosition,
     height: Option[String] = None, //ToDo unit
     hideTimeOverride: Boolean = false,
     id: Option[Int] = None,
     interval: Option[String] = None,
     links: List[Link] = List.empty,
-    maxDataPoints: Int = 300,
+    maxDataPoints: Option[Int] = None,
     options: Options = Options(),
     pageSize: Option[Int] = None,
     pluginVersion: Option[String] = None,
@@ -31,12 +29,10 @@ case class Table(
     scroll: Boolean = false,
     showHeader: Boolean = false,
     sort: Option[SortBy] = None,
-    styles: List[Style] = List.empty,
     targets: List[Target] = List.empty,
     timeFrom: Option[String] = None, //ToDo time model
     timeShift: Option[Time] = None,
     title: Option[String] = None,
-    transform: Option[String] = None, //ToDo enum
     transformations: List[Transformation] = List.empty,
     transparent: Boolean = false
 ) extends Panel {

@@ -3,7 +3,6 @@ package scalograf
 import JsonAnalyzer._
 
 import io.circe._
-import org.scalatest.events.TestFailed
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

@@ -1,7 +1,7 @@
 package scalograf
 package model.panels.timeseries
 
-import Options._
+import model.panels.timeseries.Options._
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec

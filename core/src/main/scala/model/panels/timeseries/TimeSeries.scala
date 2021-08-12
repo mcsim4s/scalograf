@@ -2,6 +2,7 @@ package scalograf
 package model.panels.timeseries
 
 import model.panels._
+import model.transformations.Transformation
 import model.{Target, Time}
 
 import io.circe._

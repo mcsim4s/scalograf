@@ -1,6 +1,7 @@
 package scalograf
 package model.panels
 
+import model.enums.{ColorMode, ThresholdMode}
 import model.panels.FieldConfig._
 import model.{Color, Mappings}
 
@@ -9,7 +10,6 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 import io.circe.syntax._
 import io.circe.{Codec, HCursor, JsonObject}
-import scalograf.model.enums.{ColorMode, ThresholdMode}
 
 case class FieldConfig[T <: CustomFieldConfig](
     defaults: Defaults[T] = Defaults[T](),

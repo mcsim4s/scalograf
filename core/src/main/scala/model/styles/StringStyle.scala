@@ -2,7 +2,6 @@ package scalograf
 package model.styles
 
 import model.Color
-import model.panels.graph.Threshold
 
 import io.circe.JsonObject
 import io.circe.generic.extras.Configuration

@@ -23,6 +23,7 @@ class DashboardsUploadSpec extends AsyncWordSpec with should.Matchers with Optio
   "Grafana client" should {
     s"upload all dashboards from test data" in withContainers {
       case container: GrafanaContainer =>
+        println(container.url)
         val client = GrafanaClient(
           GrafanaConfig(
             Scheme("http", container.host, container.port),

@@ -3,11 +3,11 @@ package model
 
 import model.Refresh.Never
 import model.annotations.Annotation
+import model.enums.DashboardStyle
 import model.panels.Panel
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
-import scalograf.model.enums.DashboardStyle
 
 case class Dashboard(
     __inputs: List[Input] = List.empty,

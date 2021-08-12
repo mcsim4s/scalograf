@@ -1,12 +1,15 @@
 package scalograf
 package model
 
+import model.enums.TargetFormat
+
+import io.circe.Codec
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Target(
     expr: String,
-    format: Option[String] = None,
+    format: TargetFormat = TargetFormat.TimeSeries,
     hide: Boolean = false,
     instant: Boolean = false,
     interval: Option[String] = None,
@@ -20,6 +23,6 @@ case class Target(
 )
 
 object Target {
-  implicit val config = Configuration.default.withDefaults
-  implicit val codec = deriveConfiguredCodec[Target]
+  implicit val config: Configuration = Configuration.default.withDefaults
+  implicit val codec: Codec.AsObject[Target] = deriveConfiguredCodec[Target]
 }

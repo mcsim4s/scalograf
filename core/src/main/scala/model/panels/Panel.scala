@@ -33,18 +33,17 @@ object Panel {
       override def encodeObject(a: Panel): JsonObject = a.asJson.add("type", Json.fromString(a.`type`))
 
       override def apply(c: HCursor): Result[Panel] = {
-        c.downField("type").as[String] match {
-          case Right("row")                    => c.as[Row]
-          case Right("stat")                   => c.as[Stat]
-          case Right("text")                   => c.as[text.Text]
-          case Right("grafana-worldmap-panel") => c.as[WorldMapPanel]
-          case Right("table")                  => c.as[Table]
-          case Right("logs")                   => c.as[Logs]
-          case Right("timeseries")             => c.as[TimeSeries]
-          case Right("singlestat")             => c.as[SingleStat]
-          case Right("graph")                  => c.as[Graph]
-          case Right(other)                    => Left(DecodingFailure(s"Unknown panel type '$other'", c.history))
-          case Left(_)                         => Left(DecodingFailure("Panel object doesn't contain 'type' field", c.history))
+        c.downField("type").as[String].flatMap {
+          case "row"                    => c.as[Row]
+          case "stat"                   => c.as[Stat]
+          case "text"                   => c.as[text.Text]
+          case "grafana-worldmap-panel" => c.as[WorldMapPanel]
+          case "table"                  => c.as[Table]
+          case "logs"                   => c.as[Logs]
+          case "timeseries"             => c.as[TimeSeries]
+          case "singlestat"             => c.as[SingleStat]
+          case "graph"                  => c.as[Graph]
+          case other                    => Left(DecodingFailure(s"Unknown panel type '$other'", c.history))
         }
       }
     }

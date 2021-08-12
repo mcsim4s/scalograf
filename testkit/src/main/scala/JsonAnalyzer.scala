@@ -3,8 +3,16 @@ package scalograf
 import io.circe.{Json, JsonObject}
 
 object JsonAnalyzer {
+  private val ignores: Seq[String] = Seq(
+    // those are actually fields of the 'table-old' panel in new grafana
+    "[table].columns",
+    "[table].styles",
+    "[table].transform"
+  )
 
-  def diff(leftJson: Json, rightJson: Json): Seq[JsonDiff] = diff(leftJson, rightJson, "root")
+  def diff(leftJson: Json, rightJson: Json): Seq[JsonDiff] =
+    diff(leftJson, rightJson, "root")
+      .filterNot(d => ignores.exists(d.path.endsWith))
 
   private def diff(leftJson: Json, rightJson: Json, path: String): Seq[JsonDiff] = {
     (leftJson, rightJson) match {
@@ -32,7 +40,7 @@ object JsonAnalyzer {
       case (key, l) =>
         right(key) match {
           case Some(r) => diff(l, r, s"$path.$key")
-          case None    => Seq(FieldMissing(path, key, l))
+          case None    => Seq(FieldMissing(s"$path.$key", l))
         }
     }.toSeq
 
@@ -66,8 +74,8 @@ object JsonAnalyzer {
 
   case class TypeDiff(path: String, leftType: String, rightType: String) extends JsonDiff
   case class ValueDiff[T](path: String, leftValue: T, rightValue: T) extends JsonDiff
-  case class FieldMissing(path: String, fieldName: String, value: Json) extends JsonDiff {
-    override def toString: String = s"Field Missing: \"$path.$fieldName\": ${value.name} : ${value.noSpaces}"
+  case class FieldMissing(path: String, value: Json) extends JsonDiff {
+    override def toString: String = s"Field Missing: \"$path\": ${value.name} : ${value.noSpaces}"
   }
   case class ExtraField[T](path: String, fieldName: String, value: Json) extends JsonDiff {
     override def toString: String = s"Extra field: \"$path.$fieldName\": ${value.name} : ${value.noSpaces}"
