@@ -2,22 +2,22 @@ package scalograf
 
 import client.GrafanaConfig._
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
+import model.Mappings.Mapping
 import model.Refresh.Every
 import model.datasource.Datasource
+import model.enums.ColorMode.ContinuousBlueYellowRed
 import model.enums.{ColorMode, DashboardStyle, TargetFormat}
 import model.panels.GridPosition
+import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
+import model.panels.config.Override.Matcher
 import model.panels.config.{ColorConfig, Config, FieldConfig, Override}
-import model.panels.table.{Table, TableConfig}
+import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
 import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
 import model.transformations.{Organize, Sort}
-import model.{Color, Dashboard, Mappings, Target, TimePicker}
-
-import scalograf.model.Mappings.Mapping
-import scalograf.model.enums.ColorMode.ContinuousBlueYellowRed
-import scalograf.model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
-import scalograf.model.panels.config.Override.Matcher
+import model._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.language.implicitConversions
 
 object Demo extends App {
 
@@ -31,7 +31,7 @@ object Demo extends App {
     OpsBackend()
   )
   val prometheusDatasource = Datasource(
-    uid = Some("prometheus"),
+    uid = "prometheus",
     `type` = "prometheus",
     isDefault = true,
     url = "http://prometheus:9090",
@@ -41,30 +41,30 @@ object Demo extends App {
 
   val timeSeries = TimeSeries(
     gridPos = GridPosition(12, 12, 0, 0),
-    title = Some("Rps by service"),
-    datasource = Some(prometheusDatasource.name),
+    title = "Rps by service",
+    datasource = prometheusDatasource.name,
     targets = List(
       Target(
         expr = "sum(irate(rpc_durations_seconds_count[1m])) by (service)",
         refId = "A",
-        legendFormat = "{{service}}"
+        legendFormat = "{{service}}",
+        intervalFactor = 2
       )
     ),
     fieldConfig = Config[TimeSeriesConfig](
       defaults = FieldConfig[TimeSeriesConfig](
-        custom = Some(
-          TimeSeriesConfig(
-            lineWidth = Some(2),
-            showPoints = Some(ShowPoints.Never)
-          )
+        custom = TimeSeriesConfig(
+          lineWidth = 2,
+          showPoints = ShowPoints.Never
         )
       )
     )
   )
+
   val table = Table(
     gridPos = GridPosition(12, 12, 12, 0),
-    title = Some("Quantiles"),
-    datasource = Some(prometheusDatasource.name),
+    title = "Quantiles",
+    datasource = prometheusDatasource.name,
     targets = List(
       Target(
         expr = "rpc_durations_seconds",
@@ -86,43 +86,35 @@ object Demo extends App {
         Override[TableConfig](
           Matcher("byName", "Value"),
           properties = FieldConfig[TableConfig](
-            custom = Some(
-              TableConfig(
-                color = Some(ColorConfig(mode = ContinuousBlueYellowRed)),
-                displayMode = Some("gradient-gauge")
-              )
+            custom = TableConfig(
+              color = ColorConfig(mode = ContinuousBlueYellowRed),
+              displayMode = ColumnDisplayMode.GradientGauge
             ),
-            decimals = Some(1),
-            unit = Some("s")
+            decimals = 1,
+            unit = "s"
           )
         ),
         Override[TableConfig](
           Matcher("byName", "service"),
           properties = FieldConfig[TableConfig](
-            custom = Some(
-              TableConfig(
-                width = Some(200)
-              )
+            custom = TableConfig(
+              width = 200
             )
           )
         ),
         Override[TableConfig](
           Matcher("byName", "quantile"),
           properties = FieldConfig[TableConfig](
-            custom = Some(
-              TableConfig(
-                width = Some(100)
-              )
+            custom = TableConfig(
+              width = 100
             ),
-            mappings = Some(
-              List(
-                Mappings(
-                  `type` = "value",
-                  options = Map(
-                    "0.5" -> Mapping(1, "50%"),
-                    "0.9" -> Mapping(2, "90%"),
-                    "0.99" -> Mapping(3, "99%")
-                  )
+            mappings = List(
+              Mappings(
+                `type` = "value",
+                options = Map(
+                  "0.5" -> Mapping(1, "50%"),
+                  "0.9" -> Mapping(2, "90%"),
+                  "0.99" -> Mapping(3, "99%")
                 )
               )
             )
@@ -130,28 +122,26 @@ object Demo extends App {
         )
       ),
       defaults = FieldConfig[TableConfig](
-        thresholds = Some(
-          Thresholds(steps =
-            List(
-              ThresholdStep(color = Color.Named("green"), value = 0.0003),
-              ThresholdStep(color = Color.Named("red"), value = 0.0003)
-            )
+        thresholds = Thresholds(steps =
+          List(
+            ThresholdStep(color = Color.Named("green"), value = 0.0003),
+            ThresholdStep(color = Color.Named("red"), value = 0.0003)
           )
         ),
-        color = Some(ColorConfig(mode = ColorMode.ContinuousBlueYellowRed)),
-        custom = Some(TableConfig(align = Some("center")))
+        color = ColorConfig(mode = ColorMode.ContinuousBlueYellowRed),
+        custom = TableConfig(align = ColumnAlign.Center)
       )
     )
   )
 
   val dashboard = Dashboard(
     title = "Demo Dashboard",
-    description = Some("Test dashboard for library abilities demonstration"),
-    uid = Some("demo"),
+    description = "Test dashboard for library abilities demonstration",
+    uid = "demo",
     refresh = Every("5s"),
     panels = List(timeSeries, table),
     style = DashboardStyle.Dark,
-    timepicker = TimePicker(nowDelay = Some("1m"))
+    timepicker = TimePicker(nowDelay = "1m")
   )
   val uploadReq = DashboardUploadRequest(
     dashboard = dashboard,
@@ -167,6 +157,8 @@ object Demo extends App {
     client.close()
     env.stop()
   }
+
+  implicit def instance2some[T](instance: T): Option[T] = Some(instance)
 
   trait Env {
     def start(): Unit

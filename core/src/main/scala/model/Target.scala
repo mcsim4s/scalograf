@@ -13,7 +13,7 @@ case class Target(
     hide: Boolean = false,
     instant: Boolean = false,
     interval: Option[String] = None,
-    intervalFactor: Option[Double] = None,
+    intervalFactor: Option[Int] = None,
     legendFormat: String = "",
     maxLines: Option[Int] = None,
     metric: Option[String] = None,

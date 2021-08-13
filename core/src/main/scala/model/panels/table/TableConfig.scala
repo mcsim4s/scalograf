@@ -8,9 +8,9 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class TableConfig(
-    align: Option[String] = None, //ToDo enum
+    align: Option[ColumnAlign] = None, //ToDo enum
     color: Option[ColorConfig] = None,
-    displayMode: Option[String] = None, //ToDo enum
+    displayMode: Option[ColumnDisplayMode] = None, //ToDo enum
     filterable: Option[Boolean] = None,
     width: Option[Int] = None
 ) extends CustomFieldConfig
