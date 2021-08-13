@@ -6,10 +6,10 @@ import model.Mappings._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 
-case class Mappings(options: Map[String, Mapping], `type`: Option[String] = None)
+case class Mappings(options: Map[String, Mapping], `type`: String)
 
 object Mappings {
-  case class Mapping(color: Option[Color] = None, index: Int, text: String)
+  case class Mapping(index: Int, text: String, color: Option[Color] = None)
 
   implicit val config = Configuration.default.withDefaults
 

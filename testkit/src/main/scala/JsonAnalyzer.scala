@@ -19,7 +19,9 @@ object JsonAnalyzer {
       case (left, right) if left.isObject && right.isObject =>
         objectDiff(path, left.asObject.get, right.asObject.get)
       case (left, right) if left.isArray && right.isArray =>
-        arrayDiff(path, left.asArray.get, right.asArray.get)
+        val leftArray = if(path.endsWith("properties")) left.asArray.get.sortBy(_.asObject.get("id").toString) else left.asArray.get
+        val rightArray = if(path.endsWith("properties")) right.asArray.get.sortBy(_.asObject.get("id").toString) else right.asArray.get
+        arrayDiff(path, leftArray, rightArray)
       case (left, right) if left.isString && right.isString =>
         val leftVal = left.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
         val rightVal = right.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
@@ -55,6 +57,8 @@ object JsonAnalyzer {
     val sizeDiff = if (left.size != right.size) {
       Seq(ValueDiff(s"$path.size", left.size, right.size))
     } else Seq.empty
+
+
     sizeDiff ++ (left zip right).zipWithIndex.flatMap { case ((l, r), index) =>
       val idxString = l.asObject.flatMap(_ ("type")).flatMap(_.asString) match {
         case Some(value) => value

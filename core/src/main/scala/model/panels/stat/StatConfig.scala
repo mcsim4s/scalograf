@@ -1,7 +1,7 @@
 package scalograf
 package model.panels.stat
 
-import model.panels.FieldConfig.CustomFieldConfig
+import model.panels.config.FieldConfig.CustomFieldConfig
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec

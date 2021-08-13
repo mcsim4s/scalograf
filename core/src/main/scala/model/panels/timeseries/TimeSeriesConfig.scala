@@ -1,7 +1,7 @@
 package scalograf
 package model.panels.timeseries
 
-import model.panels.FieldConfig.CustomFieldConfig
+import model.panels.config.FieldConfig.CustomFieldConfig
 import model.panels.timeseries.TimeSeriesConfig._
 
 import io.circe.Decoder.Result
@@ -11,21 +11,21 @@ import io.circe.syntax._
 import io.circe.{Codec, DecodingFailure, HCursor, JsonObject}
 
 case class TimeSeriesConfig(
-    axisLabel: String = "",
-    axisPlacement: AxisPlacement = AxisPlacement.Auto,
-    barAlignment: Int = 0,
-    drawStyle: DrawStyle = DrawStyle.Line,
-    fillOpacity: Int = 0,
-    gradientMode: GradientMode = GradientMode.None,
-    hideFrom: HideFrom = HideFrom(),
-    lineInterpolation: LineInterpolation = LineInterpolation.Smooth,
-    lineWidth: Int = 1,
-    pointSize: Int = 3,
-    scaleDistribution: ScaleDistribution = Linear,
-    showPoints: ShowPoints = ShowPoints.Auto,
-    spanNulls: Boolean = false,
+    axisLabel: Option[String] = None,
+    axisPlacement: Option[AxisPlacement] = None,
+    barAlignment: Option[Int] = None,
+    drawStyle: Option[DrawStyle] = None,
+    fillOpacity: Option[Int] = None,
+    gradientMode: Option[GradientMode] = None,
+    hideFrom: Option[HideFrom] = None,
+    lineInterpolation: Option[LineInterpolation] = None,
+    lineWidth: Option[Int] = None,
+    pointSize: Option[Int] = None,
+    scaleDistribution: Option[ScaleDistribution] = None,
+    showPoints: Option[ShowPoints] = None,
+    spanNulls: Option[Boolean] = None,
     stacking: Option[Stacking] = None,
-    thresholdsStyle: ThresholdStyle = ThresholdStyle()
+    thresholdsStyle: Option[ThresholdStyle] = None
 ) extends CustomFieldConfig
 
 object TimeSeriesConfig {

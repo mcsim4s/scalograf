@@ -3,6 +3,7 @@ package model.panels.stat
 
 import model._
 import model.panels._
+import model.panels.config.Config
 import model.transformations.Transformation
 
 import io.circe._
@@ -13,7 +14,7 @@ case class Stat(
     cacheTimeout: Option[Time] = None,
     datasource: Option[String] = None,
     description: Option[String] = None,
-    fieldConfig: FieldConfig[StatConfig] = FieldConfig(),
+    fieldConfig: Config[StatConfig] = Config(),
     gridPos: GridPosition,
     hideTimeOverride: Boolean = false,
     id: Option[Int] = None,

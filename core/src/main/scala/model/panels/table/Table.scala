@@ -2,6 +2,7 @@ package scalograf
 package model.panels.table
 
 import model.panels._
+import model.panels.config.Config
 import model.transformations.Transformation
 import model.{Link, Target, Time}
 
@@ -12,7 +13,7 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 case class Table(
     datasource: Option[String] = None,
     description: Option[String] = None,
-    fieldConfig: FieldConfig[TableConfig] = FieldConfig[TableConfig](),
+    fieldConfig: Config[TableConfig] = Config[TableConfig](),
     fontSize: Option[String] = None, //ToDo units
     gridPos: GridPosition,
     height: Option[String] = None, //ToDo unit

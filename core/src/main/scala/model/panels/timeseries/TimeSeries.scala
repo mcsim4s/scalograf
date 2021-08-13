@@ -2,6 +2,7 @@ package scalograf
 package model.panels.timeseries
 
 import model.panels._
+import model.panels.config.Config
 import model.transformations.Transformation
 import model.{Target, Time}
 
@@ -12,7 +13,7 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 case class TimeSeries(
     datasource: Option[String] = None,
     description: Option[String] = None,
-    fieldConfig: FieldConfig[TimeSeriesConfig] = FieldConfig[TimeSeriesConfig](),
+    fieldConfig: Config[TimeSeriesConfig] = Config[TimeSeriesConfig](),
     gridPos: GridPosition,
     id: Option[Int] = None,
     interval: Option[String] = None,
