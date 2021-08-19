@@ -9,16 +9,11 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Logs(
-    datasource: Option[String] = None,
-    description: Option[String] = None,
-    gridPos: GridPosition,
-    id: Option[Int] = None,
     options: Options = Options(),
     targets: List[Target] = List.empty,
     timeFrom: Option[Time] = None,
-    timeShift: Option[Time] = None,
-    title: Option[String] = None
-) extends Panel {
+    timeShift: Option[Time] = None
+) extends Panel.Type {
   override def `type`: String = "logs"
 
   override def asJson: JsonObject = Logs.codec.encodeObject(this)

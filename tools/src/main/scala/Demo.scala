@@ -4,6 +4,7 @@ import client.GrafanaConfig._
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
 import model.Mappings.Mapping
 import model.Refresh.Every
+import model._
 import model.datasource.Datasource
 import model.enums.ColorMode.ContinuousBlueYellowRed
 import model.enums.{ColorMode, DashboardStyle, TargetFormat}
@@ -11,10 +12,11 @@ import model.panels.GridPosition
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
 import model.panels.config.Override.Matcher
 import model.panels.config.{ColorConfig, Config, FieldConfig, Override}
+import model.panels.row.Row
+import model.panels.status_history.{Options, StatusHistory, StatusHistoryConfig}
 import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
 import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
 import model.transformations.{Organize, Sort}
-import model._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.implicitConversions
@@ -40,7 +42,7 @@ object Demo extends App {
   )
 
   val timeSeries = TimeSeries(
-    gridPos = GridPosition(12, 12, 0, 0),
+    gridPos = GridPosition(12, 12),
     title = "Rps by service",
     datasource = prometheusDatasource.name,
     targets = List(
@@ -134,12 +136,43 @@ object Demo extends App {
     )
   )
 
+  val statusHistory = StatusHistory(
+    gridPos = GridPosition(8, 8, 0, 14),
+    title = "Heap size",
+    targets = List(
+      Target(
+        expr =
+          "(sum(go_memstats_heap_alloc_bytes) by (job)) / on(job) ((sum(go_memstats_heap_alloc_bytes) by (job)) + on(job) (sum(go_memstats_heap_idle_bytes) by(job)))",
+        refId = "A",
+        legendFormat = "{{job}}",
+        intervalFactor = 3
+      )
+    ),
+    fieldConfig = Config[StatusHistoryConfig](
+      FieldConfig(
+        color = ColorConfig(mode = ColorMode.ContinuousBlueYellowRed),
+        min = 0d,
+        max = 0.6,
+        unit = "percentunit"
+      )
+    ),
+    options = Options(
+      rowHeight = 0.9
+    )
+  )
+
+  val row = Row(
+    title = "Some test title",
+    panels = List(statusHistory),
+    gridPos = GridPosition(24, 1, 0, 13)
+  )
+
   val dashboard = Dashboard(
     title = "Demo Dashboard",
     description = "Test dashboard for library abilities demonstration",
     uid = "demo",
     refresh = Every("5s"),
-    panels = List(timeSeries, table),
+    panels = List(timeSeries, table, row),
     style = DashboardStyle.Dark,
     timepicker = TimePicker(nowDelay = "1m")
   )

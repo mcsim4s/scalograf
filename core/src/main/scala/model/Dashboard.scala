@@ -6,6 +6,7 @@ import model.annotations.Annotation
 import model.enums.DashboardStyle
 import model.panels.Panel
 
+import io.circe.{Encoder, JsonObject}
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
 
@@ -37,9 +38,13 @@ case class Dashboard(
 object Dashboard {
   implicit val codecConfig = Configuration.default
 
-  implicit val encoder = deriveConfiguredEncoder[Dashboard]
+  private val defaultEncoder: Encoder.AsObject[Dashboard] = deriveConfiguredEncoder[Dashboard]
     .mapJsonObject(encodeAsListObject("annotations"))
     .mapJsonObject(encodeAsListObject("templating"))
+
+  implicit val encoder = new Encoder.AsObject[Dashboard] {
+    override def encodeObject(d: Dashboard): JsonObject = defaultEncoder.encodeObject(GridLayout.unpackPanels(d))
+  }
 
   implicit val decoder = deriveConfiguredDecoder[Dashboard]
     .prepare(decodeAsListObject("annotations"))

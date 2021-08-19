@@ -12,7 +12,7 @@ import io.circe.generic.extras.semiauto._
   * @param x The x position, in same unit as w.
   * @param y The y position, in same unit as h.
   */
-case class GridPosition(w: Int, h: Int, x: Int, y: Int)
+case class GridPosition(w: Int, h: Int, x: Option[Int] = None, y: Option[Int] = None)
 
 object GridPosition {
   implicit val codecConfig = Configuration.default

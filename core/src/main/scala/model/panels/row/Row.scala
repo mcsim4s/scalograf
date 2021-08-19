@@ -9,13 +9,8 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Row(
     collapsed: Boolean = false,
-    id: Option[Int] = None,
-    gridPos: GridPosition,
-    panels: List[Panel] = List.empty,
-    description: Option[String] = None,
-    datasource: Option[String] = None,
-    title: Option[String] = None
-) extends Panel {
+    panels: List[Panel] = List.empty
+) extends Panel.Type {
   override def `type`: String = "row"
 
   override def asJson: JsonObject = Row.codec.encodeObject(this)

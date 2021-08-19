@@ -7,33 +7,50 @@ import model.panels.map.WorldMapPanel
 import model.panels.row.Row
 import model.panels.singlestat.SingleStat
 import model.panels.stat.Stat
+import model.panels.status_history.StatusHistory
 import model.panels.table.Table
 import model.panels.timeseries.TimeSeries
 
-import io.circe.Decoder.Result
 import io.circe._
 import io.circe.generic.extras.Configuration
+import io.circe.syntax._
 
-trait Panel {
-  def `type`: String
-  def datasource: Option[String]
-  def description: Option[String]
-  def gridPos: GridPosition
-  def id: Option[Int]
-  def title: Option[String]
-
-  def asJson: JsonObject
+case class Panel(
+    datasource: Option[String],
+    description: Option[String],
+    gridPos: GridPosition,
+    id: Option[Int],
+    title: Option[String],
+    typed: Panel.Type
+) {
+  def withPos(pos: GridPosition) = copy(gridPos = pos) //ToDo lenses???
 }
 
 object Panel {
+  trait Type {
+    def `type`: String
+    def asJson: JsonObject
+  }
+
   implicit val codecConfig = Configuration.default.withDefaults
 
-  implicit val codec: Codec.AsObject[Panel] =
-    new Codec.AsObject[Panel] {
-      override def encodeObject(a: Panel): JsonObject = a.asJson.add("type", Json.fromString(a.`type`))
+  implicit val encoder: Encoder.AsObject[Panel] =
+    Encoder.AsObject.instance { panel =>
+      JsonObject(
+        "datasource" -> panel.datasource.asJson,
+        "description" -> panel.description.asJson,
+        "gridPos" -> panel.gridPos.asJson,
+        "id" -> panel.id.asJson,
+        "title" -> panel.title.asJson,
+        "type" -> panel.typed.`type`.asJson
+      ).deepMerge(panel.typed.asJson)
+    }
 
-      override def apply(c: HCursor): Result[Panel] = {
-        c.downField("type").as[String].flatMap {
+  implicit val decoder: Decoder[Panel] =
+    Decoder.instance[Panel] { c =>
+      c.downField("type")
+        .as[String]
+        .flatMap {
           case "row"                    => c.as[Row]
           case "stat"                   => c.as[Stat]
           case "text"                   => c.as[text.Text]
@@ -43,8 +60,24 @@ object Panel {
           case "timeseries"             => c.as[TimeSeries]
           case "singlestat"             => c.as[SingleStat]
           case "graph"                  => c.as[Graph]
+          case "status-history"         => c.as[StatusHistory]
           case other                    => Left(DecodingFailure(s"Unknown panel type '$other'", c.history))
         }
-      }
+        .flatMap { typed =>
+          for {
+            datasource <- c.downField("datasource").as[Option[String]]
+            description <- c.downField("description").as[Option[String]]
+            gridPos <- c.downField("gridPos").as[GridPosition]
+            id <- c.downField("id").as[Option[Int]]
+            title <- c.downField("title").as[Option[String]]
+          } yield Panel(
+            datasource = datasource,
+            description = description,
+            gridPos = gridPos,
+            id = id,
+            title = title,
+            typed = typed
+          )
+        }
     }
 }

@@ -11,14 +11,10 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Table(
-    datasource: Option[String] = None,
-    description: Option[String] = None,
     fieldConfig: Config[TableConfig] = Config[TableConfig](),
     fontSize: Option[String] = None, //ToDo units
-    gridPos: GridPosition,
     height: Option[String] = None, //ToDo unit
     hideTimeOverride: Boolean = false,
-    id: Option[Int] = None,
     interval: Option[String] = None,
     links: List[Link] = List.empty,
     maxDataPoints: Option[Int] = None,
@@ -33,10 +29,9 @@ case class Table(
     targets: List[Target] = List.empty,
     timeFrom: Option[String] = None, //ToDo time model
     timeShift: Option[Time] = None,
-    title: Option[String] = None,
     transformations: List[Transformation] = List.empty,
     transparent: Boolean = false
-) extends Panel {
+) extends Panel.Type {
   override def `type`: String = "table"
 
   override def asJson: JsonObject = Table.codec.encodeObject(this)

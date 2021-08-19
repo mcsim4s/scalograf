@@ -13,13 +13,9 @@ case class SingleStat(
     colorBackground: Boolean = false,
     colors: List[Color] = List.empty,
     colorValue: Boolean = false,
-    datasource: Option[String] = None,
     decimals: Option[Double] = None,
-    description: Option[String] = None,
     format: String,
     gauge: Gauge,
-    gridPos: GridPosition,
-    id: Option[Int] = None,
     interval: Option[String] = None,
     links: List[Link] = List.empty,
     mappingType: Int, //ToDo what's that?
@@ -36,12 +32,11 @@ case class SingleStat(
     tableColumn: String,
     targets: List[Target] = List.empty,
     thresholds: String,
-    title: Option[String] = None,
     transparent: Boolean = false,
     valueFontSize: String, //ToDo font size model
     valueMaps: List[ValueMap] = List.empty,
     valueName: String
-) extends Panel {
+) extends Panel.Type {
   override def `type`: String = "singlestat"
 
   override def asJson: JsonObject = SingleStat.codec.encodeObject(this)
