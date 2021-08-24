@@ -8,7 +8,7 @@ import model._
 import model.datasource.Datasource
 import model.enums.ColorMode.ContinuousBlueYellowRed
 import model.enums.{ColorMode, DashboardStyle, TargetFormat}
-import model.panels.GridPosition
+import model.panels.{GridPosition, Panel}
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
 import model.panels.config.Override.Matcher
 import model.panels.config.{ColorConfig, Config, FieldConfig, Override}
@@ -41,130 +41,138 @@ object Demo extends App {
     name = "Random Prometheus"
   )
 
-  val timeSeries = TimeSeries(
+  val timeSeries = Panel(
     gridPos = GridPosition(12, 12),
     title = "Rps by service",
     datasource = prometheusDatasource.name,
-    targets = List(
-      Target(
-        expr = "sum(irate(rpc_durations_seconds_count[1m])) by (service)",
-        refId = "A",
-        legendFormat = "{{service}}",
-        intervalFactor = 2
-      )
-    ),
-    fieldConfig = Config[TimeSeriesConfig](
-      defaults = FieldConfig[TimeSeriesConfig](
-        custom = TimeSeriesConfig(
-          lineWidth = 2,
-          showPoints = ShowPoints.Never
+    typed = TimeSeries(
+      targets = List(
+        Target(
+          expr = "sum(irate(rpc_durations_seconds_count[1m])) by (service)",
+          refId = "A",
+          legendFormat = "{{service}}",
+          intervalFactor = 2
+        )
+      ),
+      fieldConfig = Config[TimeSeriesConfig](
+        defaults = FieldConfig[TimeSeriesConfig](
+          custom = TimeSeriesConfig(
+            lineWidth = 2,
+            showPoints = ShowPoints.Never
+          )
         )
       )
     )
   )
 
-  val table = Table(
-    gridPos = GridPosition(12, 12, 12, 0),
+  val table = Panel(
+    gridPos = GridPosition(12, 12),
     title = "Quantiles",
     datasource = prometheusDatasource.name,
-    targets = List(
-      Target(
-        expr = "rpc_durations_seconds",
-        refId = "A",
-        instant = true,
-        legendFormat = "{{service}}",
-        format = TargetFormat.Table
-      )
-    ),
-    transformations = List(
-      Organize(
-        excludeByName = List("Time", "__name__", "instance", "job").map(_ -> true).toMap,
-        indexByName = List("service", "quantile", "Value").zipWithIndex.toMap
+    typed = Table(
+      targets = List(
+        Target(
+          expr = "rpc_durations_seconds",
+          refId = "A",
+          instant = true,
+          legendFormat = "{{service}}",
+          format = TargetFormat.Table
+        )
       ),
-      Sort(sort = List(Sort.By("service")))
-    ),
-    fieldConfig = Config[TableConfig](
-      overrides = List(
-        Override[TableConfig](
-          Matcher("byName", "Value"),
-          properties = FieldConfig[TableConfig](
-            custom = TableConfig(
-              color = ColorConfig(mode = ContinuousBlueYellowRed),
-              displayMode = ColumnDisplayMode.GradientGauge
-            ),
-            decimals = 1,
-            unit = "s"
-          )
+      transformations = List(
+        Organize(
+          excludeByName = List("Time", "__name__", "instance", "job").map(_ -> true).toMap,
+          indexByName = List("service", "quantile", "Value").zipWithIndex.toMap
         ),
-        Override[TableConfig](
-          Matcher("byName", "service"),
-          properties = FieldConfig[TableConfig](
-            custom = TableConfig(
-              width = 200
+        Sort(sort = List(Sort.By("service")))
+      ),
+      fieldConfig = Config[TableConfig](
+        overrides = List(
+          Override[TableConfig](
+            Matcher("byName", "Value"),
+            properties = FieldConfig[TableConfig](
+              custom = TableConfig(
+                color = ColorConfig(mode = ContinuousBlueYellowRed),
+                displayMode = ColumnDisplayMode.GradientGauge
+              ),
+              decimals = 1,
+              unit = "s"
             )
-          )
-        ),
-        Override[TableConfig](
-          Matcher("byName", "quantile"),
-          properties = FieldConfig[TableConfig](
-            custom = TableConfig(
-              width = 100
-            ),
-            mappings = List(
-              Mappings(
-                `type` = "value",
-                options = Map(
-                  "0.5" -> Mapping(1, "50%"),
-                  "0.9" -> Mapping(2, "90%"),
-                  "0.99" -> Mapping(3, "99%")
+          ),
+          Override[TableConfig](
+            Matcher("byName", "service"),
+            properties = FieldConfig[TableConfig](
+              custom = TableConfig(
+                width = 200
+              )
+            )
+          ),
+          Override[TableConfig](
+            Matcher("byName", "quantile"),
+            properties = FieldConfig[TableConfig](
+              custom = TableConfig(
+                width = 100
+              ),
+              mappings = List(
+                Mappings(
+                  `type` = "value",
+                  options = Map(
+                    "0.5" -> Mapping(1, "50%"),
+                    "0.9" -> Mapping(2, "90%"),
+                    "0.99" -> Mapping(3, "99%")
+                  )
                 )
               )
             )
           )
+        ),
+        defaults = FieldConfig[TableConfig](
+          thresholds = Thresholds(steps =
+            List(
+              ThresholdStep(color = Color.Named("green"), value = 0.0003),
+              ThresholdStep(color = Color.Named("red"), value = 0.0003)
+            )
+          ),
+          color = ColorConfig(mode = ColorMode.ContinuousBlueYellowRed),
+          custom = TableConfig(align = ColumnAlign.Center)
+        )
+      )
+    )
+  )
+
+  val statusHistory = Panel(
+    gridPos = GridPosition(8, 8, 0),
+    title = "Heap size",
+    typed = StatusHistory(
+      targets = List(
+        Target(
+          expr =
+            "(sum(go_memstats_heap_alloc_bytes) by (job)) / on(job) ((sum(go_memstats_heap_alloc_bytes) by (job)) + on(job) (sum(go_memstats_heap_idle_bytes) by(job)))",
+          refId = "A",
+          legendFormat = "{{job}}",
+          intervalFactor = 3
         )
       ),
-      defaults = FieldConfig[TableConfig](
-        thresholds = Thresholds(steps =
-          List(
-            ThresholdStep(color = Color.Named("green"), value = 0.0003),
-            ThresholdStep(color = Color.Named("red"), value = 0.0003)
-          )
-        ),
-        color = ColorConfig(mode = ColorMode.ContinuousBlueYellowRed),
-        custom = TableConfig(align = ColumnAlign.Center)
+      fieldConfig = Config[StatusHistoryConfig](
+        FieldConfig(
+          color = ColorConfig(mode = ColorMode.ContinuousBlueYellowRed),
+          min = 0d,
+          max = 0.6,
+          unit = "percentunit"
+        )
+      ),
+      options = Options(
+        rowHeight = 0.9
       )
     )
   )
 
-  val statusHistory = StatusHistory(
-    gridPos = GridPosition(8, 8, 0, 14),
-    title = "Heap size",
-    targets = List(
-      Target(
-        expr =
-          "(sum(go_memstats_heap_alloc_bytes) by (job)) / on(job) ((sum(go_memstats_heap_alloc_bytes) by (job)) + on(job) (sum(go_memstats_heap_idle_bytes) by(job)))",
-        refId = "A",
-        legendFormat = "{{job}}",
-        intervalFactor = 3
-      )
-    ),
-    fieldConfig = Config[StatusHistoryConfig](
-      FieldConfig(
-        color = ColorConfig(mode = ColorMode.ContinuousBlueYellowRed),
-        min = 0d,
-        max = 0.6,
-        unit = "percentunit"
-      )
-    ),
-    options = Options(
-      rowHeight = 0.9
-    )
-  )
-
-  val row = Row(
+  val row = Panel(
     title = "Some test title",
-    panels = List(statusHistory),
-    gridPos = GridPosition(24, 1, 0, 13)
+    gridPos = GridPosition(24, 1, 0, 13),
+    typed = Row(
+      panels = List(statusHistory)
+    )
   )
 
   val dashboard = Dashboard(

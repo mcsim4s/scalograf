@@ -16,11 +16,11 @@ import io.circe.generic.extras.Configuration
 import io.circe.syntax._
 
 case class Panel(
-    datasource: Option[String],
-    description: Option[String],
+    datasource: Option[String] = None,
+    description: Option[String] = None,
     gridPos: GridPosition,
-    id: Option[Int],
-    title: Option[String],
+    id: Option[Int] = None,
+    title: Option[String] = None,
     typed: Panel.Type
 ) {
   def withPos(pos: GridPosition) = copy(gridPos = pos) //ToDo lenses???
