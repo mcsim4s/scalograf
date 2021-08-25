@@ -8,7 +8,6 @@ import model._
 import model.datasource.Datasource
 import model.enums.ColorMode.ContinuousBlueYellowRed
 import model.enums.{ColorMode, DashboardStyle, TargetFormat}
-import model.panels.{GridPosition, Panel}
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
 import model.panels.config.Override.Matcher
 import model.panels.config.{ColorConfig, Config, FieldConfig, Override}
@@ -16,6 +15,7 @@ import model.panels.row.Row
 import model.panels.status_history.{Options, StatusHistory, StatusHistoryConfig}
 import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
 import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
+import model.panels.{GridPosition, Panel}
 import model.transformations.{Organize, Sort}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -32,6 +32,7 @@ object Demo extends App {
     GrafanaConfig(env.grafanaUrl, LoginPassword("admin", "admin")),
     OpsBackend()
   )
+
   val prometheusDatasource = Datasource(
     uid = "prometheus",
     `type` = "prometheus",
@@ -40,7 +41,6 @@ object Demo extends App {
     access = "proxy",
     name = "Random Prometheus"
   )
-
   val timeSeries = Panel(
     gridPos = GridPosition(12, 12),
     title = "Rps by service",
@@ -64,7 +64,6 @@ object Demo extends App {
       )
     )
   )
-
   val table = Panel(
     gridPos = GridPosition(12, 12),
     title = "Quantiles",
@@ -139,7 +138,6 @@ object Demo extends App {
       )
     )
   )
-
   val statusHistory = Panel(
     gridPos = GridPosition(8, 8, 0),
     title = "Heap size",
@@ -166,7 +164,6 @@ object Demo extends App {
       )
     )
   )
-
   val row = Panel(
     title = "Some test title",
     gridPos = GridPosition(24, 1, 0, 13),
@@ -195,8 +192,8 @@ object Demo extends App {
   } yield ()
 
   program.andThen { _ =>
-    client.close()
     env.stop()
+    client.close()
   }
 
   implicit def instance2some[T](instance: T): Option[T] = Some(instance)
