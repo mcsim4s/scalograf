@@ -10,5 +10,5 @@ object TargetFormat extends StringEnum[TargetFormat] with StringCirceEnum[Target
 
   case object TimeSeries extends TargetFormat("time_series")
   case object Table extends TargetFormat("table")
-  case object ContinuousBlPu extends TargetFormat("continuous-BlPu")
+  case object HeatMap extends TargetFormat("heatmap")
 }

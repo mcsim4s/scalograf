@@ -4,7 +4,7 @@ package model.panels.status_history
 import model.panels._
 import model.panels.config.Config
 import model.transformations.Transformation
-import model.{Link, Target, Time}
+import model.{Link, Target}
 
 import io.circe._
 import io.circe.generic.extras.Configuration

@@ -1,6 +1,7 @@
 package scalograf
 package model.panels
 
+import model.panels.dashlist.DashboardList
 import model.panels.graph.Graph
 import model.panels.logs.Logs
 import model.panels.map.WorldMapPanel
@@ -61,6 +62,7 @@ object Panel {
           case "singlestat"             => c.as[SingleStat]
           case "graph"                  => c.as[Graph]
           case "status-history"         => c.as[StatusHistory]
+          case "dashlist"               => c.as[DashboardList]
           case other                    => Left(DecodingFailure(s"Unknown panel type '$other'", c.history))
         }
         .flatMap { typed =>

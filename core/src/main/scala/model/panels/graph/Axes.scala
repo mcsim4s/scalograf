@@ -5,11 +5,12 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Axes(
+    decimals: Option[Int] = None,
     format: String, //ToDe enum
     label: Option[String] = None,
     logBase: Double,
-    max: Option[Double] = None,
-    min: Option[Double] = None,
+    max: Option[String] = None,
+    min: Option[String] = None,
     show: Boolean = false
 )
 

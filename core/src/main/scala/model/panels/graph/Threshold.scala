@@ -8,7 +8,8 @@ case class Threshold(
     colorMode: ThresholdColorMode = ThresholdColorMode.Critical,
     fill: Boolean = false,
     line: Boolean = false,
-    op: String // ToDo operation model
+    op: String, // ToDo operation model
+    value: Option[Double] = None
 )
 
 object Threshold {
