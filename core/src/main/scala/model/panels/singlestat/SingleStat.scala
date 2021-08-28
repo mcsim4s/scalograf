@@ -16,7 +16,7 @@ case class SingleStat(
     colorBackground: Boolean = false,
     colors: List[Color] = List.empty,
     colorValue: Boolean = false,
-    decimals: Option[Double] = None,
+    decimals: Option[Int] = None,
     format: String,
     gauge: Gauge,
     interval: Option[String] = None,

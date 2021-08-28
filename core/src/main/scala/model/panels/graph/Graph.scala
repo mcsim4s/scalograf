@@ -4,6 +4,7 @@ package model.panels.graph
 import model.panels.Panel
 import model.time._
 import model.{Color, Link, Target}
+import model.alert.Alert
 
 import io.circe._
 import io.circe.generic.extras.Configuration
@@ -12,11 +13,12 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 import scala.concurrent.duration.FiniteDuration
 
 case class Graph(
+    alert: Option[Alert] = None,
     aliasColors: Map[String, Color] = Map.empty,
     bars: Boolean = false,
     dashes: Boolean = false,
-    dashLength: Int,
-    decimals: Int, //ToDo ???
+    dashLength: Option[Int] = None,
+    decimals: Option[Int] = None, //ToDo ???
     editable: Boolean = true,
     error: Boolean = false,
     fill: Int, //ToDo ???

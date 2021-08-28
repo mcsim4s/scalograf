@@ -2,6 +2,7 @@ package scalograf
 package model.panels.timeseries
 
 import model.Target
+import model.alert.Alert
 import model.panels._
 import model.panels.config.Config
 import model.time._
@@ -14,6 +15,7 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 import scala.concurrent.duration.FiniteDuration
 
 case class TimeSeries(
+    alert: Option[Alert] = None,
     fieldConfig: Config[TimeSeriesConfig] = Config[TimeSeriesConfig](),
     interval: Option[String] = None,
     maxDataPoints: Option[Int] = None,

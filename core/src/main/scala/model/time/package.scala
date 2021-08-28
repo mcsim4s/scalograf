@@ -11,6 +11,8 @@ import scala.concurrent.duration.{DAYS, FiniteDuration, HOURS, MINUTES, SECONDS}
 import scala.util.{Failure, Success, Try}
 
 package object time {
+  val now: Time.now.type = Time.now
+
   implicit val relativeDecoder: Decoder[Relative] = Decoder.instance[Relative] { cursor =>
     val regex = "^now\\s*-\\s*(\\d+)([dhms])$".r
     cursor.value.asString match {

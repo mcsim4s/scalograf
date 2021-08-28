@@ -5,6 +5,8 @@ import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
 import model.Mappings.Mapping
 import model.Refresh.Every
 import model._
+import model.time._
+import model.alert.Alert
 import model.datasource.Datasource
 import model.enums.ColorMode.ContinuousBlueYellowRed
 import model.enums.{ColorMode, DashboardStyle, TargetFormat}
@@ -17,8 +19,10 @@ import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
 import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
 import model.panels.{GridPosition, Panel}
 import model.transformations.{Organize, Sort}
+import syntax._
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 object Demo extends App {
@@ -41,11 +45,25 @@ object Demo extends App {
     access = "proxy",
     name = "Random Prometheus"
   )
+
+  val alert = Alert(
+    conditions =
+      max("A").on(now, 5.seconds).isAbove(16)
+        or avg("A").on(now, 10.minutes).isAbove(13)
+        or min("A").on(now, 1.hour).isAbove(8),
+    name = "High rpc alert",
+    frequency = 5.seconds,
+    `for` = 10.seconds,
+    handler = 0 //ToDo ???
+  )
+
   val timeSeries = Panel(
     gridPos = GridPosition(12, 12),
     title = "Rps by service",
+    id = 1,
     datasource = prometheusDatasource.name,
     typed = TimeSeries(
+      alert = alert,
       targets = List(
         Target(
           expr = "sum(irate(rpc_durations_seconds_count[1m])) by (service)",
