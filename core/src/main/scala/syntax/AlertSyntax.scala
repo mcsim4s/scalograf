@@ -39,7 +39,11 @@ trait AlertSyntax {
   }
 
   case class RL(reducerType: ReducerType, label: String) {
-    def on(from: Time, window: FiniteDuration) = RLR(reducerType, label, TimeRange(from, window))
+    def over(window: FiniteDuration) = RLW(reducerType, label, window)
+  }
+
+  case class RLW(reducerType: ReducerType, label: String, window: FiniteDuration) {
+    def from(from: Time) = RLR(reducerType, label, TimeRange(from, window))
   }
 
   case class RLR(reducerType: ReducerType, label: String, range: TimeRange) {

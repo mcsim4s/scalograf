@@ -48,9 +48,9 @@ object Demo extends App {
 
   val alert = Alert(
     conditions =
-      max("A").on(now, 5.seconds).isAbove(16)
-        or avg("A").on(now, 10.minutes).isAbove(13)
-        or min("A").on(now, 1.hour).isAbove(8),
+      max("A").over(5.seconds).from(now).isAbove(16)
+        or avg("A").over(10.minutes).from(now).isAbove(13)
+        or min("A").over(1.hour).from(now).isAbove(8),
     name = "High rpc alert",
     frequency = 5.seconds,
     `for` = 10.seconds,
