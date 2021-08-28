@@ -1,18 +1,21 @@
 package scalograf
 package model.panels.logs
 
-import model.panels.{GridPosition, Panel}
-import model.{Target, Time}
+import model.Target
+import model.panels.Panel
+import model.time._
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
+import scala.concurrent.duration.FiniteDuration
+
 case class Logs(
     options: Options = Options(),
     targets: List[Target] = List.empty,
-    timeFrom: Option[Time] = None,
-    timeShift: Option[Time] = None
+    timeFrom: Option[FiniteDuration] = None,
+    timeShift: Option[FiniteDuration] = None
 ) extends Panel.Type {
   override def `type`: String = "logs"
 

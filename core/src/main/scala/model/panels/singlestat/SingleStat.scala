@@ -1,15 +1,18 @@
 package scalograf
 package model.panels.singlestat
 
-import model.panels.{GridPosition, Panel}
-import model.{Color, Link, Target, Time}
+import model.panels.Panel
+import model.{Color, Link, Target}
+import model.time._
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
+import scala.concurrent.duration.FiniteDuration
+
 case class SingleStat(
-    cacheTimeout: Option[Time] = None,
+    cacheTimeout: Option[FiniteDuration] = None,
     colorBackground: Boolean = false,
     colors: List[Color] = List.empty,
     colorValue: Boolean = false,

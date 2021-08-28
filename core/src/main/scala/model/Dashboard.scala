@@ -5,10 +5,13 @@ import model.Refresh.Never
 import model.annotations.Annotation
 import model.enums.DashboardStyle
 import model.panels.Panel
+import model.time.Time.now
 
-import io.circe.{Encoder, JsonObject}
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
+import io.circe.{Encoder, JsonObject}
+
+import scala.concurrent.duration._
 
 case class Dashboard(
     __inputs: List[Input] = List.empty,
@@ -27,7 +30,7 @@ case class Dashboard(
     style: DashboardStyle = DashboardStyle.Default,
     tags: List[String] = List.empty,
     templating: List[Template] = List.empty,
-    time: TimeRange = TimeRange("now - 1h", "now"), //ToDo time/duration model
+    time: TimeRange = TimeRange(now - 1.hour, now),
     timepicker: TimePicker = TimePicker(),
     timezone: String = "browser", //ToDo timezone model
     title: String,
