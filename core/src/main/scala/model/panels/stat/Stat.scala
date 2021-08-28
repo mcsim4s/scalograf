@@ -4,14 +4,17 @@ package model.panels.stat
 import model._
 import model.panels._
 import model.panels.config.Config
+import model.time._
 import model.transformations.Transformation
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
+import scala.concurrent.duration.FiniteDuration
+
 case class Stat(
-    cacheTimeout: Option[Time] = None,
+    cacheTimeout: Option[FiniteDuration] = None,
     fieldConfig: Config[StatConfig] = Config(),
     hideTimeOverride: Boolean = false,
     interval: Option[String] = None,
@@ -20,8 +23,8 @@ case class Stat(
     options: Options = Options(),
     pluginVersion: Option[String] = None, //ToDo ???
     targets: List[Target] = List.empty,
-    timeFrom: Option[String] = None, //ToDo time model
-    timeShift: Option[Time] = None,
+    timeFrom: Option[FiniteDuration] = None, //ToDo time model
+    timeShift: Option[FiniteDuration] = None,
     transformations: List[Transformation] = List.empty
 ) extends Panel.Type {
   override def `type`: String = "stat"

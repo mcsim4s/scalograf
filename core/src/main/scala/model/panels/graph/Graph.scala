@@ -1,12 +1,15 @@
 package scalograf
 package model.panels.graph
 
-import model.panels.{GridPosition, Panel}
-import model.{Color, Link, Target, Time}
+import model.panels.Panel
+import model.time._
+import model.{Color, Link, Target}
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+
+import scala.concurrent.duration.FiniteDuration
 
 case class Graph(
     aliasColors: Map[String, Color] = Map.empty,
@@ -29,7 +32,7 @@ case class Graph(
     pointradius: Option[Double] = None,
     points: Boolean = false,
     renderer: String,
-    repeat: Option[Time] = None,
+    repeat: Option[FiniteDuration] = None,
     repeatDirection: Option[String] = None,
     seriesOverrides: List[String] = List.empty,
     spaceLength: Int,
@@ -37,8 +40,8 @@ case class Graph(
     steppedLine: Boolean = false,
     targets: List[Target] = List.empty,
     thresholds: List[Threshold] = List.empty,
-    timeFrom: Option[Time] = None,
-    timeShift: Option[Time] = None,
+    timeFrom: Option[FiniteDuration] = None,
+    timeShift: Option[FiniteDuration] = None,
     tooltip: Option[Tooltip] = None,
     transparent: Boolean = false,
     xaxis: XAxis = XAxis(),

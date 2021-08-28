@@ -3,12 +3,15 @@ package model.panels.table
 
 import model.panels._
 import model.panels.config.Config
+import model.time._
 import model.transformations.Transformation
-import model.{Link, Target, Time}
+import model.{Link, Target}
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+
+import scala.concurrent.duration.FiniteDuration
 
 case class Table(
     fieldConfig: Config[TableConfig] = Config[TableConfig](),
@@ -27,8 +30,8 @@ case class Table(
     showHeader: Boolean = false,
     sort: Option[SortBy] = None,
     targets: List[Target] = List.empty,
-    timeFrom: Option[String] = None, //ToDo time model
-    timeShift: Option[Time] = None,
+    timeFrom: Option[FiniteDuration] = None, //ToDo time model
+    timeShift: Option[FiniteDuration] = None,
     transformations: List[Transformation] = List.empty,
     transparent: Boolean = false
 ) extends Panel.Type {

@@ -69,7 +69,10 @@ object JsonAnalyzer {
   }
 
   private def valueDiff[T](path: String, left: T, right: T): Seq[JsonDiff] = {
-    if (left != right) Seq(ValueDiff(path, left, right)) else Seq.empty
+    if (left != right)
+      Seq(ValueDiff(path, left, right))
+    else
+      Seq.empty
   }
 
   sealed trait JsonDiff {
