@@ -14,7 +14,7 @@ case class Alert(
     name: Option[String] = None,
     executionErrorState: ExecutionErrorBehaviour = ExecutionErrorBehaviour.Alerting,
     noDataState: NoDataBehaviour = NoDataBehaviour.Alerting,
-    `for`: FiniteDuration,
+    `for`: Option[FiniteDuration] = None,
     frequency: FiniteDuration,
     notifications: List[Notification] = List.empty,
     handler: Int
