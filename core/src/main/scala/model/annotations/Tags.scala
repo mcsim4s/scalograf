@@ -8,7 +8,6 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Tags(
-    `type`: String,
     datasource: String,
     enable: Boolean = true,
     expr: String,
@@ -22,6 +21,9 @@ case class Tags(
     tags: List[String] = List.empty,
     titleFormat: Option[String] = None
 ) extends Annotation {
+
+  override def `type`: String = "tags"
+
   override def asJson: JsonObject = Tags.codec.encodeObject(this)
 }
 

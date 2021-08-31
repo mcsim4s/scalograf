@@ -21,9 +21,9 @@ case class Stat(
     links: List[Link] = List.empty,
     maxDataPoints: Int = 300,
     options: Options = Options(),
-    pluginVersion: Option[String] = None, //ToDo ???
+    pluginVersion: Option[String] = None,
     targets: List[Target] = List.empty,
-    timeFrom: Option[FiniteDuration] = None, //ToDo time model
+    timeFrom: Option[FiniteDuration] = None,
     timeShift: Option[FiniteDuration] = None,
     transformations: List[Transformation] = List.empty
 ) extends Panel.Type {

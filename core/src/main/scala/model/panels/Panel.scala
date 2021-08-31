@@ -23,7 +23,7 @@ case class Panel(
     title: Option[String] = None,
     typed: Panel.Type
 ) {
-  def withPos(pos: GridPosition) = copy(gridPos = pos) //ToDo lenses???
+  def withPos(pos: GridPosition) = copy(gridPos = pos)
 }
 
 object Panel {

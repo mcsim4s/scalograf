@@ -7,8 +7,8 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 case class XAxis(
     align: Boolean = false,
     alignLevel: Option[String] = None,
-    buckets: Option[String] = None, //ToDo buckets model
-    mode: Option[String] = None, //ToDo enum
+    buckets: Option[String] = None,
+    mode: Option[String] = None,
     name: Option[String] = None,
     show: Boolean = false,
     values: List[String] = List.empty

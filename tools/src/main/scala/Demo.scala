@@ -56,7 +56,7 @@ object Demo extends App {
     name = "High rpc alert",
     frequency = 5.seconds,
     `for` = 10.seconds,
-    handler = 0 //ToDo ???
+    handler = 1
   )
   val timeSeries = Panel(
     gridPos = GridPosition(12, 12),

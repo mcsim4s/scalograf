@@ -6,7 +6,7 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Options(
     content: Option[String] = None,
-    mode: Option[String] = None // ToDo enum
+    mode: Option[TextMode] = None
 )
 
 object Options {

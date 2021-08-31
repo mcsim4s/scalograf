@@ -7,7 +7,6 @@ import model.enums.ColorMode
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
-//ToDo color config model
 case class ColorConfig(
     mode: ColorMode = ColorMode.PaletteClassic,
     fixedColor: Option[Color] = None

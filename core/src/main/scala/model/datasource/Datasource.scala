@@ -17,7 +17,7 @@ case class Datasource(
     basicAuth: Boolean = false,
     isDefault: Boolean = false,
     readOnly: Boolean = false,
-    //ToDp Datasource model
+    //ToDo Datasource model
     `type`: String,
     jsonData: JsonObject = JsonObject()
 //    secureJsonData: JsonObject //ToDo what is that???
