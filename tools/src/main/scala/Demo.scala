@@ -208,7 +208,7 @@ object Demo extends App {
     refresh = Every("5s"),
     panels = List(timeSeries, table, row),
     style = DashboardStyle.Dark,
-    timepicker = TimePicker(nowDelay = "1m")
+    timepicker = TimePicker(nowDelay = 1.minute)
   )
   val uploadReq = DashboardUploadRequest(
     dashboard = dashboard,
