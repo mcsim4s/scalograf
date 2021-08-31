@@ -10,6 +10,7 @@ import io.circe.generic.extras.semiauto._
 import scala.concurrent.duration.FiniteDuration
 
 case class Alert(
+    alertRuleTags: Map[String, String] = Map.empty,
     conditions: List[Condition],
     name: Option[String] = None,
     executionErrorState: ExecutionErrorBehaviour = ExecutionErrorBehaviour.Alerting,
@@ -21,6 +22,6 @@ case class Alert(
 )
 
 object Alert {
-  implicit val codecConfig = Configuration.default
+  implicit val codecConfig = Configuration.default.withDefaults
   implicit val codec = deriveConfiguredCodec[Alert]
 }

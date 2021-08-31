@@ -9,17 +9,19 @@ import model.time._
 import model.alert.Alert
 import model.datasource.Datasource
 import model.enums.ColorMode.ContinuousBlueYellowRed
-import model.enums.{ColorMode, DashboardStyle, TargetFormat}
+import model.enums.{ColorMode, DashboardStyle, TargetFormat, ThresholdMode}
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
 import model.panels.config.Override.Matcher
 import model.panels.config.{ColorConfig, Config, FieldConfig, Override}
 import model.panels.row.Row
 import model.panels.status_history.{Options, StatusHistory, StatusHistoryConfig}
 import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
-import model.panels.timeseries.{ShowPoints, TimeSeries, TimeSeriesConfig}
+import model.panels.timeseries.{LineInterpolation, ShowPoints, ThresholdStyleMode, TimeSeries, TimeSeriesConfig}
 import model.panels.{GridPosition, Panel}
 import model.transformations.{Organize, Sort}
 import syntax._
+
+import scalograf.model.panels.timeseries.TimeSeriesConfig.ThresholdStyle
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -56,7 +58,6 @@ object Demo extends App {
     `for` = 10.seconds,
     handler = 0 //ToDo ???
   )
-
   val timeSeries = Panel(
     gridPos = GridPosition(12, 12),
     title = "Rps by service",
@@ -76,7 +77,17 @@ object Demo extends App {
         defaults = FieldConfig[TimeSeriesConfig](
           custom = TimeSeriesConfig(
             lineWidth = 2,
-            showPoints = ShowPoints.Never
+            showPoints = ShowPoints.Never,
+            lineInterpolation = LineInterpolation.Smooth,
+            thresholdsStyle = ThresholdStyle(ThresholdStyleMode.Line)
+          ),
+          thresholds = Thresholds(
+            mode = ThresholdMode.Absolute,
+            steps = List(
+              ThresholdStep(Color.Named("green"), 0),
+              ThresholdStep(Color.Named("yellow"), 12),
+              ThresholdStep(Color.Named("red"), 16)
+            )
           )
         )
       )

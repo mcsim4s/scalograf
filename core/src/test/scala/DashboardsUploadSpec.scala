@@ -34,11 +34,10 @@ class DashboardsUploadSpec extends AsyncWordSpec with should.Matchers with Optio
 
         Future
           .traverse(testDataDir.listFiles().toList) { dashboardFile =>
-            val json = parse(Source.fromFile(dashboardFile).getLines().mkString) match {
+            val dashboardJson = parse(Source.fromFile(dashboardFile).getLines().mkString) match {
               case Left(value)  => throw value
               case Right(value) => value
             }
-            val dashboardJson = json.asObject.get("json").get
             val dashboard = dashboardJson.as[Dashboard] match {
               case Left(value)  => throw value
               case Right(value) => value

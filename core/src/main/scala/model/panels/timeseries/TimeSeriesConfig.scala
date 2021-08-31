@@ -17,13 +17,13 @@ case class TimeSeriesConfig(
     drawStyle: Option[DrawStyle] = None,
     fillOpacity: Option[Int] = None,
     gradientMode: Option[GradientMode] = None,
-    hideFrom: Option[HideFrom] = None,
+//    hideFrom: Option[HideFrom] = None, //ToDo What is that?
     lineInterpolation: Option[LineInterpolation] = None,
     lineWidth: Option[Int] = None,
     pointSize: Option[Int] = None,
     scaleDistribution: Option[ScaleDistribution] = None,
     showPoints: Option[ShowPoints] = None,
-    spanNulls: Option[Boolean] = None,
+    spanNulls: Option[Boolean] = None, //TODO SPAN NULLS MODEL
     stacking: Option[Stacking] = None,
     thresholdsStyle: Option[ThresholdStyle] = None
 ) extends CustomFieldConfig

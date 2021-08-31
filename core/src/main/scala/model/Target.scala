@@ -8,6 +8,7 @@ import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Target(
+    exemplar: Boolean = false,
     expr: String,
     format: TargetFormat = TargetFormat.TimeSeries,
     hide: Boolean = false,

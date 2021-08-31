@@ -13,7 +13,6 @@ import model.panels.table.Table
 import model.panels.timeseries.TimeSeries
 
 import io.circe._
-import io.circe.generic.extras.Configuration
 import io.circe.syntax._
 
 case class Panel(
@@ -32,8 +31,6 @@ object Panel {
     def `type`: String
     def asJson: JsonObject
   }
-
-  implicit val codecConfig = Configuration.default.withDefaults
 
   implicit val encoder: Encoder.AsObject[Panel] =
     Encoder.AsObject.instance { panel =>

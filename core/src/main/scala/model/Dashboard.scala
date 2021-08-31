@@ -5,6 +5,7 @@ import model.Refresh.Never
 import model.annotations.Annotation
 import model.enums.DashboardStyle
 import model.panels.Panel
+import model.template.Template
 import model.time.Time.now
 
 import io.circe.generic.extras.Configuration
@@ -39,7 +40,7 @@ case class Dashboard(
 )
 
 object Dashboard {
-  implicit val codecConfig = Configuration.default
+  implicit val codecConfig = Configuration.default.withDefaults
 
   private val defaultEncoder: Encoder.AsObject[Dashboard] = deriveConfiguredEncoder[Dashboard]
     .mapJsonObject(encodeAsListObject("annotations"))

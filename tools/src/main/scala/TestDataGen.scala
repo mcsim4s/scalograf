@@ -42,13 +42,9 @@ object TestDataGen extends App {
       name <- fromOption(body("name"))
       id <- fromOption(body("id").flatMap(_.asNumber).flatMap(_.toLong))
     } yield {
-      val testData = JsonObject(
-        "name" -> name,
-        "json" -> json
-      ).asJson
       Files.write(
-        Paths.get(s"core/src/test/resources/testDashboards/$id"),
-        testData.noSpaces.getBytes(StandardCharsets.UTF_8),
+        Paths.get(s"core/src/test/resources/testDashboards/$id.json"),
+        json.spaces2.getBytes(StandardCharsets.UTF_8),
         StandardOpenOption.CREATE
       )
       log.info(s"Written $id with name '$name'")

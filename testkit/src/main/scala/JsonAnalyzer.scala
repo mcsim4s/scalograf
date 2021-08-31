@@ -2,17 +2,35 @@ package scalograf
 
 import io.circe.{Json, JsonObject}
 
+import scala.util.matching.Regex
+
 object JsonAnalyzer {
-  private val ignores: Seq[String] = Seq(
+  private val ignores: Seq[Regex] = Seq(
     // those are actually fields of the 'table-old' panel in new grafana
-    "[table].columns",
-    "[table].styles",
-    "[table].transform"
+    "\\[table\\]\\.columns".r,
+    "\\[table\\]\\.styles".r,
+    "\\[table\\]\\.transform".r,
+    //Grafana 7 deprecated
+    "templating\\.list\\[\\w+\\]\\.tagsQuery".r,
+    "templating\\.list\\[\\w+\\]\\.tagValuesQuery".r,
+    "templating\\.list\\[\\w+\\]\\.useTags".r,
+    "templating\\.list\\[\\w+\\]\\.error".r,
+    "templating\\.list\\[\\w+\\]\\.queryValue".r,
+    "templating\\.list\\[\\w+\\]\\.skipUrlSync".r,
+    "templating\\.list\\[datasource\\]\\.refresh".r,
+    "templating\\.list\\[query\\]\\.query".r,
+
+    // Auto generated from alert, and doesn't work for some reason. use fieldconfig.thresholds
+    "panels\\[timeseries\\]\\.thresholds".r,
+
+    // idk what it is, so just ignore that for now
+    "list\\[adhoc\\]\\.filters\\[\\d+\\].condition".r,
+    "panels\\[timeseries\\]\\.fieldConfig\\.defaults\\.custom\\.hideFrom".r,
   )
 
   def diff(leftJson: Json, rightJson: Json): Seq[JsonDiff] =
     diff(leftJson, rightJson, "root")
-      .filterNot(d => ignores.exists(d.path.endsWith))
+      .filterNot(d => ignores.exists(r => r.findFirstIn(d.path).nonEmpty))
 
   private def diff(leftJson: Json, rightJson: Json, path: String): Seq[JsonDiff] = {
     (leftJson, rightJson) match {
