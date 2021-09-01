@@ -3,6 +3,8 @@ name := "scalograf"
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix := Some("scalograf")
 ThisBuild / Test / fork := true
+ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
+ThisBuild / skip in publish := true
 
 val sttpVersion = "3.3.11"
 val circeVersion = "0.14.1"
@@ -34,8 +36,7 @@ val testkit = (project in file("testkit"))
       "io.circe" %% "circe-core" % circeVersion,
       "org.scalatest" %% "scalatest" % scalatestVersion % "test",
       "io.circe" %% "circe-parser" % circeVersion % "test"
-    ),
-    skip in publish := true
+    )
   )
 
 val core = (project in file("core"))
@@ -52,7 +53,8 @@ val core = (project in file("core"))
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion % "test",
       "org.scalatest" %% "scalatest" % scalatestVersion % "test",
       "ch.qos.logback" % "logback-classic" % "1.2.3" % "test"
-    )
+    ),
+    skip in publish := false
   )
   .dependsOn(testkit % "compile->test;test->test")
 
@@ -63,7 +65,6 @@ val tools = (project in file("tools"))
       "ch.qos.logback" % "logback-classic" % "1.2.3",
       "com.github.pureconfig" %% "pureconfig" % "0.16.0",
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion
-    ),
-    skip in publish := true
+    )
   )
   .dependsOn(core, testkit)
