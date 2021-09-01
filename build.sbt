@@ -1,8 +1,11 @@
+import xerial.sbt.Sonatype.autoImport.sonatypeRepository
+
 name := "scalograf"
 
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix := Some("scalograf")
 ThisBuild / Test / fork := true
+ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
 ThisBuild / skip in publish := true
 
 val sttpVersion = "3.3.11"
@@ -53,7 +56,9 @@ val core = (project in file("core"))
       "org.scalatest" %% "scalatest" % scalatestVersion % "test",
       "ch.qos.logback" % "logback-classic" % "1.2.3" % "test"
     ),
-    skip in publish := false
+    skip in publish := false,
+    sonatypeCredentialHost := "s01.oss.sonatype.org",
+    sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
   )
   .dependsOn(testkit % "compile->test;test->test")
 
