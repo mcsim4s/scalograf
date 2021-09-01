@@ -43,7 +43,7 @@ val testkit = (project in file("testkit"))
 
 val core = (project in file("core"))
   .settings(
-    name := "core",
+    name := "scalograf-core",
     libraryDependencies ++= Seq(
       "com.beachape" %% "enumeratum" % enumeratumVersion,
       "com.beachape" %% "enumeratum-circe" % enumeratumVersion,
