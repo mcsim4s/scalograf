@@ -29,7 +29,7 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
       .send(backend)
   }
 
-  def dashboard(uid: String): F[Response[Either[DeserializationException[circe.Error], Dashboard]]] = {
+  def getDashboard(uid: String): F[Response[Either[DeserializationException[circe.Error], Dashboard]]] = {
     dashboardInner(asJsonAlways[Dashboard])(uid)
   }
 
@@ -51,6 +51,20 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
     grafanaRequest
       .post(uri"$url/api/datasources")
       .body(datasource)
+      .send(backend)
+  }
+
+  // https://grafana.com/api/dashboards?orderBy=downloads&direction=desc&includeLogo=1&page=1&pageSize=100
+  def dashboardsSearch(page: Int) = {
+    grafanaRequest
+      .get(
+        uri = uri"$url/api/dashboards"
+          .addParam("orderBy", "downloads")
+          .addParam("direction", "desc")
+          .addParam("pageSize", "100")
+          .addParam("page", page.toString)
+      )
+      .response(asJsonAlways[Json])
       .send(backend)
   }
 
