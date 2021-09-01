@@ -1,6 +1,5 @@
 name := "scalograf"
 
-ThisBuild / version := "0.1"
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix := Some("scalograf")
 ThisBuild / Test / fork := true
@@ -9,6 +8,22 @@ val sttpVersion = "3.3.11"
 val circeVersion = "0.14.1"
 val scalatestVersion = "3.2.9"
 val enumeratumVersion = "1.7.0"
+
+inThisBuild(
+  List(
+    organization := "io.github.mcsim4s",
+    homepage := Some(url("https://github.com/mcsim4s/scalograf")),
+    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    developers := List(
+      Developer(
+        "mcsim4s",
+        "Maxim Gribov",
+        "ya.mcsim1993@yandex.ru",
+        url("https://github.com/mcsim4s")
+      )
+    )
+  )
+)
 
 val testkit = (project in file("testkit"))
   .settings(
@@ -19,7 +34,8 @@ val testkit = (project in file("testkit"))
       "io.circe" %% "circe-core" % circeVersion,
       "org.scalatest" %% "scalatest" % scalatestVersion % "test",
       "io.circe" %% "circe-parser" % circeVersion % "test"
-    )
+    ),
+    skip in publish := true
   )
 
 val core = (project in file("core"))
@@ -47,6 +63,7 @@ val tools = (project in file("tools"))
       "ch.qos.logback" % "logback-classic" % "1.2.3",
       "com.github.pureconfig" %% "pureconfig" % "0.16.0",
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion
-    )
+    ),
+    skip in publish := true
   )
   .dependsOn(core, testkit)
