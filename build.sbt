@@ -3,7 +3,6 @@ name := "scalograf"
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix := Some("scalograf")
 ThisBuild / Test / fork := true
-ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
 ThisBuild / skip in publish := true
 
 val sttpVersion = "3.3.11"
