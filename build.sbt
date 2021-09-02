@@ -1,8 +1,12 @@
+import xerial.sbt.Sonatype.autoImport.sonatypeRepository
+
 name := "scalograf"
 
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix.withRank(KeyRanks.Invisible) := Some("scalograf")
 ThisBuild / Test / fork := true
+ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
+ThisBuild / skip in publish := true
 
 val sttpVersion = "3.3.13"
 val circeVersion = "0.14.1"
@@ -10,6 +14,22 @@ val scalatestVersion = "3.2.9"
 val enumeratumVersion = "1.7.0"
 val zioVersion = "1.0.11"
 val doobieVersion = "1.0.0-RC1"
+
+inThisBuild(
+  List(
+    organization := "io.github.mcsim4s",
+    homepage := Some(url("https://github.com/mcsim4s/scalograf")),
+    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    developers := List(
+      Developer(
+        "mcsim4s",
+        "Maxim Gribov",
+        "ya.mcsim1993@yandex.ru",
+        url("https://github.com/mcsim4s")
+      )
+    )
+  )
+)
 
 val testkit = (project in file("testkit"))
   .settings(
@@ -25,7 +45,7 @@ val testkit = (project in file("testkit"))
 
 val core = (project in file("core"))
   .settings(
-    name := "core",
+    name := "scalograf-core",
     libraryDependencies ++= Seq(
       "com.beachape" %% "enumeratum" % enumeratumVersion,
       "com.beachape" %% "enumeratum-circe" % enumeratumVersion,
@@ -37,9 +57,12 @@ val core = (project in file("core"))
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion % "test",
       "org.scalatest" %% "scalatest" % scalatestVersion % "test",
       "ch.qos.logback" % "logback-classic" % "1.2.3" % "test"
-    )
+    ),
+    skip in publish := false,
+    sonatypeCredentialHost := "s01.oss.sonatype.org",
+    sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
   )
-  .dependsOn(testkit % "compile->test;test->test")
+  .dependsOn(testkit % "test->compile")
 
 val tools = (project in file("tools"))
   .settings(
