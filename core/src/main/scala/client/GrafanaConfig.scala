@@ -24,4 +24,5 @@ object GrafanaConfig {
 
   case class LoginPassword(login: String, password: String) extends Auth
   case class Token(token: String) extends Auth
+  case object NoAuth extends Auth
 }

@@ -9,13 +9,14 @@ import io.circe.Json
 import sttp.client3._
 import sttp.client3.circe._
 
-case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpBackend[F, Any]) {
+case class GrafanaClient[F[_]](config: GrafanaConfig, private[scalograf] val backend: SttpBackend[F, Any]) {
   val url = config.endpoint.url
 
-  private val grafanaRequest = {
+  private[scalograf] val grafanaRequest = {
     config.auth match {
       case GrafanaConfig.LoginPassword(login, password) => basicRequest.auth.basic(login, password)
       case GrafanaConfig.Token(token)                   => basicRequest.auth.bearer(token)
+      case GrafanaConfig.NoAuth                         => basicRequest
     }
   }
 
@@ -54,20 +55,6 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
       .send(backend)
   }
 
-  // https://grafana.com/api/dashboards?orderBy=downloads&direction=desc&includeLogo=1&page=1&pageSize=100
-  def dashboardsSearch(page: Int) = {
-    grafanaRequest
-      .get(
-        uri = uri"$url/api/dashboards"
-          .addParam("orderBy", "downloads")
-          .addParam("direction", "desc")
-          .addParam("pageSize", "100")
-          .addParam("page", page.toString)
-      )
-      .response(asJsonAlways[Json])
-      .send(backend)
-  }
-
   private[scalograf] def dashboardRaw(uid: String): F[Response[Either[DeserializationException[circe.Error], Json]]] = {
     dashboardInner(asJsonAlways[Json])(uid)
   }
@@ -83,7 +70,7 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
       id: CommunityDashboardId
   ): F[Response[Either[DeserializationException[circe.Error], Json]]] = {
     grafanaRequest
-      .get(uri"$url/api/gnet/dashboards/${id.id}")
+      .get(uri"$url/api/dashboards/${id.id}/revisions/${id.revision}/download")
       .response(asJsonAlways[Json])
       .send(backend)
   }

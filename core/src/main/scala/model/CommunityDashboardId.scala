@@ -1,4 +1,4 @@
 package scalograf
 package model
 
-case class CommunityDashboardId(id: Long)
+case class CommunityDashboardId(id: Long, revision: Long)

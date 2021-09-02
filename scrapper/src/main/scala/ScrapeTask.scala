@@ -1,3 +1,5 @@
 package scalograf
 
-case class ScrapeTask(id: Long, name: String)
+import model.CommunityDashboardId
+
+case class ScrapeTask(id: CommunityDashboardId, name: String, scrapedWith: Option[String])
