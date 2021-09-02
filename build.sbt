@@ -60,7 +60,7 @@ val core = (project in file("core"))
     sonatypeCredentialHost := "s01.oss.sonatype.org",
     sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
   )
-  .dependsOn(testkit % "compile->test;test->test")
+  .dependsOn(testkit % "test->compile")
 
 val tools = (project in file("tools"))
   .settings(
