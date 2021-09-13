@@ -10,7 +10,7 @@ import sttp.client3._
 import sttp.client3.circe._
 
 case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpBackend[F, Any]) {
-  val url = config.endpoint.url
+  private val url: String = config.endpoint.url
 
   private val grafanaRequest = {
     config.auth match {
@@ -19,38 +19,42 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
     }
   }
 
-  def search(): F[Response[Either[DeserializationException[circe.Error], Seq[DashboardSnippet]]]] = {
+  def search(): F[Response[Either[ResponseException[Json, circe.Error], Seq[DashboardSnippet]]]] = {
     grafanaRequest
       .get(
         uri"$url/api/search"
           .addParam("limit", "5000")
       )
-      .response(asJsonAlways[Seq[DashboardSnippet]])
+      .response(asJsonEither[Json, Seq[DashboardSnippet]])
       .send(backend)
   }
 
-  def dashboard(uid: String): F[Response[Either[DeserializationException[circe.Error], Dashboard]]] = {
-    dashboardInner(asJsonAlways[Dashboard])(uid)
+  def getDashboard(uid: String): F[Response[Either[ResponseException[Json, circe.Error], Dashboard]]] = {
+    dashboardInner(asJsonEither[Json, Dashboard])(uid)
   }
 
-  def uploadDashboard(request: DashboardUploadRequest) = {
+  def uploadDashboard(
+      request: DashboardUploadRequest
+  ): F[Response[Either[ResponseException[Json, circe.Error], Unit]]] = {
     grafanaRequest
       .post(uri"$url/api/dashboards/db")
       .body(request)
+      .response(asJsonEither[Json, Unit])
       .send(backend)
   }
 
-  def listDataSources() = {
+  def listDataSources(): F[Response[Either[ResponseException[Json, circe.Error], Json]]] = {
     grafanaRequest
       .get(uri"$url/api/datasources")
-      .response(asJsonAlways[Json])
+      .response(asJsonEither[Json, Json])
       .send(backend)
   }
 
-  def createDatasource(datasource: Datasource): F[Response[Either[String, String]]] = {
+  def createDatasource(datasource: Datasource): F[Response[Either[ResponseException[Json, circe.Error], Unit]]] = {
     grafanaRequest
       .post(uri"$url/api/datasources")
       .body(datasource)
+      .response(asJsonEither[Json, Unit])
       .send(backend)
   }
 
