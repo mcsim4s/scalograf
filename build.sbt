@@ -5,8 +5,10 @@ name := "scalograf"
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / idePackagePrefix.withRank(KeyRanks.Invisible) := Some("scalograf")
 ThisBuild / Test / fork := true
-ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
 ThisBuild / skip in publish := true
+
+sonatypeCredentialHost := "s01.oss.sonatype.org"
+sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 
 val sttpVersion = "3.3.14"
 val circeVersion = "0.14.1"
