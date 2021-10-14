@@ -8,6 +8,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -16,15 +22,12 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 2,
-  "iteration": 1630275649266,
+  "id": 1,
   "links": [],
   "panels": [
     {
       "alert": {
-        "alertRuleTags": {
-          "tag1": "tag2"
-        },
+        "alertRuleTags": {},
         "conditions": [
           {
             "evaluator": {
@@ -122,7 +125,7 @@
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "linear",
+            "lineInterpolation": "smooth",
             "lineWidth": 2,
             "pointSize": 5,
             "scaleDistribution": {
@@ -135,7 +138,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "off"
+              "mode": "line"
             }
           },
           "mappings": [],
@@ -145,6 +148,14 @@
               {
                 "color": "green",
                 "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 12
+              },
+              {
+                "color": "red",
+                "value": 16
               }
             ]
           }
@@ -170,36 +181,15 @@
       },
       "targets": [
         {
-          "exemplar": true,
+          "exemplar": false,
           "expr": "sum(irate(rpc_durations_seconds_count[1m])) by (service)",
           "format": "time_series",
-          "hide": true,
+          "hide": false,
           "instant": false,
-          "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{service}}",
           "range": false,
           "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "sum(irate(rpc_durations_seconds_count{service=~\"$service\"}[1m])) by (service)",
-          "format": "time_series",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "{{service}}",
-          "range": false,
-          "refId": "B"
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "op": "gt",
-          "value": 16,
-          "visible": true
         }
       ],
       "title": "Rps by service",
@@ -314,11 +304,12 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "8.0.6",
+      "pluginVersion": "8.1.2",
       "scroll": false,
       "showHeader": false,
       "targets": [
         {
+          "exemplar": false,
           "expr": "rpc_durations_seconds",
           "format": "table",
           "hide": false,
@@ -430,10 +421,12 @@
       "showHeader": false,
       "targets": [
         {
+          "exemplar": false,
           "expr": "(sum(go_memstats_heap_alloc_bytes) by (job)) / on(job) ((sum(go_memstats_heap_alloc_bytes) by (job)) + on(job) (sum(go_memstats_heap_idle_bytes) by(job)))",
           "format": "time_series",
           "hide": false,
           "instant": false,
+          "interval": "",
           "intervalFactor": 3,
           "legendFormat": "{{job}}",
           "range": false,
@@ -443,6 +436,70 @@
       "title": "Heap size",
       "transformations": [],
       "type": "status-history"
+    },
+    {
+      "datasource": null,
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.35
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 8,
+        "y": 13
+      },
+      "id": 6,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "max"
+          ],
+          "fields": "/^prometheus\\-random-data$/",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "8.1.2",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "(sum(go_memstats_heap_alloc_bytes) by (job)) / on(job) ((sum(go_memstats_heap_alloc_bytes) by (job)) + on(job) (sum(go_memstats_heap_idle_bytes) by(job)))",
+          "interval": "",
+          "legendFormat": "{{job}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Heap size gauge",
+      "type": "gauge"
     }
   ],
   "refresh": "",
@@ -450,252 +507,10 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "1",
-          "value": "1"
-        },
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "query0",
-        "options": [
-          {
-            "selected": true,
-            "text": "1",
-            "value": "1"
-          },
-          {
-            "selected": false,
-            "text": "2",
-            "value": "2"
-          },
-          {
-            "selected": false,
-            "text": "3",
-            "value": "3"
-          },
-          {
-            "selected": false,
-            "text": "4",
-            "value": "4"
-          },
-          {
-            "selected": false,
-            "text": "5",
-            "value": "5"
-          }
-        ],
-        "query": "1,2,3,4,5",
-        "skipUrlSync": false,
-        "type": "custom"
-      },
-      {
-        "allValue": ".*",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": "Prometheus",
-        "definition": "label_values(rpc_durations_seconds_count, service)",
-        "description": "pspsppsppspsps",
-        "error": null,
-        "hide": 0,
-        "includeAll": true,
-        "label": "service_name",
-        "multi": false,
-        "name": "service",
-        "options": [],
-        "query": {
-          "query": "label_values(rpc_durations_seconds_count, service)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
-      },
-      {
-        "current": {
-          "selected": true,
-          "text": "",
-          "value": ""
-        },
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "label": null,
-        "name": "query1",
-        "options": [
-          {
-            "selected": true,
-            "text": "",
-            "value": ""
-          }
-        ],
-        "query": "",
-        "skipUrlSync": false,
-        "type": "textbox"
-      },
-      {
-        "description": null,
-        "error": null,
-        "hide": 2,
-        "label": null,
-        "name": "query2",
-        "query": "1",
-        "skipUrlSync": false,
-        "type": "constant"
-      },
-      {
-        "auto": true,
-        "auto_count": 10,
-        "auto_min": "5s",
-        "current": {
-          "selected": false,
-          "text": "12h",
-          "value": "12h"
-        },
-        "description": null,
-        "error": null,
-        "hide": 0,
-        "label": null,
-        "name": "query3",
-        "options": [
-          {
-            "selected": false,
-            "text": "auto",
-            "value": "$__auto_interval_query3"
-          },
-          {
-            "selected": false,
-            "text": "1m",
-            "value": "1m"
-          },
-          {
-            "selected": false,
-            "text": "10m",
-            "value": "10m"
-          },
-          {
-            "selected": false,
-            "text": "30m",
-            "value": "30m"
-          },
-          {
-            "selected": false,
-            "text": "1h",
-            "value": "1h"
-          },
-          {
-            "selected": false,
-            "text": "6h",
-            "value": "6h"
-          },
-          {
-            "selected": true,
-            "text": "12h",
-            "value": "12h"
-          },
-          {
-            "selected": false,
-            "text": "1d",
-            "value": "1d"
-          },
-          {
-            "selected": false,
-            "text": "7d",
-            "value": "7d"
-          },
-          {
-            "selected": false,
-            "text": "14d",
-            "value": "14d"
-          },
-          {
-            "selected": false,
-            "text": "30d",
-            "value": "30d"
-          }
-        ],
-        "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
-        "queryValue": "",
-        "refresh": 2,
-        "skipUrlSync": false,
-        "type": "interval"
-      },
-      {
-        "datasource": "Prometheus",
-        "description": null,
-        "error": null,
-        "filters": [
-          {
-            "condition": "",
-            "key": "action",
-            "operator": ">",
-            "value": "notify"
-          },
-          {
-            "condition": "",
-            "key": "action",
-            "operator": "!=",
-            "value": "history"
-          },
-          {
-            "condition": "",
-            "key": "action",
-            "operator": "<",
-            "value": "history"
-          }
-        ],
-        "hide": 0,
-        "label": null,
-        "name": "query4",
-        "skipUrlSync": false,
-        "type": "adhoc"
-      },
-      {
-        "datasource": "Prometheus",
-        "description": null,
-        "error": null,
-        "filters": [
-          {
-            "condition": "",
-            "key": "app",
-            "operator": ">",
-            "value": "frontend"
-          },
-          {
-            "condition": "",
-            "key": "code",
-            "operator": "=~",
-            "value": "400"
-          },
-          {
-            "condition": "",
-            "key": "alertname",
-            "operator": "!~",
-            "value": "AppCrash"
-          }
-        ],
-        "hide": 0,
-        "label": null,
-        "name": "Filters",
-        "skipUrlSync": false,
-        "type": "adhoc"
-      }
-    ]
+    "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -706,5 +521,5 @@
   "timezone": "browser",
   "title": "Demo Dashboard",
   "uid": "demo",
-  "version": 138
+  "version": 2
 }
