@@ -3,7 +3,7 @@ package scalograf
 import App.Env
 import LiveGrafanaClient._
 import client.GrafanaClient
-import model.{CommunityDashboardId, Dashboard}
+import model.Dashboard
 
 import io.circe.syntax._
 import zio._
@@ -12,9 +12,9 @@ import zio.stream.ZStream
 
 object Logic {
 
-  lazy val version = ZIO.service[AppConf].map(_.version)
+  lazy val version: ZIO[Has[AppConf], Nothing, String] = ZIO.service[AppConf].map(_.version)
 
-  lazy val untagOldScrapping = version.flatMap(TaskDao.untagAll)
+  lazy val untagOldScrapping: ZIO[Has[TaskDao] with Has[AppConf], Throwable, Unit] = version.flatMap(TaskDao.untagAll)
 
   lazy val existingDashBoards: ZStream[Has[TaskDao], Throwable, ScrapeTask] = ZStream.repeatEffectChunkOption {
     TaskDao.pull(100).mapBoth(Some.apply, Chunk.fromIterable).tap(r => ZIO.fail(None).when(r.isEmpty))

@@ -91,4 +91,4 @@ val scrapper = (project in file("scrapper"))
       "org.tpolecat" %% "doobie-hikari" % doobieVersion
     )
   )
-  .dependsOn(core)
+  .dependsOn(core, testkit)
