@@ -9,8 +9,8 @@ import io.circe.Json
 import sttp.client3._
 import sttp.client3.circe._
 
-case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpBackend[F, Any]) {
-  private val url: String = config.endpoint.url
+case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, Any]) {
+  val url: String = config.endpoint.url
 
   private[scalograf] val grafanaRequest = {
     config.auth match {
