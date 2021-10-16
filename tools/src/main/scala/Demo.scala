@@ -143,7 +143,7 @@ object Demo extends App {
                 width = 100
               ),
               mappings = List(
-                Mappings(
+                Mappings.OptionsMapping(
                   `type` = "value",
                   options = Map(
                     "0.5" -> Mapping(1, "50%"),
