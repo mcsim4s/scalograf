@@ -11,6 +11,7 @@ import model.time.Time.now
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
 import io.circe.{Encoder, JsonObject}
+import scalograf.model.link.Link
 
 import scala.concurrent.duration._
 

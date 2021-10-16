@@ -6,7 +6,7 @@ import model.panels.Panel
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
-import scalograf.model.Link
+import scalograf.model.link.Link
 
 case class DashboardList(
     folderId: Option[Int] = None,

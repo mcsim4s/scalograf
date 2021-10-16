@@ -9,7 +9,8 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Row(
     collapsed: Boolean = false,
-    panels: List[Panel] = List.empty
+    panels: List[Panel] = List.empty,
+    repeat: Option[Json] = None
 ) extends Panel.Type {
   override def `type`: String = "row"
 

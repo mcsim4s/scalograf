@@ -6,7 +6,7 @@ import model.template.query.QueryTemplate
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto._
 import io.circe.syntax._
-import io.circe.{Decoder, DecodingFailure, Encoder, JsonObject}
+import io.circe.{Codec, Decoder, DecodingFailure, Encoder, JsonObject}
 import scalograf.model.template.adhoc.AdhocFilterTemplate
 
 case class Template(
@@ -24,8 +24,8 @@ case class Template(
 )
 
 object Template {
-  implicit val codecConfig = Configuration.default.withDefaults
-  implicit val errorCodec = deriveConfiguredCodec[Error]
+  implicit val codecConfig: Configuration = Configuration.default.withDefaults
+  implicit val errorCodec: Codec.AsObject[Error] = deriveConfiguredCodec[Error]
 
   case class Error()
 

@@ -6,7 +6,7 @@ import enumeratum.values.{StringCirceEnum, StringEnum, StringEnumEntry}
 sealed abstract class ReduceCalculation(val value: String) extends StringEnumEntry
 
 object ReduceCalculation extends StringEnum[ReduceCalculation] with StringCirceEnum[ReduceCalculation] {
-  val values = findValues
+  val values: IndexedSeq[ReduceCalculation] = findValues
 
   case object LastNotNull extends ReduceCalculation("lastNotNull")
   case object Last extends ReduceCalculation("last")

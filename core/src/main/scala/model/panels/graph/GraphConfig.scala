@@ -1,5 +1,5 @@
 package scalograf
-package model.panels.gauge
+package model.panels.graph
 
 import model.panels.config.FieldConfig.CustomFieldConfig
 
@@ -7,10 +7,10 @@ import io.circe.Codec
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
-case class GaugeConfig(
+case class GraphConfig(
 ) extends CustomFieldConfig
 
-object GaugeConfig {
+object GraphConfig {
   implicit val config: Configuration = Configuration.default.withDefaults
-  implicit val codec: Codec.AsObject[GaugeConfig] = deriveConfiguredCodec[GaugeConfig]
+  implicit val codec: Codec.AsObject[GraphConfig] = deriveConfiguredCodec[GraphConfig]
 }

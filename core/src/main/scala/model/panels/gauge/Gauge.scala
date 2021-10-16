@@ -2,20 +2,27 @@ package scalograf
 package model.panels.gauge
 
 import model.Target
+import model.link.Link
 import model.panels.Panel
+import model.panels.config.Config
 import model.transformations.Transformation
+import model.time._
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 import io.circe.{Codec, JsonObject}
-import scalograf.model.panels.config.Config
+
+import scala.concurrent.duration.FiniteDuration
 
 case class Gauge(
-    targets: List[Target] = List.empty,
-    transformations: List[Transformation] = List.empty,
-    pluginVersion: Option[String] = None,
+    cacheTimeout: Option[FiniteDuration] = None,
+    fieldConfig: Config[GaugeConfig] = Config[GaugeConfig](),
+    hideTimeOverride: Boolean = false,
+    links: List[Link] = List.empty,
     options: Options = Options(),
-    fieldConfig: Config[GaugeConfig] = Config[GaugeConfig]()
+    pluginVersion: Option[String] = None,
+    targets: List[Target] = List.empty,
+    transformations: List[Transformation] = List.empty
 ) extends Panel.Type {
   override def `type`: String = "gauge"
 

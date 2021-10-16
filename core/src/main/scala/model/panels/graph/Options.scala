@@ -1,18 +1,15 @@
 package scalograf
-package model.panels.gauge
+package model.panels.graph
 
-import model.enums.Orientation
+import model.link.Link
 
 import io.circe.Codec
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
 case class Options(
-    reduceOptions: ReduceOptions = ReduceOptions(),
-    showThresholdLabels: Boolean = false,
-    showThresholdMarkers: Boolean = false,
-    text: TextOptions = TextOptions(),
-    orientation: Option[Orientation] = None
+    alertThreshold: Boolean = false,
+    dataLinks: List[Link] = List.empty
 )
 
 object Options {

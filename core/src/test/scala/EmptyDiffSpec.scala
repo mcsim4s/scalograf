@@ -26,6 +26,7 @@ class EmptyDiffSpec extends AnyWordSpec with should.Matchers with OptionValues {
           case Right(value) => value
         }
         val diff = JsonAnalyzer.diff(dashboardJson, dashboard.asJson)
+        println(s"${dashboardFile.getName}")
         diff.foreach(println)
         diff should be(empty)
       }
