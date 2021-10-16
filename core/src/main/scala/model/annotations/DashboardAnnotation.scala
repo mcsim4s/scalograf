@@ -14,7 +14,8 @@ case class DashboardAnnotation(
     enable: Boolean = true,
     hide: Boolean = false,
     iconColor: Color,
-    name: String
+    name: String,
+    target: Option[AnnotationTarget] = None
 ) extends Annotation {
   override def asJson: JsonObject = DashboardAnnotation.codec.encodeObject(this)
 }

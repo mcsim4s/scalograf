@@ -7,6 +7,8 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 case class Options(
     dedupStrategy: Option[String] = None,
     enableLogDetails: Boolean = false,
+    prettifyLogMessage: Boolean = false,
+    showCommonLabels: Boolean = false,
     showLabels: Boolean = false,
     showTime: Boolean = false,
     sortOrder: String = "Descending", //toDo enum

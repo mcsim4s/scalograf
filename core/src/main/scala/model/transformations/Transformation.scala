@@ -25,6 +25,7 @@ object Transformation {
         case "organize"           => c.downField("options").as[Organize]
         case "filterFieldsByName" => c.downField("options").as[FilterFieldsByName]
         case "sortBy"             => c.downField("options").as[Sort]
+        case "seriesToRows"       => c.downField("options").as[SeriesToRows]
         case other                => Left(DecodingFailure(s"Unknown transformation type '$other'", c.history))
       }
   }

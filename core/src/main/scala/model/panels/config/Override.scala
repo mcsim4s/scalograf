@@ -21,10 +21,10 @@ object Override {
     def stripCustom: Property = copy(id = this.id.stripPrefix("custom."))
   }
 
-  implicit val config = Configuration.default.withDefaults
-  implicit val codecMatcher = deriveConfiguredCodec[Matcher]
-  implicit val codecProperty = deriveConfiguredCodec[Property]
-  implicit def codec[T <: CustomFieldConfig](implicit codecT: Codec.AsObject[T]) =
+  implicit val config: Configuration = Configuration.default.withDefaults
+  implicit val codecMatcher: Codec.AsObject[Matcher] = deriveConfiguredCodec[Matcher]
+  implicit val codecProperty: Codec.AsObject[Property] = deriveConfiguredCodec[Property]
+  implicit def codec[T <: CustomFieldConfig](implicit codecT: Codec.AsObject[T]): Codec.AsObject[Override[T]] =
     new Codec.AsObject[Override[T]] {
       override def encodeObject(o: Override[T]): JsonObject =
         JsonObject(

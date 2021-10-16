@@ -2,7 +2,8 @@ package scalograf
 
 import client.GrafanaConfig._
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
-import model.Mappings.Mapping
+
+import scalograf.model.panels.config.Mappings.Mapping
 import model.Refresh.Every
 import model._
 import model.time._
@@ -12,7 +13,7 @@ import model.enums.ColorMode.ContinuousBlueYellowRed
 import model.enums.{ColorMode, DashboardStyle, TargetFormat, ThresholdMode}
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
 import model.panels.config.Override.Matcher
-import model.panels.config.{ColorConfig, Config, FieldConfig, Override}
+import model.panels.config.{ColorConfig, Config, FieldConfig, Mappings, Override}
 import model.panels.row.Row
 import model.panels.status_history.{Options, StatusHistory, StatusHistoryConfig}
 import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
@@ -142,7 +143,7 @@ object Demo extends App {
                 width = 100
               ),
               mappings = List(
-                Mappings(
+                Mappings.OptionsMapping(
                   `type` = "value",
                   options = Map(
                     "0.5" -> Mapping(1, "50%"),

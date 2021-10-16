@@ -1,6 +1,7 @@
 package scalograf
 package model.panels.graph
 
+import io.circe.Codec
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 
@@ -13,6 +14,6 @@ case class Threshold(
 )
 
 object Threshold {
-  implicit val config = Configuration.default.withDefaults
-  implicit val codec = deriveConfiguredCodec[Threshold]
+  implicit val config: Configuration = Configuration.default.withDefaults
+  implicit val codec: Codec.AsObject[Threshold] = deriveConfiguredCodec[Threshold]
 }
