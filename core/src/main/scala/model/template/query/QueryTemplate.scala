@@ -1,11 +1,12 @@
 package scalograf
 package model.template.query
 
+import model._
 import model.template.Template
 
-import io.circe.JsonObject
 import io.circe.generic.extras.Configuration
-import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
+import io.circe.{Decoder, Encoder, JsonObject}
 
 case class QueryTemplate(
     definition: String = "",
@@ -16,11 +17,18 @@ case class QueryTemplate(
 ) extends Template.Type {
   override def `type`: String = "query"
 
-  override def asJson: JsonObject = QueryTemplate.codec.encodeObject(this)
+  override def asJson: JsonObject = QueryTemplate.encoder.encodeObject(this)
 }
 
 object QueryTemplate {
 
-  implicit val codecConfig = Configuration.default.withDefaults
-  implicit val codec = deriveConfiguredCodec[QueryTemplate]
+  implicit val codecConfig: Configuration = Configuration.default.withDefaults
+
+  implicit val encoder: Encoder.AsObject[QueryTemplate] =
+    deriveConfiguredEncoder[QueryTemplate]
+      .mapJsonObject(changeEncodeName("definition", "query"))
+
+  implicit val decoder: Decoder[QueryTemplate] =
+    deriveConfiguredDecoder[QueryTemplate]
+      .prepare(changeDecodeName("query", "definition"))
 }

@@ -23,13 +23,11 @@ package object model {
     }))
   }
 
-  private[scalograf] def changeEncodeName(from: String, to: String)(json: Json): Json =
-    json.mapObject(obj =>
-      obj(from) match {
-        case Some(value) => obj.add(to, value)
-        case None        => obj
-      }
-    )
+  private[scalograf] def changeEncodeName(from: String, to: String)(obj: JsonObject): JsonObject =
+    obj(from) match {
+      case Some(value) => obj.add(to, value)
+      case None        => obj
+    }
 
   private[scalograf] def changeDecodeName(from: String, to: String)(cursor: ACursor): ACursor =
     cursor.withFocus(
