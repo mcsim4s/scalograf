@@ -9,13 +9,14 @@ import io.circe.Json
 import sttp.client3._
 import sttp.client3.circe._
 
-case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpBackend[F, Any]) {
-  private val url: String = config.endpoint.url
+case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, Any]) {
+  val url: String = config.endpoint.url
 
-  private val grafanaRequest = {
+  private[scalograf] val grafanaRequest = {
     config.auth match {
       case GrafanaConfig.LoginPassword(login, password) => basicRequest.auth.basic(login, password)
       case GrafanaConfig.Token(token)                   => basicRequest.auth.bearer(token)
+      case GrafanaConfig.NoAuth                         => basicRequest
     }
   }
 
@@ -73,7 +74,7 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, private val backend: SttpB
       id: CommunityDashboardId
   ): F[Response[Either[DeserializationException[circe.Error], Json]]] = {
     grafanaRequest
-      .get(uri"$url/api/gnet/dashboards/${id.id}")
+      .get(uri"$url/api/dashboards/${id.id}/revisions/${id.revision}/download")
       .response(asJsonAlways[Json])
       .send(backend)
   }

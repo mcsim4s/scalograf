@@ -14,6 +14,8 @@ val sttpVersion = "3.3.14"
 val circeVersion = "0.14.1"
 val scalatestVersion = "3.2.9"
 val enumeratumVersion = "1.7.0"
+val zioVersion = "1.0.11"
+val doobieVersion = "1.0.0-RC1"
 
 inThisBuild(
   List(
@@ -71,6 +73,22 @@ val tools = (project in file("tools"))
       "ch.qos.logback" % "logback-classic" % "1.2.3",
       "com.github.pureconfig" %% "pureconfig" % "0.16.0",
       "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % sttpVersion
+    )
+  )
+  .dependsOn(core, testkit)
+
+val scrapper = (project in file("scrapper"))
+  .settings(
+    name := "tools",
+    libraryDependencies ++= Seq(
+      "ch.qos.logback" % "logback-classic" % "1.2.3",
+      "com.github.pureconfig" %% "pureconfig" % "0.16.0",
+      "com.softwaremill.sttp.client3" %% "httpclient-backend-zio" % sttpVersion,
+      "dev.zio" %% "zio" % zioVersion,
+      "dev.zio" %% "zio-interop-cats" % "3.1.1.0",
+      "org.tpolecat" %% "doobie-core" % doobieVersion,
+      "org.tpolecat" %% "doobie-postgres" % doobieVersion,
+      "org.tpolecat" %% "doobie-hikari" % doobieVersion
     )
   )
   .dependsOn(core, testkit)

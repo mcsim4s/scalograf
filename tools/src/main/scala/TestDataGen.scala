@@ -21,38 +21,35 @@ object TestDataGen extends App {
   private val log = LoggerFactory.getLogger(this.getClass)
   case class Conf(communityDashboardIds: List[CommunityDashboardId])
   implicit val DashboardIdReader: ConfigReader[CommunityDashboardId] = (cur: ConfigCursor) =>
-    cur.asLong.map(CommunityDashboardId.apply)
+    cur.asListCursor.flatMap { elems =>
+      for {
+        id <- elems.atIndexOrUndefined(0).asLong
+        revision <- elems.atIndexOrUndefined(1).asLong
+      } yield CommunityDashboardId(id, revision)
+
+    }
   val conf = ConfigSource.resources("test.data").loadOrThrow[Conf]
 
-  val container = GrafanaContainer.Def().start()
-
   val client = GrafanaClient(
-    GrafanaConfig(
-      Scheme("http", container.host, container.port),
-      LoginPassword("admin", "admin")
-    ),
+    GrafanaConfig(Url("https://grafana.com"), NoAuth),
     AsyncHttpClientFutureBackend()
   )
 
   val program = Future.traverse(conf.communityDashboardIds) { id =>
     for {
       resp <- client.importJson(id)
-      body <- Future.fromTry(resp.body.toTry).map(_.asObject).flatMap(fromOption)
-      json <- fromOption(body("json"))
-      name <- fromOption(body("name"))
-      id <- fromOption(body("id").flatMap(_.asNumber).flatMap(_.toLong))
+      json <- Future.fromTry(resp.body.toTry)
     } yield {
       Files.write(
-        Paths.get(s"core/src/test/resources/testDashboards/$id.json"),
+        Paths.get(s"core/src/test/resources/testDashboards/${id.id}.json"),
         json.spaces2.getBytes(StandardCharsets.UTF_8),
         StandardOpenOption.CREATE
       )
-      log.info(s"Written $id with name '$name'")
+      log.info(s"Written $id'")
     }
   }
   program
     .andThen(_ => client.close())
-    .andThen(_ => container.stop())
     .failed
     .foreach(err => log.error("Fatal: ", err))
 }

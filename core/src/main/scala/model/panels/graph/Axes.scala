@@ -9,8 +9,8 @@ case class Axes(
     format: String, //ToDe enum
     label: Option[String] = None,
     logBase: Double,
-    max: Option[String] = None,
-    min: Option[String] = None,
+    max: Option[Double] = None,
+    min: Option[Double] = None,
     show: Boolean = false
 )
 

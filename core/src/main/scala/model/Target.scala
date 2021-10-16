@@ -3,9 +3,9 @@ package model
 
 import model.enums.TargetFormat
 
-import io.circe.Codec
 import io.circe.generic.extras.Configuration
-import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
+import io.circe.{Decoder, Encoder}
 
 case class Target(
     exemplar: Boolean = false,
@@ -25,5 +25,11 @@ case class Target(
 
 object Target {
   implicit val config: Configuration = Configuration.default.withDefaults
-  implicit val codec: Codec.AsObject[Target] = deriveConfiguredCodec[Target]
+  implicit val encoder: Encoder[Target] =
+    deriveConfiguredEncoder[Target]
+      .mapJsonObject(changeEncodeName("expr", "expression"))
+
+  implicit val decoder: Decoder[Target] =
+    deriveConfiguredDecoder[Target]
+      .prepare(changeDecodeName("expression", "expr"))
 }

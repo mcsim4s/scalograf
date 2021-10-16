@@ -20,6 +20,7 @@ object JsonAnalyzer {
     "templating\\.list\\[\\d+-\\w+\\]\\.skipUrlSync".r,
     "templating\\.list\\[\\d+-datasource\\]\\.refresh".r,
     "templating\\.list\\[\\d+-query\\]\\.query".r,
+    "templating\\.list\\[\\d+-query\\]\\.definition".r,
 
     // Auto generated from alert, and doesn't work for some reason. use fieldconfig.thresholds
     "panels\\[\\d+-timeseries\\]\\.thresholds".r,
@@ -27,6 +28,10 @@ object JsonAnalyzer {
     // idk what it is, so just ignore that for now
     "list\\[\\d+-adhoc\\]\\.filters\\[\\d+\\].condition".r,
     "panels\\[\\d+-timeseries\\]\\.fieldConfig\\.defaults\\.custom\\.hideFrom".r,
+
+    // type diff
+    "yaxes\\[\\d+\\]\\.min".r,
+    "yaxes\\[\\d+\\]\\.max".r,
 
     "\\$\\$hashKey".r,
     "gridPos\\.y".r

@@ -10,4 +10,5 @@ object Orientation extends StringEnum[Orientation] with StringCirceEnum[Orientat
 
   case object Horizontal extends Orientation("horizontal")
   case object Vertical extends Orientation("vertical")
+  case object Auto extends Orientation("auto")
 }
