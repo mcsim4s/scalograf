@@ -2,6 +2,7 @@
 
 
 [![build](https://github.com/mcsim4s/scalograf/actions/workflows/scala.yml/badge.svg)](https://github.com/mcsim4s/scalograf/actions)
+[![scalograf-core Scala version support](https://index.scala-lang.org/mcsim4s/scalograf/scalograf-core/latest-by-scala-version.svg)](https://index.scala-lang.org/mcsim4s/scalograf/scalograf-core)
 
 Scalograf lets you generate and parse grafana entities(dashboards, datasources etc.) 
 and communicate with grafana instances through built in http client.

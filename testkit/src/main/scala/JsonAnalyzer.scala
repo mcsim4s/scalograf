@@ -1,35 +1,51 @@
 package scalograf
 
 import io.circe.{Json, JsonObject}
+import io.circe.syntax._
 
 import scala.util.matching.Regex
 
 object JsonAnalyzer {
   private val ignores: Seq[Regex] = Seq(
     // those are actually fields of the 'table-old' panel in new grafana
-    "\\[table\\]\\.columns".r,
-    "\\[table\\]\\.styles".r,
-    "\\[table\\]\\.transform".r,
+    "table\\]\\.columns".r,
+    "table\\]\\.styles".r,
+    "table\\]\\.transform".r,
     //Grafana 7 deprecated
-    "templating\\.list\\[\\w+\\]\\.tagsQuery".r,
-    "templating\\.list\\[\\w+\\]\\.tagValuesQuery".r,
-    "templating\\.list\\[\\w+\\]\\.useTags".r,
-    "templating\\.list\\[\\w+\\]\\.error".r,
-    "templating\\.list\\[\\w+\\]\\.queryValue".r,
-    "templating\\.list\\[\\w+\\]\\.skipUrlSync".r,
-    "templating\\.list\\[datasource\\]\\.refresh".r,
-    "templating\\.list\\[query\\]\\.query".r,
+    "templating\\.list\\[\\d+-\\w+\\]\\.tagsQuery".r,
+    "templating\\.list\\[\\d+-\\w+\\]\\.tagValuesQuery".r,
+    "templating\\.list\\[\\d+-\\w+\\]\\.useTags".r,
+    "templating\\.list\\[\\d+-\\w+\\]\\.error".r,
+    "templating\\.list\\[\\d+-\\w+\\]\\.queryValue".r,
+    "templating\\.list\\[\\d+-\\w+\\]\\.skipUrlSync".r,
+    "templating\\.list\\[\\d+-datasource\\]\\.refresh".r,
+    "templating\\.list\\[\\d+-query\\]\\.query".r,
 
     // Auto generated from alert, and doesn't work for some reason. use fieldconfig.thresholds
-    "panels\\[timeseries\\]\\.thresholds".r,
+    "panels\\[\\d+-timeseries\\]\\.thresholds".r,
 
     // idk what it is, so just ignore that for now
-    "list\\[adhoc\\]\\.filters\\[\\d+\\].condition".r,
-    "panels\\[timeseries\\]\\.fieldConfig\\.defaults\\.custom\\.hideFrom".r,
+    "list\\[\\d+-adhoc\\]\\.filters\\[\\d+\\].condition".r,
+    "panels\\[\\d+-timeseries\\]\\.fieldConfig\\.defaults\\.custom\\.hideFrom".r,
+
+    "\\$\\$hashKey".r,
+    "gridPos\\.y".r
   )
 
+  def prepare(dashboard: Json): Json = dashboard.mapObject { dashboardObj =>
+    val panels = dashboardObj("panels").flatMap(_.asArray).map(_.flatMap { panel =>
+      if (panel.asObject.flatMap(_("type")).flatMap(_.asString).contains("row")) {
+        val inner = panel.asObject.flatMap(_("panels")).flatMap(_.asArray).getOrElse(Vector.empty)
+        panel.asObject.map(_.remove("panels").asJson).toVector ++ inner
+      } else {
+        Vector(panel)
+      }
+    }).getOrElse(Vector.empty)
+    dashboardObj.add("panels", panels.asJson)
+  }
+
   def diff(leftJson: Json, rightJson: Json): Seq[JsonDiff] =
-    diff(leftJson, rightJson, "root")
+    diff(prepare(leftJson), rightJson, "root")
       .filterNot(d => ignores.exists(r => r.findFirstIn(d.path).nonEmpty))
 
   private def diff(leftJson: Json, rightJson: Json, path: String): Seq[JsonDiff] = {
@@ -79,7 +95,7 @@ object JsonAnalyzer {
 
     sizeDiff ++ (left zip right).zipWithIndex.flatMap { case ((l, r), index) =>
       val idxString = l.asObject.flatMap(_ ("type")).flatMap(_.asString) match {
-        case Some(value) => value
+        case Some(value) => s"$index-$value"
         case None => index.toString
       }
       diff(l, r, s"$path[$idxString]")

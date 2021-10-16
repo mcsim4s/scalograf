@@ -1,39 +1,35 @@
 package scalograf
-package model.panels.stat
+package model.panels.gauge
 
-import model._
-import model.panels._
+import model.Target
+import model.link.Link
+import model.panels.Panel
 import model.panels.config.Config
-import model.time._
 import model.transformations.Transformation
+import model.time._
 
-import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
-import scalograf.model.link.Link
+import io.circe.{Codec, JsonObject}
 
 import scala.concurrent.duration.FiniteDuration
 
-case class Stat(
+case class Gauge(
     cacheTimeout: Option[FiniteDuration] = None,
-    fieldConfig: Config[StatConfig] = Config(),
+    fieldConfig: Config[GaugeConfig] = Config[GaugeConfig](),
     hideTimeOverride: Boolean = false,
-    interval: Option[String] = None,
     links: List[Link] = List.empty,
-    maxDataPoints: Int = 300,
     options: Options = Options(),
     pluginVersion: Option[String] = None,
     targets: List[Target] = List.empty,
-    timeFrom: Option[FiniteDuration] = None,
-    timeShift: Option[FiniteDuration] = None,
     transformations: List[Transformation] = List.empty
 ) extends Panel.Type {
-  override def `type`: String = "stat"
+  override def `type`: String = "gauge"
 
-  override def asJson: JsonObject = Stat.codec.encodeObject(this)
+  override def asJson: JsonObject = Gauge.codec.encodeObject(this)
 }
 
-object Stat {
+object Gauge {
   implicit val codecConfig = Configuration.default.withDefaults
-  implicit val codec: Codec.AsObject[Stat] = deriveConfiguredCodec[Stat]
+  implicit val codec: Codec.AsObject[Gauge] = deriveConfiguredCodec[Gauge]
 }

@@ -4,11 +4,12 @@ package model.panels.status_history
 import model.panels._
 import model.panels.config.Config
 import model.transformations.Transformation
-import model.{Link, Target}
+import model.Target
 
 import io.circe._
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+import scalograf.model.link.Link
 
 case class StatusHistory(
     fieldConfig: Config[StatusHistoryConfig] = Config[StatusHistoryConfig](),

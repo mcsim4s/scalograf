@@ -14,6 +14,8 @@ import model.panels.timeseries.TimeSeries
 
 import io.circe._
 import io.circe.syntax._
+import scalograf.model.panels.gauge.Gauge
+import scalograf.model.panels.geomap.GeoMap
 
 case class Panel(
     datasource: Option[String] = None,
@@ -60,6 +62,8 @@ object Panel {
           case "graph"                  => c.as[Graph]
           case "status-history"         => c.as[StatusHistory]
           case "dashlist"               => c.as[DashboardList]
+          case "geomap"                 => c.as[GeoMap]
+          case "gauge"                  => c.as[Gauge]
           case other                    => Left(DecodingFailure(s"Unknown panel type '$other'", c.history))
         }
         .flatMap { typed =>
