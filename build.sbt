@@ -5,6 +5,9 @@ ThisBuild / idePackagePrefix.withRank(KeyRanks.Invisible) := Some("scalograf")
 ThisBuild / Test / fork := true
 ThisBuild / skip / publish := true
 
+ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
+ThisBuild / sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
+
 val sttpVersion = "3.3.14"
 val circeVersion = "0.14.1"
 val scalatestVersion = "3.2.9"
@@ -55,7 +58,9 @@ val core = (project in file("core"))
       "org.scalatest" %% "scalatest" % scalatestVersion % "test",
       "ch.qos.logback" % "logback-classic" % "1.2.5" % "test"
     ),
-    skip / publish := false
+    skip / publish := false,
+    sonatypeCredentialHost := "s01.oss.sonatype.org",
+    sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
   )
   .dependsOn(testkit % "test->compile")
 
