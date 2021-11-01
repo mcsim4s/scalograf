@@ -10,7 +10,7 @@ import io.circe.{Decoder, Encoder, JsonObject}
 
 case class QueryTemplate(
     definition: String = "",
-    regex: Option[String],
+    regex: Option[String] = None,
     refresh: TemplateRefresh = TemplateRefresh.OnLoad,
     sort: ValuesSort = ValuesSort.Disabled,
     datasource: String //ToDo datasource model????

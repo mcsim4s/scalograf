@@ -30,7 +30,7 @@ object FieldConfig {
 
   case class ThresholdStep(
       color: Color,
-      value: Double
+      value: Option[Double] = None
   )
 
   case class Thresholds(
