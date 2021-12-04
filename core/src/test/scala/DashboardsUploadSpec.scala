@@ -50,8 +50,8 @@ class DashboardsUploadSpec extends AsyncWordSpec with should.Matchers with Optio
               .map { body =>
                 println(s"${dashboard.gnetId} $body")
                 body should matchPattern {
-                  case Right(_)                                                                        =>
-                  case Left(HttpError(_, status)) if dashboard.__inputs.nonEmpty && status.code == 422 =>
+                  case Right(_)                                                  =>
+                  case Left(HttpError(_, status)) if dashboard.__inputs.nonEmpty =>
                 }
               }
           }
