@@ -14,7 +14,7 @@ case class CustomTemplate(
 }
 
 object CustomTemplate {
-  implicit val codec = new Codec.AsObject[CustomTemplate] {
+  implicit val codec: Codec.AsObject[CustomTemplate] = new Codec.AsObject[CustomTemplate] {
     override def encodeObject(t: CustomTemplate): JsonObject =
       JsonObject(
         "query" -> t.values.mkString(",").asJson

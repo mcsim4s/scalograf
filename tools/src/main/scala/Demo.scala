@@ -206,7 +206,7 @@ object Demo extends App {
     title = "Demo Dashboard",
     description = "Test dashboard for library abilities demonstration",
     uid = "demo",
-    refresh = Every("5s"),
+    refresh = Every(5.seconds),
     panels = List(timeSeries, table, row),
     style = DashboardStyle.Dark,
     timepicker = TimePicker(nowDelay = 1.minute)
