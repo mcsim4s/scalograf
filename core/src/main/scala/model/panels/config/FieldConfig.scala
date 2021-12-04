@@ -2,7 +2,7 @@ package scalograf
 package model.panels.config
 
 import model.Color
-import model.enums.ThresholdMode
+import model.enums.{ThresholdMode, Units}
 import model.link.Link
 import model.panels.config.FieldConfig._
 
@@ -22,7 +22,7 @@ case class FieldConfig[T <: CustomFieldConfig](
     min: Option[Double] = None,
     nullValueMode: Option[String] = None, //ToDo enum
     thresholds: Option[Thresholds] = None,
-    unit: Option[String] = None
+    unit: Option[Units] = None
 )
 
 object FieldConfig {
@@ -55,7 +55,7 @@ object FieldConfig {
           max <- c.downField("max").as[Option[Double]]
           min <- c.downField("min").as[Option[Double]]
           thresholds <- c.downField("thresholds").as[Option[Thresholds]]
-          unit <- c.downField("unit").as[Option[String]]
+          unit <- c.downField("unit").as[Option[Units]]
           links <- c.downField("links").as[Option[List[Link]]]
         } yield FieldConfig[T](
           color = color,

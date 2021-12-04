@@ -51,7 +51,7 @@ package object time {
     }
   }
 
-  implicit val durationEncoder = Encoder.instance[FiniteDuration] { duration =>
+  implicit val durationEncoder: Encoder[FiniteDuration] = Encoder.instance[FiniteDuration] { duration =>
     val unit = duration.unit match {
       case DAYS    => "d"
       case HOURS   => "h"
@@ -61,7 +61,7 @@ package object time {
     s"${duration.length}$unit".asJson
   }
 
-  implicit val durationDecoder = Decoder.instance[FiniteDuration] { cursor =>
+  implicit val durationDecoder: Decoder[FiniteDuration] = Decoder.instance[FiniteDuration] { cursor =>
     val regex = "^(\\d+)([dhms])$".r
     cursor.value.asString match {
       case Some(regex(len, unitString)) =>

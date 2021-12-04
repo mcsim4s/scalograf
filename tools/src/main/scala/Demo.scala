@@ -2,7 +2,6 @@ package scalograf
 
 import client.GrafanaConfig._
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
-
 import model.panels.config.Mappings.Mapping
 import model.Refresh.Every
 import model._
@@ -10,7 +9,7 @@ import model.time._
 import model.alert.Alert
 import model.datasource.Datasource
 import model.enums.ColorMode.ContinuousBlueYellowRed
-import model.enums.{ColorMode, DashboardStyle, TargetFormat, ThresholdMode}
+import model.enums.{ColorMode, DashboardStyle, TargetFormat, ThresholdMode, Units}
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
 import model.panels.config.Override.Matcher
 import model.panels.config.{ColorConfig, Config, FieldConfig, Mappings, Override}
@@ -21,7 +20,6 @@ import model.panels.timeseries.{LineInterpolation, ShowPoints, ThresholdStyleMod
 import model.panels.{GridPosition, Panel}
 import model.transformations.{Organize, Sort}
 import syntax._
-
 import model.panels.timeseries.TimeSeriesConfig.ThresholdStyle
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -125,7 +123,7 @@ object Demo extends App {
                 displayMode = ColumnDisplayMode.GradientGauge
               ),
               decimals = 1,
-              unit = "s"
+              unit = Units.Seconds
             )
           ),
           Override[TableConfig](
@@ -186,7 +184,7 @@ object Demo extends App {
           color = ColorConfig(mode = ColorMode.ContinuousBlueYellowRed),
           min = 0d,
           max = 0.6,
-          unit = "percentunit"
+          unit = Units.PercentUnit
         )
       ),
       options = Options(
@@ -206,7 +204,7 @@ object Demo extends App {
     title = "Demo Dashboard",
     description = "Test dashboard for library abilities demonstration",
     uid = "demo",
-    refresh = Every("5s"),
+    refresh = Every(5.seconds),
     panels = List(timeSeries, table, row),
     style = DashboardStyle.Dark,
     timepicker = TimePicker(nowDelay = 1.minute)
