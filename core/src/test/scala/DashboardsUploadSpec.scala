@@ -10,6 +10,7 @@ import io.circe.parser._
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should
 import org.scalatest.wordspec.AsyncWordSpec
+import sttp.client3.HttpError
 import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
 
 import java.io.File
@@ -46,7 +47,13 @@ class DashboardsUploadSpec extends AsyncWordSpec with should.Matchers with Optio
             client
               .uploadDashboard(DashboardUploadRequest(dashboard))
               .map(_.body)
-              .map(println)
+              .map { body =>
+                println(s"${dashboard.gnetId} $body")
+                body should matchPattern {
+                  case Right(_)                                                  =>
+                  case Left(HttpError(_, status)) if dashboard.__inputs.nonEmpty =>
+                }
+              }
           }
           .map(_ => assert(true))
     }

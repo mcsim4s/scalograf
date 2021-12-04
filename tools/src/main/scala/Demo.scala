@@ -3,7 +3,7 @@ package scalograf
 import client.GrafanaConfig._
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
 
-import scalograf.model.panels.config.Mappings.Mapping
+import model.panels.config.Mappings.Mapping
 import model.Refresh.Every
 import model._
 import model.time._
@@ -22,7 +22,7 @@ import model.panels.{GridPosition, Panel}
 import model.transformations.{Organize, Sort}
 import syntax._
 
-import scalograf.model.panels.timeseries.TimeSeriesConfig.ThresholdStyle
+import model.panels.timeseries.TimeSeriesConfig.ThresholdStyle
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
