@@ -9,6 +9,7 @@ case class UrlLink(
     url: String,
     tags: List[String] = List.empty,
     icon: Option[String] = Some("external link"), // ToDo enum ?
+    targetBlank: Boolean = false, // Link opens in new tab if true
     title: Option[String] = None
 ) extends Link {
   val `type`: String = "link"

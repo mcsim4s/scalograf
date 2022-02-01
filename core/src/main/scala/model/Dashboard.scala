@@ -33,7 +33,7 @@ case class Dashboard(
     tags: List[String] = List.empty,
     templating: List[Template] = List.empty,
     time: TimeRange = TimeRange(now - 1.hour, now),
-    timepicker: TimePicker = TimePicker(),
+    timepicker: Option[TimePicker] = None,
     timezone: String = "browser", //ToDo timezone model
     title: String,
     uid: Option[String] = None, //ToDo option or adt?
