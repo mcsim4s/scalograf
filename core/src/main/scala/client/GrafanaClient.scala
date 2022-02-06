@@ -6,6 +6,7 @@ import model.datasource.Datasource
 
 import io.circe
 import io.circe.Json
+import scalograf.client.notifications.NotificationChannel
 import sttp.client3._
 import sttp.client3.circe._
 
@@ -58,6 +59,38 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
       .post(uri"$url/api/datasources")
       .body(datasource)
       .response(asJsonEither[ErrorResponse, DatasourceCreateResponse])
+      .send(backend)
+  }
+
+  def createNotificationChannel(
+      channel: NotificationChannel
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], NotificationChannel]]] = {
+    grafanaRequest
+      .post(uri"$url/api/alert-notifications")
+      .body(channel)
+      .response(asJsonEither[ErrorResponse, NotificationChannel])
+      .send(backend)
+  }
+
+  /***
+    * https://grafana.com/docs/grafana/latest/http_api/alerting_notification_channels/#get-all-notification-channels-lookup
+    */
+  def lookupNotificationChannels()
+      : F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[NotificationChannel]]]] = {
+    grafanaRequest
+      .get(uri"$url/api/alert-notifications/lookup")
+      .response(asJsonEither[ErrorResponse, List[NotificationChannel]])
+      .send(backend)
+  }
+
+  /***
+    * https://grafana.com/docs/grafana/latest/http_api/alerting_notification_channels/#get-all-notification-channels
+    */
+  def listNotificationChannels()
+      : F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[NotificationChannel]]]] = {
+    grafanaRequest
+      .get(uri"$url/api/alert-notifications")
+      .response(asJsonEither[ErrorResponse, List[NotificationChannel]])
       .send(backend)
   }
 
