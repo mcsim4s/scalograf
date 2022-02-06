@@ -18,7 +18,7 @@ case class Alert(
     `for`: Option[FiniteDuration] = None,
     frequency: FiniteDuration,
     notifications: List[Notification] = List.empty,
-    handler: Int
+    handler: Int = 1 // I have no idea what this is :(
 )
 
 object Alert {

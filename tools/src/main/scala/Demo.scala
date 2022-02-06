@@ -1,26 +1,28 @@
 package scalograf
 
 import client.GrafanaConfig._
+import client.notifications.{EmailSettings, NotificationChannel}
 import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
-import model.panels.config.Mappings.Mapping
 import model.Refresh.Every
 import model._
-import model.time._
-import model.alert.Alert
+import model.alert.{Alert, Notification}
 import model.datasource.Datasource
 import model.enums.ColorMode.ContinuousBlueYellowRed
-import model.enums.{ColorMode, DashboardStyle, TargetFormat, ThresholdMode, Units}
+import model.enums._
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
+import model.panels.config.Mappings.Mapping
 import model.panels.config.Override.Matcher
-import model.panels.config.{ColorConfig, Config, FieldConfig, Mappings, Override}
+import model.panels.config._
 import model.panels.row.Row
 import model.panels.status_history.{Options, StatusHistory, StatusHistoryConfig}
 import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
-import model.panels.timeseries.{LineInterpolation, ShowPoints, ThresholdStyleMode, TimeSeries, TimeSeriesConfig}
+import model.panels.timeseries.TimeSeriesConfig.ThresholdStyle
+import model.panels.timeseries._
 import model.panels.{GridPosition, Panel}
+import model.time._
 import model.transformations.{Organize, Sort}
 import syntax._
-import model.panels.timeseries.TimeSeriesConfig.ThresholdStyle
+import BetterFuture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -46,6 +48,13 @@ object Demo extends App {
     access = "proxy",
     name = "Random Prometheus"
   )
+  val emailNotificationChannel = NotificationChannel(
+    uid = Some("email-uid"),
+    name = "default channel",
+    settings = EmailSettings(
+      addresses = List("example@example.com")
+    )
+  )
 
   val alert = Alert(
     conditions =
@@ -55,7 +64,7 @@ object Demo extends App {
     name = "High rpc alert",
     frequency = 5.seconds,
     `for` = 10.seconds,
-    handler = 1
+    notifications = emailNotificationChannel.uid.map(uid => Notification.apply(uid)).toList
   )
   val timeSeries = Panel(
     gridPos = GridPosition(12, 12),
@@ -83,9 +92,9 @@ object Demo extends App {
           thresholds = Thresholds(
             mode = ThresholdMode.Absolute,
             steps = List(
-              ThresholdStep(Color.Named("green"), 0),
-              ThresholdStep(Color.Named("yellow"), 12),
-              ThresholdStep(Color.Named("red"), 16)
+              ThresholdStep(Color.Named("green"), 0d),
+              ThresholdStep(Color.Named("yellow"), 12d),
+              ThresholdStep(Color.Named("red"), 16d)
             )
           )
         )
@@ -216,6 +225,7 @@ object Demo extends App {
 
   val program = for {
     _ <- client.createDatasource(prometheusDatasource)
+    _ <- client.createNotificationChannel(emailNotificationChannel)
     _ <- client.uploadDashboard(uploadReq)
   } yield ()
 
