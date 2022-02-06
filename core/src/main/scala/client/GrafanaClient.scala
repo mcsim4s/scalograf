@@ -30,6 +30,27 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
       .send(backend)
   }
 
+  /**
+   * Allow to add query parameters for a request.
+   *
+   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder_dashboard_search/]]
+   * @author vl0ft
+   * @param params map of query parameters
+   * @return response
+   */
+  def search(
+      params: Map[String, String])
+  : F[Response[Either[ResponseException[ErrorResponse, circe.Error], Seq[DashboardSnippet]]]] = {
+    grafanaRequest
+      .get(
+        params
+          .foldLeft(uri"$url/api/search")((url, params) => url.addParam(params._1, params._2))
+          .addParam("limit", "5000")
+      )
+      .response(asJsonEither[ErrorResponse, Seq[DashboardSnippet]])
+      .send(backend)
+  }
+
   def getDashboard(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Dashboard]]] = {
     dashboardInner(asJsonEither[ErrorResponse, Dashboard])(uid)
   }
