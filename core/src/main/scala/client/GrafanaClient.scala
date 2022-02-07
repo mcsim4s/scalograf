@@ -35,7 +35,6 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
       .get(
         params
           .foldLeft(uri"$url/api/search")((url, params) => url.addParam(params._1, params._2))
-          .addParam("limit", "5000")
       )
       .response(asJsonEither[ErrorResponse, Seq[DashboardSnippet]])
       .send(backend)
