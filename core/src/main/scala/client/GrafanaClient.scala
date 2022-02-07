@@ -21,11 +21,21 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
     }
   }
 
-  def search(): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Seq[DashboardSnippet]]]] = {
+  /**
+   * Allow to add query parameters for a request.
+   *
+   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder_dashboard_search/]]
+   * @author vl0ft
+   * @param params map of query parameters
+   * @return response
+   */
+  def search(
+      params: Map[String, String])
+  : F[Response[Either[ResponseException[ErrorResponse, circe.Error], Seq[DashboardSnippet]]]] = {
     grafanaRequest
       .get(
-        uri"$url/api/search"
-          .addParam("limit", "5000")
+        params
+          .foldLeft(uri"$url/api/search")((url, params) => url.addParam(params._1, params._2))
       )
       .response(asJsonEither[ErrorResponse, Seq[DashboardSnippet]])
       .send(backend)
