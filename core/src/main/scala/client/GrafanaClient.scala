@@ -20,16 +20,6 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
     }
   }
 
-  def search(): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Seq[DashboardSnippet]]]] = {
-    grafanaRequest
-      .get(
-        uri"$url/api/search"
-          .addParam("limit", "5000")
-      )
-      .response(asJsonEither[ErrorResponse, Seq[DashboardSnippet]])
-      .send(backend)
-  }
-
   /**
    * Allow to add query parameters for a request.
    *
