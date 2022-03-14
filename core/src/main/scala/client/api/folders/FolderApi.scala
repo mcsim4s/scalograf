@@ -40,7 +40,7 @@ trait FolderApi[F[_]] {
   /**
    * Get folder by uid
    *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#create-folder]]
+   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-folder-by-uid]]
    * @param uid uid of folder
    * @author vl0ft
    * @return response
@@ -62,9 +62,9 @@ trait FolderApi[F[_]] {
   }
 
   /**
-   * Get folder by uid
+   * Get folder by id
    *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#create-folder]]
+   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-folder-by-id]]
    * @param id id of folder
    * @author vl0ft
    * @return response
