@@ -1,11 +1,10 @@
 package scalograf
 package client
 
-import client.api.folders.{CreateFolderRequest, FolderApi, UpdateFolderRequest}
+import client.api.folders.FolderApi
 import client.notifications.NotificationChannel
 import model._
 import model.datasource.Datasource
-import model.folder.{Folder, FolderInfo}
 
 import io.circe
 import io.circe.Json
@@ -22,6 +21,9 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
       case GrafanaConfig.NoAuth => basicRequest
     }
   }
+
+  override protected[client] def clientContext(): GrafanaClientContext[F] =
+    GrafanaClientContext(url, grafanaRequest, backend)
 
   /**
    * Allow to add query parameters for a request.
@@ -56,81 +58,6 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
       .body(request)
       .response(asJsonEither[ErrorResponse, DashboardUploadResponse])
       .send(backend)
-  }
-
-  /**
-   * Get list of folders
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-all-folders]]
-   * @author vl0ft
-   * @return response
-   */
-  def listFolders(): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[FolderInfo]]]] = {
-    listFolders(backend, url, grafanaRequest)
-  }
-
-  /**
-   * Get folder by uid
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#create-folder]]
-   * @param uid uid of folder
-   * @author vl0ft
-   * @return response
-   */
-  def getByUid(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
-    getByUid(backend, url, grafanaRequest, uid)
-  }
-
-  /**
-   * Get folder by id
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#create-folder]]
-   * @param id id of folder
-   * @author vl0ft
-   * @return response
-   */
-  def getById(id: Long): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
-    getById(backend, url, grafanaRequest, id)
-  }
-
-  /**
-   * Create folder
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#create-folder]]
-   * @param request CreateFolderRequest
-   * @author vl0ft
-   * @return response
-   */
-  def createFolder(
-      request: CreateFolderRequest): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
-    createFolder(backend, url, grafanaRequest, request)
-  }
-
-  /**
-   * Update folder
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#update-folder]]
-   * @param uid current uid of folder
-   * @param request CreateFolderRequest
-   * @author vl0ft
-   * @return response
-   */
-  def updateFolder(
-      uid: String,
-      request: UpdateFolderRequest): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
-    updateFolder(backend, url, grafanaRequest, uid, request)
-  }
-
-  /**
-   * Delete folder
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#update-folder]]
-   * @param uid current uid of folder
-   * @author vl0ft
-   * @return response
-   */
-  def deleteFolder(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Json]]] = {
-    deleteFolder(backend, url, grafanaRequest, uid)
   }
 
   def listDataSources(): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Json]]] = {

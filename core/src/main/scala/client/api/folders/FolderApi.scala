@@ -1,8 +1,8 @@
 package scalograf
 package client.api.folders
 
-import client.ErrorResponse
 import client.api.folders.CreateFolderRequest._
+import client.{ErrorResponse, GrafanaClientContext}
 import model.folder.{Folder, FolderInfo}
 
 import io.circe
@@ -14,7 +14,9 @@ import sttp.model.Uri.{PathSegmentEncoding, Segment}
 
 trait FolderApi[F[_]] {
 
-  def folderUrl(baseUrl: String): Uri = uri"$baseUrl/api/folders"
+  protected def clientContext(): GrafanaClientContext[F]
+
+  private def folderUrl(ctx: GrafanaClientContext[F]): Uri = uri"${ctx.url}/api/folders"
 
   /**
    * Get list of folders
@@ -23,18 +25,13 @@ trait FolderApi[F[_]] {
    * @author vl0ft
    * @return response
    */
-  protected def listFolders(
-      backend: SttpBackend[F, Any],
-      url: String,
-      grafanaRequest: RequestT[
-        Empty,
-        Either[String, String],
-        Any
-      ]): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[FolderInfo]]]] = {
-    grafanaRequest
-      .get(folderUrl(url))
+  def listFolders(): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[FolderInfo]]]] = {
+    val ctx = clientContext()
+
+    ctx.grafanaRequest
+      .get(folderUrl(ctx))
       .response(asJsonEither[ErrorResponse, List[FolderInfo]])
-      .send(backend)
+      .send(ctx.backend)
   }
 
   /**
@@ -45,20 +42,13 @@ trait FolderApi[F[_]] {
    * @author vl0ft
    * @return response
    */
-  protected def getByUid(
-      backend: SttpBackend[F, Any],
-      url: String,
-      grafanaRequest: RequestT[
-        Empty,
-        Either[String, String],
-        Any
-      ],
-      uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+  def getByUid(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+    val ctx = clientContext()
 
-    grafanaRequest
-      .get(folderUrl(url).addPathSegment(Segment(uid, PathSegmentEncoding.Standard)))
+    ctx.grafanaRequest
+      .get(folderUrl(ctx).addPathSegment(Segment(uid, PathSegmentEncoding.Standard)))
       .response(asJsonEither[ErrorResponse, Folder])
-      .send(backend)
+      .send(ctx.backend)
   }
 
   /**
@@ -69,22 +59,17 @@ trait FolderApi[F[_]] {
    * @author vl0ft
    * @return response
    */
-  protected def getById(
-                          backend: SttpBackend[F, Any],
-                          url: String,
-                          grafanaRequest: RequestT[
-                            Empty,
-                            Either[String, String],
-                            Any
-                          ],
-                          id: Long): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+  def getById(id: Long): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+    val ctx = clientContext()
 
-    grafanaRequest
-      .get(folderUrl(url)
-        .addPathSegment(Segment("id", PathSegmentEncoding.Standard))
-        .addPathSegment(Segment(id.toString, PathSegmentEncoding.Standard)))
+    ctx.grafanaRequest
+      .get(
+        folderUrl(ctx)
+          .addPathSegment(Segment("id", PathSegmentEncoding.Standard))
+          .addPathSegment(Segment(id.toString, PathSegmentEncoding.Standard))
+      )
       .response(asJsonEither[ErrorResponse, Folder])
-      .send(backend)
+      .send(ctx.backend)
   }
 
   /**
@@ -95,21 +80,15 @@ trait FolderApi[F[_]] {
    * @author vl0ft
    * @return response
    */
-  protected def createFolder(
-      backend: SttpBackend[F, Any],
-      url: String,
-      grafanaRequest: RequestT[
-        Empty,
-        Either[String, String],
-        Any
-      ],
+  def createFolder(
       request: CreateFolderRequest): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+    val ctx = clientContext()
 
-    grafanaRequest
-      .post(folderUrl(url))
+    ctx.grafanaRequest
+      .post(folderUrl(ctx))
       .body(request)
       .response(asJsonEither[ErrorResponse, Folder])
-      .send(backend)
+      .send(ctx.backend)
   }
 
   /**
@@ -121,22 +100,16 @@ trait FolderApi[F[_]] {
    * @author vl0ft
    * @return response
    */
-  protected def updateFolder(
-      backend: SttpBackend[F, Any],
-      url: String,
-      grafanaRequest: RequestT[
-        Empty,
-        Either[String, String],
-        Any
-      ],
+  def updateFolder(
       uid: String,
       request: UpdateFolderRequest): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+    val ctx = clientContext()
 
-    grafanaRequest
-      .put(folderUrl(url).addPathSegment(Segment(uid, PathSegmentEncoding.Standard)))
+    ctx.grafanaRequest
+      .put(folderUrl(ctx).addPathSegment(Segment(uid, PathSegmentEncoding.Standard)))
       .body(request)
       .response(asJsonEither[ErrorResponse, Folder])
-      .send(backend)
+      .send(ctx.backend)
   }
 
   /**
@@ -147,19 +120,12 @@ trait FolderApi[F[_]] {
    * @author vl0ft
    * @return response
    */
-  protected def deleteFolder(
-      backend: SttpBackend[F, Any],
-      url: String,
-      grafanaRequest: RequestT[
-        Empty,
-        Either[String, String],
-        Any
-      ],
-      uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Json]]] = {
+  def deleteFolder(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Json]]] = {
+    val ctx = clientContext()
 
-    grafanaRequest
-      .delete(folderUrl(url).addPathSegment(Segment(uid, PathSegmentEncoding.Standard)))
+    ctx.grafanaRequest
+      .delete(folderUrl(ctx).addPathSegment(Segment(uid, PathSegmentEncoding.Standard)))
       .response(asJsonEither[ErrorResponse, Json])
-      .send(backend)
+      .send(ctx.backend)
   }
 }
