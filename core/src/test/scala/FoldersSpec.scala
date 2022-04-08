@@ -21,33 +21,6 @@ class FoldersSpec extends AsyncWordSpec with should.Matchers with OptionValues w
   override val containerDef: ContainerDef = GrafanaContainer.Def()
 
   "Grafana client" should {
-    s"found by id" in withContainers {
-      case container: GrafanaContainer =>
-        println(container.url)
-        val client = GrafanaClient(
-          GrafanaConfig(
-            Scheme("http", container.host, container.port),
-            LoginPassword("admin", "admin")
-          ),
-          AsyncHttpClientFutureBackend()
-        )
-
-        val folderUid = Random.nextLong().toString
-        val folderTitle = Random.nextString(5)
-
-        for {
-          created <- client.createFolder(CreateFolderRequest(folderUid, folderTitle))
-          folder <- eitherToFuture(created.body)
-          _ <- logStep(s"created folder with id '${folder.id}'", folder)
-          getById <- client.getById(folder.id)
-          res <- getById.body match {
-            case Right(f) => assert(f.uid == folderUid)
-            case Left(ex) =>
-              println(ex)
-              assert(false)
-          }
-        } yield res
-    }
 
     s"found folders after creating" in withContainers {
       case container: GrafanaContainer =>
