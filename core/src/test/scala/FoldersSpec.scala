@@ -67,6 +67,7 @@ class FoldersSpec extends AsyncWordSpec with should.Matchers with OptionValues w
         for {
           created <- client.createFolder(CreateFolderRequest("getByUid", "getByUid"))
           folder <- eitherToFuture(created.body)
+          _ <- logStep("created folder with uid 'getById'", folder)
           getByUid <- client.getByUid(folder.uid)
           res <- getByUid.body match {
             case Right(f) => assert(f.uid == "getByUid")
@@ -90,10 +91,11 @@ class FoldersSpec extends AsyncWordSpec with should.Matchers with OptionValues w
         for {
           created <- client.createFolder(CreateFolderRequest("getById", "getById"))
           folder <- eitherToFuture(created.body)
+          _ <- logStep("created folder with uid 'getById'", folder)
           getById <- client.getById(folder.id)
           res <- getById.body match {
-            case Right(f)   => assert(folder.uid == "getById")
-            case Left(some) => assert(false)
+            case Right(f) => assert(f.uid == "getById")
+            case Left(_)  => assert(false)
           }
         } yield res
     }
@@ -115,7 +117,9 @@ class FoldersSpec extends AsyncWordSpec with should.Matchers with OptionValues w
         for {
           created <- client.createFolder(CreateFolderRequest(folderUid, folderTitle))
           folder <- eitherToFuture(created.body)
+          _ <- logStep(s"created folder with uid '$folderUid'", folder)
           _ <- client.updateFolder(folderUid, UpdateFolderRequest(s"new_uid_${folder.uid}", s"new $folderTitle"))
+          _ <- logStep(s"update folder with uid '$folderUid' with new uid", s"new_uid_${folder.uid}")
           all <- client.listFolders()
           res <- all.body match {
             case Right(listOfFolders) => {
@@ -141,16 +145,24 @@ class FoldersSpec extends AsyncWordSpec with should.Matchers with OptionValues w
         val folderUid = "uid"
         val folderTitle = Random.nextString(5)
 
-        client
-          .createFolder(CreateFolderRequest(folderUid, folderTitle))
-          .flatMap(_ => client.deleteFolder(folderUid))
-          .flatMap(_ => client.listFolders())
-          .map(_.body)
-          .map {
+        for {
+          created <- client.createFolder(CreateFolderRequest(folderUid, folderTitle))
+          folder <- eitherToFuture(created.body)
+          _ <- logStep(s"created folder with uid '$folderUid'", folder)
+          delResult <- client.deleteFolder(folderUid)
+          _ <- logStep(s"delete folder with uid '$folderUid'", delResult)
+          all <- client.listFolders()
+          res <- all.body match {
             case Right(listOfFolders) => assert(!listOfFolders.exists(f => f.uid == folderUid))
             case _                    => assert(false)
           }
+        } yield res
     }
+  }
+
+  private def logStep[T](step: String, obj: T): Future[T] = {
+    println(s"step: $step: $obj")
+    Future.successful(obj)
   }
 
   private def eitherToFuture[T](e: Either[ResponseException[_, _], T]): Future[T] =
