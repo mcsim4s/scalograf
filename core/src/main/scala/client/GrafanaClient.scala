@@ -17,8 +17,8 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
   private[scalograf] val grafanaRequest: RequestT[Empty, Either[String, String], Any] = {
     config.auth match {
       case GrafanaConfig.LoginPassword(login, password) => basicRequest.auth.basic(login, password)
-      case GrafanaConfig.Token(token) => basicRequest.auth.bearer(token)
-      case GrafanaConfig.NoAuth => basicRequest
+      case GrafanaConfig.Token(token)                   => basicRequest.auth.bearer(token)
+      case GrafanaConfig.NoAuth                         => basicRequest
     }
   }
 
@@ -52,7 +52,8 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
   }
 
   def uploadDashboard(
-      request: DashboardUploadRequest): F[Response[Either[ResponseException[ErrorResponse, circe.Error], DashboardUploadResponse]]] = {
+      request: DashboardUploadRequest
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], DashboardUploadResponse]]] = {
     grafanaRequest
       .post(uri"$url/api/dashboards/db")
       .body(request)
@@ -68,7 +69,8 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
   }
 
   def createDatasource(
-      datasource: Datasource): F[Response[Either[ResponseException[ErrorResponse, circe.Error], DatasourceCreateResponse]]] = {
+      datasource: Datasource
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], DatasourceCreateResponse]]] = {
     grafanaRequest
       .post(uri"$url/api/datasources")
       .body(datasource)
@@ -77,7 +79,8 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
   }
 
   def createNotificationChannel(
-      channel: NotificationChannel): F[Response[Either[ResponseException[ErrorResponse, circe.Error], NotificationChannel]]] = {
+      channel: NotificationChannel
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], NotificationChannel]]] = {
     grafanaRequest
       .post(uri"$url/api/alert-notifications")
       .body(channel)
@@ -89,7 +92,7 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
     * https://grafana.com/docs/grafana/latest/http_api/alerting_notification_channels/#get-all-notification-channels-lookup
     */
   def lookupNotificationChannels(
-    ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[NotificationChannel]]]] = {
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[NotificationChannel]]]] = {
     grafanaRequest
       .get(uri"$url/api/alert-notifications/lookup")
       .response(asJsonEither[ErrorResponse, List[NotificationChannel]])
@@ -100,7 +103,7 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
     * https://grafana.com/docs/grafana/latest/http_api/alerting_notification_channels/#get-all-notification-channels
     */
   def listNotificationChannels(
-    ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[NotificationChannel]]]] = {
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[NotificationChannel]]]] = {
     grafanaRequest
       .get(uri"$url/api/alert-notifications")
       .response(asJsonEither[ErrorResponse, List[NotificationChannel]])
@@ -119,7 +122,8 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
   }
 
   private[scalograf] def importJson(
-      id: CommunityDashboardId): F[Response[Either[DeserializationException[circe.Error], Json]]] = {
+      id: CommunityDashboardId
+  ): F[Response[Either[DeserializationException[circe.Error], Json]]] = {
     grafanaRequest
       .get(uri"$url/api/dashboards/${id.id}/revisions/${id.revision}/download")
       .response(asJsonAlways[Json])

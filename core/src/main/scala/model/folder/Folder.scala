@@ -17,9 +17,10 @@ case class Folder(
     canAdmin: Boolean,
     createdBy: String,
     created: Instant,
-    updatedBy:   String,
+    updatedBy: String,
     updated: Instant,
-    version: Long)
+    version: Long
+)
 
 object Folder {
   implicit val config = Configuration.default.withDefaults

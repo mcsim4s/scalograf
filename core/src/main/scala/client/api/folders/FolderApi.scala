@@ -19,12 +19,12 @@ trait FolderApi[F[_]] {
   private def folderUrl(ctx: GrafanaClientContext[F]): Uri = uri"${ctx.url}/api/folders"
 
   /**
-   * Get list of folders
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-all-folders]]
-   * @author vl0ft
-   * @return response
-   */
+    * Get list of folders
+    *
+    * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-all-folders]]
+    * @author vl0ft
+    * @return response
+    */
   def listFolders(): F[Response[Either[ResponseException[ErrorResponse, circe.Error], List[FolderInfo]]]] = {
     val ctx = clientContext()
 
@@ -35,13 +35,13 @@ trait FolderApi[F[_]] {
   }
 
   /**
-   * Get folder by uid
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-folder-by-uid]]
-   * @param uid uid of folder
-   * @author vl0ft
-   * @return response
-   */
+    * Get folder by uid
+    *
+    * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-folder-by-uid]]
+    * @param uid uid of folder
+    * @author vl0ft
+    * @return response
+    */
   def getByUid(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
     val ctx = clientContext()
 
@@ -52,13 +52,13 @@ trait FolderApi[F[_]] {
   }
 
   /**
-   * Get folder by id
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-folder-by-id]]
-   * @param id id of folder
-   * @author vl0ft
-   * @return response
-   */
+    * Get folder by id
+    *
+    * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#get-folder-by-id]]
+    * @param id id of folder
+    * @author vl0ft
+    * @return response
+    */
   def getById(id: Long): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
     val ctx = clientContext()
 
@@ -73,15 +73,16 @@ trait FolderApi[F[_]] {
   }
 
   /**
-   * Create folder
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#create-folder]]
-   * @param request CreateFolderRequest
-   * @author vl0ft
-   * @return response
-   */
+    * Create folder
+    *
+    * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#create-folder]]
+    * @param request CreateFolderRequest
+    * @author vl0ft
+    * @return response
+    */
   def createFolder(
-      request: CreateFolderRequest): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+      request: CreateFolderRequest
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
     val ctx = clientContext()
 
     ctx.grafanaRequest
@@ -92,17 +93,18 @@ trait FolderApi[F[_]] {
   }
 
   /**
-   * Update folder
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#update-folder]]
-   * @param uid current uid of folder
-   * @param request UpdateFolderRequest
-   * @author vl0ft
-   * @return response
-   */
+    * Update folder
+    *
+    * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#update-folder]]
+    * @param uid current uid of folder
+    * @param request UpdateFolderRequest
+    * @author vl0ft
+    * @return response
+    */
   def updateFolder(
       uid: String,
-      request: UpdateFolderRequest): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
+      request: UpdateFolderRequest
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Folder]]] = {
     val ctx = clientContext()
 
     ctx.grafanaRequest
@@ -113,13 +115,13 @@ trait FolderApi[F[_]] {
   }
 
   /**
-   * Delete folder
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#delete-folder]]
-   * @param uid current uid of folder
-   * @author vl0ft
-   * @return response
-   */
+    * Delete folder
+    *
+    * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder/#delete-folder]]
+    * @param uid current uid of folder
+    * @author vl0ft
+    * @return response
+    */
   def deleteFolder(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Json]]] = {
     val ctx = clientContext()
 
