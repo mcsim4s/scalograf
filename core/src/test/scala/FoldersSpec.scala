@@ -88,13 +88,16 @@ class FoldersSpec extends AsyncWordSpec with should.Matchers with OptionValues w
           AsyncHttpClientFutureBackend()
         )
 
+        val folderUid = Random.nextLong().toString
+        val folderTitle = Random.nextString(5)
+
         for {
-          created <- client.createFolder(CreateFolderRequest("getById", "getById"))
+          created <- client.createFolder(CreateFolderRequest(folderUid, folderTitle))
           folder <- eitherToFuture(created.body)
-          _ <- logStep("created folder with uid 'getById'", folder)
+          _ <- logStep(s"created folder with uid '$folderUid'", folder)
           getById <- client.getById(folder.id)
           res <- getById.body match {
-            case Right(f) => assert(f.uid == "getById")
+            case Right(f) => assert(f.uid == folderUid)
             case Left(ex) =>
               println(ex)
               assert(false)
