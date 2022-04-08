@@ -21,33 +21,33 @@ object JsonAnalyzer {
     "templating\\.list\\[\\d+-datasource\\]\\.refresh".r,
     "templating\\.list\\[\\d+-query\\]\\.query".r,
     "templating\\.list\\[\\d+-query\\]\\.definition".r,
-
     // Auto generated from alert, and doesn't work for some reason. use fieldconfig.thresholds
     "panels\\[\\d+-timeseries\\]\\.thresholds".r,
-
     // idk what it is, so just ignore that for now
     "list\\[\\d+-adhoc\\]\\.filters\\[\\d+\\].condition".r,
     "panels\\[\\d+-timeseries\\]\\.fieldConfig\\.defaults\\.custom\\.hideFrom".r,
-
     // type diff
     "yaxes\\[\\d+\\]\\.min".r,
     "yaxes\\[\\d+\\]\\.max".r,
-
     "\\$\\$hashKey".r,
     "gridPos\\.y".r
   )
 
-  def prepare(dashboard: Json): Json = dashboard.mapObject { dashboardObj =>
-    val panels = dashboardObj("panels").flatMap(_.asArray).map(_.flatMap { panel =>
-      if (panel.asObject.flatMap(_("type")).flatMap(_.asString).contains("row")) {
-        val inner = panel.asObject.flatMap(_("panels")).flatMap(_.asArray).getOrElse(Vector.empty)
-        panel.asObject.map(_.remove("panels").asJson).toVector ++ inner
-      } else {
-        Vector(panel)
-      }
-    }).getOrElse(Vector.empty)
-    dashboardObj.add("panels", panels.asJson)
-  }
+  def prepare(dashboard: Json): Json =
+    dashboard.mapObject { dashboardObj =>
+      val panels = dashboardObj("panels")
+        .flatMap(_.asArray)
+        .map(_.flatMap { panel =>
+          if (panel.asObject.flatMap(_("type")).flatMap(_.asString).contains("row")) {
+            val inner = panel.asObject.flatMap(_("panels")).flatMap(_.asArray).getOrElse(Vector.empty)
+            panel.asObject.map(_.remove("panels").asJson).toVector ++ inner
+          } else {
+            Vector(panel)
+          }
+        })
+        .getOrElse(Vector.empty)
+      dashboardObj.add("panels", panels.asJson)
+    }
 
   def diff(leftJson: Json, rightJson: Json): Seq[JsonDiff] =
     diff(prepare(leftJson), rightJson, "root")
@@ -58,8 +58,11 @@ object JsonAnalyzer {
       case (left, right) if left.isObject && right.isObject =>
         objectDiff(path, left.asObject.get, right.asObject.get)
       case (left, right) if left.isArray && right.isArray =>
-        val leftArray = if(path.endsWith("properties")) left.asArray.get.sortBy(_.asObject.get("id").toString) else left.asArray.get
-        val rightArray = if(path.endsWith("properties")) right.asArray.get.sortBy(_.asObject.get("id").toString) else right.asArray.get
+        val leftArray =
+          if (path.endsWith("properties")) left.asArray.get.sortBy(_.asObject.get("id").toString) else left.asArray.get
+        val rightArray =
+          if (path.endsWith("properties")) right.asArray.get.sortBy(_.asObject.get("id").toString)
+          else right.asArray.get
         arrayDiff(path, leftArray, rightArray)
       case (left, right) if left.isString && right.isString =>
         val leftVal = left.asString.map(s => if (s.startsWith("#")) s.toUpperCase else s).get
@@ -97,13 +100,13 @@ object JsonAnalyzer {
       Seq(ValueDiff(s"$path.size", left.size, right.size))
     } else Seq.empty
 
-
-    sizeDiff ++ (left zip right).zipWithIndex.flatMap { case ((l, r), index) =>
-      val idxString = l.asObject.flatMap(_ ("type")).flatMap(_.asString) match {
-        case Some(value) => s"$index-$value"
-        case None => index.toString
-      }
-      diff(l, r, s"$path[$idxString]")
+    sizeDiff ++ (left zip right).zipWithIndex.flatMap {
+      case ((l, r), index) =>
+        val idxString = l.asObject.flatMap(_("type")).flatMap(_.asString) match {
+          case Some(value) => s"$index-$value"
+          case None        => index.toString
+        }
+        diff(l, r, s"$path[$idxString]")
     }
   }
 
@@ -121,9 +124,9 @@ object JsonAnalyzer {
   case class TypeDiff(path: String, leftType: String, rightType: String) extends JsonDiff
   case class ValueDiff[T](path: String, leftValue: T, rightValue: T) extends JsonDiff
   case class FieldMissing(path: String, value: Json) extends JsonDiff {
-    override def toString: String = s"Field Missing: \"$path\": ${value.name} : ${value.noSpaces}"
+    override def toString: String = s"Field Missing: '$path': ${value.name} : ${value.noSpaces}"
   }
   case class ExtraField[T](path: String, fieldName: String, value: Json) extends JsonDiff {
-    override def toString: String = s"Extra field: \"$path.$fieldName\": ${value.name} : ${value.noSpaces}"
+    override def toString: String = s"Extra field: '$path.$fieldName': ${value.name} : ${value.noSpaces}"
   }
 }
