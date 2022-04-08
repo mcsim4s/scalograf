@@ -95,7 +95,9 @@ class FoldersSpec extends AsyncWordSpec with should.Matchers with OptionValues w
           getById <- client.getById(folder.id)
           res <- getById.body match {
             case Right(f) => assert(f.uid == "getById")
-            case Left(_)  => assert(false)
+            case Left(ex) =>
+              println(ex)
+              assert(false)
           }
         } yield res
     }
