@@ -22,16 +22,16 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
   }
 
   /**
-   * Allow to add query parameters for a request.
-   *
-   * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder_dashboard_search/]]
-   * @author vl0ft
-   * @param params map of query parameters
-   * @return response
-   */
+    * Allow to add query parameters for a request.
+    *
+    * e.g. [[https://grafana.com/docs/grafana/latest/http_api/folder_dashboard_search/]]
+    * @author vl0ft
+    * @param params map of query parameters
+    * @return response
+    */
   def search(
-      params: Map[String, String])
-  : F[Response[Either[ResponseException[ErrorResponse, circe.Error], Seq[DashboardSnippet]]]] = {
+      params: Map[String, String]
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Seq[DashboardSnippet]]]] = {
     grafanaRequest
       .get(
         params
@@ -41,8 +41,10 @@ case class GrafanaClient[F[_]](config: GrafanaConfig, backend: SttpBackend[F, An
       .send(backend)
   }
 
-  def getDashboard(uid: String): F[Response[Either[ResponseException[ErrorResponse, circe.Error], Dashboard]]] = {
-    dashboardInner(asJsonEither[ErrorResponse, Dashboard])(uid)
+  def getDashboard(
+      uid: String
+  ): F[Response[Either[ResponseException[ErrorResponse, circe.Error], GetDashboardResponse]]] = {
+    dashboardInner(asJsonEither[ErrorResponse, GetDashboardResponse])(uid)
   }
 
   def uploadDashboard(

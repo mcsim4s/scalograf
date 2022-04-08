@@ -1,4 +1,7 @@
-.PHONY: start/demo start/grafana-env start/demo-embedded
+.PHONY: start/demo start/grafana-env start/demo-embedded format
+
+format:
+	sbt scalafmtAll
 
 start/demo:
 	sbt "tools/runMain scalograf.Demo"

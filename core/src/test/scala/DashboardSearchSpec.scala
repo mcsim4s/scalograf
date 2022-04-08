@@ -45,12 +45,12 @@ class DashboardSearchSpec extends AsyncWordSpec with should.Matchers with Option
 
             client
               .uploadDashboard(DashboardUploadRequest(dashboard))
-              .flatMap { _ => client.search(Map("type" -> "dash-folder"))}
+              .flatMap { _ => client.search(Map("type" -> "dash-folder")) }
               .map(_.body)
               .map { body =>
                 println(s"${dashboard.gnetId} $body")
                 body match {
-                  case Right(listOfFolders) => Right(listOfFolders.isEmpty)
+                  case Right(listOfFolders)                                          => Right(listOfFolders.isEmpty)
                   case l @ Left(HttpError(b, status)) if dashboard.__inputs.nonEmpty => l
                 }
               }
@@ -82,12 +82,12 @@ class DashboardSearchSpec extends AsyncWordSpec with should.Matchers with Option
 
             client
               .uploadDashboard(DashboardUploadRequest(dashboard))
-              .flatMap { _ => client.search(Map("type" -> "dash-db"))}
+              .flatMap { _ => client.search(Map("type" -> "dash-db")) }
               .map(_.body)
               .map { body =>
                 println(s"${dashboard.gnetId} $body")
                 body match {
-                  case Right(listOfFolders) => Right(listOfFolders.nonEmpty)
+                  case Right(listOfFolders)                                          => Right(listOfFolders.nonEmpty)
                   case l @ Left(HttpError(b, status)) if dashboard.__inputs.nonEmpty => l
                 }
               }
