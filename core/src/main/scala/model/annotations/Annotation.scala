@@ -12,7 +12,7 @@ trait Annotation {
 }
 
 object Annotation {
-  implicit val codecConfig = Configuration.default
+  implicit val codecConfig: Configuration = Configuration.default
   implicit val codec: Codec.AsObject[Annotation] =
     new Codec.AsObject[Annotation] {
       override def encodeObject(a: Annotation): JsonObject = a.asJson.add("type", Json.fromString(a.`type`))

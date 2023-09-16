@@ -26,8 +26,8 @@ object TestDataGen extends App {
         id <- elems.atIndexOrUndefined(0).asLong
         revision <- elems.atIndexOrUndefined(1).asLong
       } yield CommunityDashboardId(id, revision)
-
     }
+
   val conf = ConfigSource.resources("test.data").loadOrThrow[Conf]
 
   val client = GrafanaClient(

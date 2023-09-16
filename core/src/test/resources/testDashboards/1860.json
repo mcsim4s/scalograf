@@ -81,7 +81,10 @@
   "panels" : [
     {
       "collapsed" : false,
-      "datasource" : "${DS_PROMETHEUS}",
+      "datasource" : {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
       "gridPos" : {
         "h" : 1,
         "w" : 24,

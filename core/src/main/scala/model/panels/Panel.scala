@@ -14,11 +14,12 @@ import model.panels.timeseries.TimeSeries
 
 import io.circe._
 import io.circe.syntax._
+import scalograf.model.datasource.DatasourceId
 import scalograf.model.panels.gauge.Gauge
 import scalograf.model.panels.geomap.GeoMap
 
 case class Panel(
-    datasource: Option[String] = None,
+    datasource: Option[DatasourceId] = None,
     description: Option[String] = None,
     gridPos: GridPosition,
     id: Option[Int] = None,
@@ -68,7 +69,7 @@ object Panel {
         }
         .flatMap { typed =>
           for {
-            datasource <- c.downField("datasource").as[Option[String]]
+            datasource <- c.downField("datasource").as[Option[DatasourceId]]
             description <- c.downField("description").as[Option[String]]
             gridPos <- c.downField("gridPos").as[GridPosition]
             id <- c.downField("id").as[Option[Int]]

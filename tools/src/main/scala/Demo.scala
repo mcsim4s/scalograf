@@ -6,7 +6,7 @@ import client.{DashboardUploadRequest, GrafanaClient, GrafanaConfig}
 import model.Refresh.Every
 import model._
 import model.alert.{Alert, Notification}
-import model.datasource.Datasource
+import model.datasource.{Datasource, DatasourceId}
 import model.enums.ColorMode.ContinuousBlueYellowRed
 import model.enums._
 import model.panels.config.FieldConfig.{ThresholdStep, Thresholds}
@@ -70,12 +70,12 @@ object Demo extends App {
     gridPos = GridPosition(12, 12),
     title = "Rps by service",
     id = 1,
-    datasource = prometheusDatasource.name,
+    datasource = DatasourceId.Typed(prometheusDatasource.`type`, prometheusDatasource.uid.get),
     typed = TimeSeries(
       alert = alert,
       targets = List(
         Target(
-          expr = "sum(irate(rpc_durations_seconds_count[1m])) by (service)",
+          expr = "sum(irate(grafana_http_request_duration_seconds_count[1m])) by (service)",
           refId = "A",
           legendFormat = "{{service}}",
           intervalFactor = 2
@@ -104,11 +104,11 @@ object Demo extends App {
   val table = Panel(
     gridPos = GridPosition(12, 12),
     title = "Quantiles",
-    datasource = prometheusDatasource.name,
+    datasource = DatasourceId.Typed(prometheusDatasource.`type`, prometheusDatasource.uid.get),
     typed = Table(
       targets = List(
         Target(
-          expr = "rpc_durations_seconds",
+          expr = "grafana_http_request_duration_seconds_bucket",
           refId = "A",
           instant = true,
           legendFormat = "{{service}}",

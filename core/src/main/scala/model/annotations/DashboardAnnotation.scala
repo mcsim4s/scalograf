@@ -6,11 +6,12 @@ import model.Color
 import io.circe.JsonObject
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.deriveConfiguredCodec
+import model.datasource.DatasourceId
 
 case class DashboardAnnotation(
     `type`: String,
     builtIn: Int = 0,
-    datasource: String,
+    datasource: DatasourceId,
     enable: Boolean = true,
     hide: Boolean = false,
     iconColor: Color,

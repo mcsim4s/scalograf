@@ -6,7 +6,7 @@ import io.circe.syntax._
 import io.circe.{Codec, HCursor, JsonObject}
 
 case class CustomTemplate(
-    values: List[String]
+    values: List[String] = List.empty
 ) extends Template.Type {
   override def `type`: String = "custom"
 
