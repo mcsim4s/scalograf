@@ -7,14 +7,15 @@ import model.template.Template
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
 import io.circe.{Decoder, Encoder, JsonObject}
+import datasource.DatasourceId
 
 case class QueryTemplate(
     definition: String = "",
     regex: Option[String] = None,
     refresh: TemplateRefresh = TemplateRefresh.OnLoad,
     sort: ValuesSort = ValuesSort.Disabled,
-    datasource: String //ToDo datasource model????
-) extends Template.Type {
+    datasource: DatasourceId)
+  extends Template.Type {
   override def `type`: String = "query"
 
   override def asJson: JsonObject = QueryTemplate.encoder.encodeObject(this)
