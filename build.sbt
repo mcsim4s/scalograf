@@ -19,7 +19,7 @@ inThisBuild(
   List(
     organization := "io.github.mcsim4s",
     homepage := Some(url("https://github.com/mcsim4s/scalograf")),
-    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    licenses := List("Apache-2.0" -> url("https://www.apache.org/licenses/LICENSE-2.0")),
     developers := List(
       Developer(
         "mcsim4s",

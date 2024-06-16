@@ -15,7 +15,7 @@ case class Target(
     instant: Boolean = false,
     interval: Option[String] = None,
     intervalFactor: Option[Int] = None,
-    legendFormat: String = "",
+    legendFormat: String = "__auto",
     maxLines: Option[Int] = None,
     metric: Option[String] = None,
     range: Boolean = false,

@@ -12,7 +12,7 @@ object GrafanaContainer {
       extends GenericContainer.Def[GrafanaContainer](
         new GrafanaContainer(
           GenericContainer(
-            dockerImage = "grafana/grafana",
+            dockerImage = "grafana/grafana:11.0.0",
             exposedPorts = Seq(3000)
           )
         )

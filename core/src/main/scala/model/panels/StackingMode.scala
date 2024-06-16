@@ -10,4 +10,5 @@ object StackingMode extends StringEnum[StackingMode] with StringCirceEnum[Stacki
 
   case object None extends StackingMode("none")
   case object Normal extends StackingMode("normal")
+  case object Percent extends StackingMode("percent")
 }

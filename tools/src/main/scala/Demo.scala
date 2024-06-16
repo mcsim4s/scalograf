@@ -16,13 +16,15 @@ import model.panels.config._
 import model.panels.row.Row
 import model.panels.status_history.{Options, StatusHistory, StatusHistoryConfig}
 import model.panels.table.{ColumnAlign, ColumnDisplayMode, Table, TableConfig}
-import model.panels.timeseries.TimeSeriesConfig.ThresholdStyle
 import model.panels.timeseries._
-import model.panels.{GridPosition, Panel}
+import model.panels.{GridPosition, Panel, ThresholdStyle}
 import model.time._
 import model.transformations.{Organize, Sort}
 import syntax._
 import BetterFuture._
+
+import scalograf.model.panels.ThresholdStyle.ThresholdStyleMode
+import scalograf.model.panels.barchart.{BarChart, BarChartLabelSpacing, BarChartShowValue}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -209,12 +211,34 @@ object Demo extends App {
     )
   )
 
+  val barchart = Panel(
+    title = "Barchart",
+    gridPos = GridPosition(12, 12),
+    typed = BarChart(
+      targets = List(
+        Target(
+          expr = """sum by (slice) (increase(prometheus_engine_query_duration_seconds_count[10m]))""",
+          refId = "A"
+        )
+      ),
+      interval = 10.minutes,
+      options = model.panels.barchart.Options(
+        barRadius = 0.1,
+        barWidth = 0.9,
+        showValue = BarChartShowValue.Auto,
+        stacking = StackingMode.Normal,
+        xTickLabelRotation = -45,
+        xTickLabelSpacing = BarChartLabelSpacing.Small
+      )
+    )
+  )
+
   val dashboard = Dashboard(
     title = "Demo Dashboard",
     description = "Test dashboard for library abilities demonstration",
     uid = "demo",
     refresh = Every(5.seconds),
-    panels = List(timeSeries, table, row),
+    panels = List(barchart, timeSeries, table, row),
     style = DashboardStyle.Dark,
     timepicker = TimePicker(nowDelay = 1.minute)
   )
