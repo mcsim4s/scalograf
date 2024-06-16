@@ -221,7 +221,7 @@ object Demo extends App {
           refId = "A"
         )
       ),
-      interval = 10.minutes,
+      interval = "10m",
       options = model.panels.barchart.Options(
         barRadius = 0.1,
         barWidth = 0.9,

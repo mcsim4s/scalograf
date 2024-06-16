@@ -21,7 +21,7 @@ case class WorldMapPanel(
     hideEmpty: Boolean = false,
     hideZero: Boolean = false,
     initialZoom: String = "2",
-    interval: Option[FiniteDuration] = None,
+    interval: Option[String] = None,
     locationData: String = "countries", //ToDo enum
     mapCenter: String, //ToDo geopoint
     mapCenterLatitude: Double,
