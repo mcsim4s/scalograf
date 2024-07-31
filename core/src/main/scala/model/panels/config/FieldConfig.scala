@@ -22,7 +22,8 @@ case class FieldConfig[T <: CustomFieldConfig](
     min: Option[Double] = None,
     nullValueMode: Option[String] = None, //ToDo enum
     thresholds: Option[Thresholds] = None,
-    unit: Option[Units] = None
+    unit: Option[Units] = None,
+    noValue: Option[String] = None
 )
 
 object FieldConfig {

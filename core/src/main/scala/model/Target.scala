@@ -18,7 +18,7 @@ case class Target(
     legendFormat: String = "__auto",
     maxLines: Option[Int] = None,
     metric: Option[String] = None,
-    range: Boolean = false,
+    range: Boolean = true,
     refId: String,
     step: Option[Double] = None
 )

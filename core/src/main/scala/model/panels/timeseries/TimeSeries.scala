@@ -24,7 +24,8 @@ case class TimeSeries(
     targets: List[Target] = List.empty,
     timeFrom: Option[FiniteDuration] = None,
     timeShift: Option[FiniteDuration] = None,
-    transformations: List[Transformation] = List.empty
+    transformations: List[Transformation] = List.empty,
+    repeat: Option[String] = None
 ) extends Panel.Type {
   override def `type`: String = "timeseries"
 
