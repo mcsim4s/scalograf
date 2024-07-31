@@ -22,7 +22,8 @@ case class FieldConfig[T <: CustomFieldConfig](
     min: Option[Double] = None,
     nullValueMode: Option[String] = None, //ToDo enum
     thresholds: Option[Thresholds] = None,
-    unit: Option[Units] = None
+    unit: Option[Units] = None,
+    noValue: Option[String] = None
 )
 
 object FieldConfig {
@@ -57,6 +58,7 @@ object FieldConfig {
           thresholds <- c.downField("thresholds").as[Option[Thresholds]]
           unit <- c.downField("unit").as[Option[Units]]
           links <- c.downField("links").as[Option[List[Link]]]
+          noValue <- c.downField("noValue").as[Option[String]]
         } yield FieldConfig[T](
           color = color,
           custom = custom,
@@ -67,7 +69,8 @@ object FieldConfig {
           min = min,
           thresholds = thresholds,
           unit = unit,
-          links = links
+          links = links,
+          noValue = noValue
         )
 
       override def encodeObject(d: FieldConfig[T]): JsonObject =
@@ -81,7 +84,8 @@ object FieldConfig {
           "nullValueMode" -> d.nullValueMode.asJson,
           "thresholds" -> d.thresholds.asJson,
           "unit" -> d.unit.asJson,
-          "links" -> d.links.asJson
+          "links" -> d.links.asJson,
+          "noValue" -> d.noValue.asJson
         )
     }
 }

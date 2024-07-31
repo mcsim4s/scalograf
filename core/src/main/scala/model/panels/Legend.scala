@@ -10,7 +10,10 @@ import io.circe.generic.extras.semiauto.deriveConfiguredCodec
 case class Legend(
     calcs: List[String] = List.empty,
     displayMode: DisplayMode = DisplayMode.List,
-    placement: Placement = Placement.Bottom
+    placement: Placement = Placement.Bottom,
+    width: Option[Int] = None,
+    sortBy: Option[String] = None,
+    sortDesc: Option[Boolean] = None
 )
 
 object Legend {
