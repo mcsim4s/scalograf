@@ -11,7 +11,7 @@ ThisBuild / sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 val sttpVersion = "3.3.14"
 val circeVersion = "0.14.1"
 val scalatestVersion = "3.2.9"
-val enumeratumVersion = "1.7.0"
+val enumeratumVersion = "1.7.4"
 val zioVersion = "1.0.11"
 val doobieVersion = "1.0.0-RC1"
 
