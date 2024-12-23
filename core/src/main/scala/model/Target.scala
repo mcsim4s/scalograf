@@ -13,7 +13,7 @@ case class Target(
     format: TargetFormat = TargetFormat.TimeSeries,
     hide: Boolean = false,
     instant: Boolean = false,
-    interval: Option[String] = None,
+    interval: String = "",
     intervalFactor: Option[Int] = None,
     legendFormat: String = "__auto",
     maxLines: Option[Int] = None,
