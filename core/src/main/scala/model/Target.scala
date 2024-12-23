@@ -1,7 +1,7 @@
 package scalograf
 package model
 
-import model.enums.TargetFormat
+import model.enums.{EditorMode, TargetFormat}
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.semiauto.{deriveConfiguredDecoder, deriveConfiguredEncoder}
@@ -20,7 +20,8 @@ case class Target(
     metric: Option[String] = None,
     range: Boolean = true,
     refId: String,
-    step: Option[Double] = None
+    step: Option[Double] = None,
+    editorMode: EditorMode = EditorMode.Code
 )
 
 object Target {
